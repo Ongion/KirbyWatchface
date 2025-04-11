@@ -1,0 +1,683 @@
+{
+  "version": "2.0.0",
+  "author": "Ongion, Game Time",
+  "private": true,
+  "dependencies": {},
+  "keywords": [
+    "pebble-app"
+  ],
+  "pebble": {
+    "sdkVersion": "3",
+    "resources": {
+      "media": [
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_BEAM_13",
+          "file": "images/KIRBY_BEAM_13.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_CUTTER_17",
+          "file": "images/KIRBY_CUTTER_17.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_FIRE_23",
+          "file": "images/KIRBY_FIRE_23.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_HAMMER_13",
+          "file": "images/KIRBY_HAMMER_13.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_MIKE_14",
+          "file": "images/KIRBY_MIKE_14.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_SWORD_9",
+          "file": "images/KIRBY_SWORD_9.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_SWORD_8",
+          "file": "images/KIRBY_SWORD_8.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_SWORD_7",
+          "file": "images/KIRBY_SWORD_7.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_SWORD_6",
+          "file": "images/KIRBY_SWORD_6.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_SWORD_5",
+          "file": "images/KIRBY_SWORD_5.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_SWORD_4",
+          "file": "images/KIRBY_SWORD_4.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_SWORD_3",
+          "file": "images/KIRBY_SWORD_3.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_SWORD_2",
+          "file": "images/KIRBY_SWORD_2.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_SWORD_1",
+          "file": "images/KIRBY_SWORD_1.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_SLEEP_6",
+          "file": "images/KIRBY_SLEEP_6.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_SLEEP_5",
+          "file": "images/KIRBY_SLEEP_5.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_SLEEP_4",
+          "file": "images/KIRBY_SLEEP_4.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_SLEEP_3",
+          "file": "images/KIRBY_SLEEP_3.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_SLEEP_2",
+          "file": "images/KIRBY_SLEEP_2.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_SLEEP_1",
+          "file": "images/KIRBY_SLEEP_1.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_MIKE_13",
+          "file": "images/KIRBY_MIKE_13.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_MIKE_12",
+          "file": "images/KIRBY_MIKE_12.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_MIKE_11",
+          "file": "images/KIRBY_MIKE_11.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_MIKE_10",
+          "file": "images/KIRBY_MIKE_10.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_MIKE_9",
+          "file": "images/KIRBY_MIKE_9.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_MIKE_8",
+          "file": "images/KIRBY_MIKE_8.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_MIKE_7",
+          "file": "images/KIRBY_MIKE_7.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_MIKE_6",
+          "file": "images/KIRBY_MIKE_6.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_MIKE_5",
+          "file": "images/KIRBY_MIKE_5.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_MIKE_4",
+          "file": "images/KIRBY_MIKE_4.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_MIKE_3",
+          "file": "images/KIRBY_MIKE_3.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_MIKE_2",
+          "file": "images/KIRBY_MIKE_2.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_MIKE_1",
+          "file": "images/KIRBY_MIKE_1.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_HAMMER_12",
+          "file": "images/KIRBY_HAMMER_12.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_HAMMER_11",
+          "file": "images/KIRBY_HAMMER_11.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_HAMMER_10",
+          "file": "images/KIRBY_HAMMER_10.png"
+        },
+        {
+          "targetPlatforms":null,
+          "type": "bitmap",
+          "name": "KIRBY_HAMMER_9",
+          "file": "images/KIRBY_HAMMER_9.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_HAMMER_8",
+          "file": "images/KIRBY_HAMMER_8.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_HAMMER_7",
+          "file": "images/KIRBY_HAMMER_7.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_HAMMER_6",
+          "file": "images/KIRBY_HAMMER_6.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_HAMMER_5",
+          "file": "images/KIRBY_HAMMER_5.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_HAMMER_4",
+          "file": "images/KIRBY_HAMMER_4.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_HAMMER_3",
+          "file": "images/KIRBY_HAMMER_3.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_HAMMER_2",
+          "file": "images/KIRBY_HAMMER_2.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_HAMMER_1",
+          "file": "images/KIRBY_HAMMER_1.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_FIRE_22",
+          "file": "images/KIRBY_FIRE_22.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_FIRE_21",
+          "file": "images/KIRBY_FIRE_21.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_FIRE_20",
+          "file": "images/KIRBY_FIRE_20.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_FIRE_19",
+          "file": "images/KIRBY_FIRE_19.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_FIRE_18",
+          "file": "images/KIRBY_FIRE_18.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_FIRE_17",
+          "file": "images/KIRBY_FIRE_17.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_FIRE_16",
+          "file": "images/KIRBY_FIRE_16.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_FIRE_15",
+          "file": "images/KIRBY_FIRE_15.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_FIRE_14",
+          "file": "images/KIRBY_FIRE_14.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_FIRE_13",
+          "file": "images/KIRBY_FIRE_13.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_FIRE_12",
+          "file": "images/KIRBY_FIRE_12.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_FIRE_11",
+          "file": "images/KIRBY_FIRE_11.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_FIRE_10",
+          "file": "images/KIRBY_FIRE_10.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_FIRE_9",
+          "file": "images/KIRBY_FIRE_9.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_FIRE_8",
+          "file": "images/KIRBY_FIRE_8.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_FIRE_7",
+          "file": "images/KIRBY_FIRE_7.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_FIRE_6",
+          "file": "images/KIRBY_FIRE_6.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_FIRE_5",
+          "file": "images/KIRBY_FIRE_5.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_FIRE_4",
+          "file": "images/KIRBY_FIRE_4.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_FIRE_3",
+          "file": "images/KIRBY_FIRE_3.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_FIRE_2",
+          "file": "images/KIRBY_FIRE_2.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_FIRE_1",
+          "file": "images/KIRBY_FIRE_1.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_CUTTER_16",
+          "file": "images/KIRBY_CUTTER_16.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_CUTTER_15",
+          "file": "images/KIRBY_CUTTER_15.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_CUTTER_14",
+          "file": "images/KIRBY_CUTTER_14.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_CUTTER_13",
+          "file": "images/KIRBY_CUTTER_13.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_CUTTER_12",
+          "file": "images/KIRBY_CUTTER_12.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_CUTTER_11",
+          "file": "images/KIRBY_CUTTER_11.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_CUTTER_10",
+          "file": "images/KIRBY_CUTTER_10.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_CUTTER_9",
+          "file": "images/KIRBY_CUTTER_9.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_CUTTER_8",
+          "file": "images/KIRBY_CUTTER_8.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_CUTTER_7",
+          "file": "images/KIRBY_CUTTER_7.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_CUTTER_6",
+          "file": "images/KIRBY_CUTTER_6.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_CUTTER_5",
+          "file": "images/KIRBY_CUTTER_5.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_CUTTER_4",
+          "file": "images/KIRBY_CUTTER_4.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_CUTTER_3",
+          "file": "images/KIRBY_CUTTER_3.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_CUTTER_2",
+          "file": "images/KIRBY_CUTTER_2.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_CUTTER_1",
+          "file": "images/KIRBY_CUTTER_1.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_BEAM_12",
+          "file": "images/KIRBY_BEAM_12.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_BEAM_11",
+          "file": "images/KIRBY_BEAM_11.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_BEAM_10",
+          "file": "images/KIRBY_BEAM_10.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_BEAM_9",
+          "file": "images/KIRBY_BEAM_9.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_BEAM_8",
+          "file": "images/KIRBY_BEAM_8.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_BEAM_7",
+          "file": "images/KIRBY_BEAM_7.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_BEAM_6",
+          "file": "images/KIRBY_BEAM_6.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_BEAM_5",
+          "file": "images/KIRBY_BEAM_5.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_BEAM_4",
+          "file": "images/KIRBY_BEAM_4.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_BEAM_3",
+          "file": "images/KIRBY_BEAM_3.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_BEAM_2",
+          "file": "images/KIRBY_BEAM_2.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KIRBY_BEAM_1",
+          "file": "images/KIRBY_BEAM_1.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "SWORD",
+          "file": "images/SWORD.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "SLEEP",
+          "file": "images/SLEEP.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "MR_SHINE",
+          "file": "images/MR_SHINE.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "MR_BRIGHT",
+          "file": "images/MR_BRIGHT.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "MIKE",
+          "file": "images/MIKE.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KRACKO",
+          "file": "images/KRACKO.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "KING",
+          "file": "images/KING.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "HAMMER",
+          "file": "images/HAMMER.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "FOREGROUND",
+          "file": "images/FOREGROUND.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "FIRE",
+          "file": "images/FIRE.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "CUTTER",
+          "file": "images/CUTTER.png"
+        },
+        {
+          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "BEAM",
+          "file": "images/BEAM.png"
+        }
+      ]
+    },
+    "projectType": "native",
+    "uuid": "6afd9dc5-4457-43e7-902e-1055ca4283ae",
+    "messageKeys": {
+      "KEY_TEMPERATURE": 1,
+      "KEY_STEPSGOAL": 6,
+      "KEY_ICON": 2,
+      "KEY_SCALE": 3
+    },
+    "enableMultiJS": false,
+    "displayName": "Kirby",
+    "watchapp": {
+      "onlyShownOnCommunication": false,
+      "hiddenApp": false,
+      "watchface": true
+    },
+    "targetPlatforms": [
+      "basalt",
+      "emery"
+    ],
+    "capabilities": [
+      "location",
+      "configurable",
+      "health"
+    ]
+  },
+  "name": "kirby"
+}
