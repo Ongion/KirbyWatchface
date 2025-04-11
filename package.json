@@ -651,6 +651,11 @@
           "type": "bitmap",
           "name": "BEAM",
           "file": "images/BEAM.png"
+        },
+        {
+          "type": "raw",
+          "name": "KIRBY_SWORD_ANIM",
+          "file": "images/KIRBY_SWORD_ANIM.png"
         }
       ]
     },
