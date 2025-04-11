@@ -3,7 +3,6 @@
 #define KEY_TEMPERATURE 1
 #define KEY_ICON 2
 #define KEY_SCALE 3
-#define KEY_SCALE_OPTION 4
 #define KEY_STEPSGOAL 6
 
 /*
@@ -34,6 +33,8 @@ TextLayer *text_weather_layer;
 TextLayer *text_time_layer;
 TextLayer *text_date_layer;
 
+static char weather_layer_buffer[32];
+
 static Layer *steps_layer;
 int steps, steps_per_px, stepgoal;
 
@@ -43,6 +44,9 @@ static Layer *battery_layer;
 
 static GBitmap *foreground_image;
 static BitmapLayer *foreground_layer;
+
+static int s_temperature = -1;
+static int s_temperatureScale = -1;
 
 int replay = 2;
 int current_frame, starting_frame;
@@ -166,6 +170,12 @@ RESOURCE_ID_KIRBY_SWORD_8,
 RESOURCE_ID_KIRBY_SWORD_9, //94
 };
 
+typedef enum temperature_scales
+{
+  FAHRENHEIT,
+  CELSIUS
+} TemperatureScale;
+
 const int POWERS_IMAGE_RESOURCE_IDS[] = 
 {
   RESOURCE_ID_BEAM,
@@ -212,12 +222,29 @@ static void load_step_layer(Layer *window_layer)
   layer_add_child(window_layer, steps_layer);
 }
 
+static void update_weather_layer_text()
+{
+  int finalTemp;
+
+  if(s_temperatureScale == FAHRENHEIT)
+  {
+    finalTemp = (s_temperature - 273.15) * 1.8 + 32;
+  }
+  else // (s_temperatureScale == CELSIUS)
+  {
+    finalTemp = s_temperature - 273.15;
+  }
+
+  snprintf(weather_layer_buffer, sizeof(weather_layer_buffer), "%d°", finalTemp);
+  text_layer_set_text(text_weather_layer, weather_layer_buffer);
+}
+
 static void load_weather_layer(Layer *window_layer)
 {
   text_weather_layer = text_layer_create(GRect(72, 130, 72, 26));
   text_layer_set_background_color(text_weather_layer, GColorClear);
   text_layer_set_text_color(text_weather_layer, GColorBlack);
-  text_layer_set_text(text_weather_layer, "...");
+  update_weather_layer_text();
   text_layer_set_font(text_weather_layer,fonts_get_system_font(FONT_KEY_LECO_20_BOLD_NUMBERS));
   text_layer_set_text_alignment(text_weather_layer, GTextAlignmentCenter);
   layer_add_child(window_layer, text_layer_get_layer(text_weather_layer));
@@ -455,47 +482,28 @@ static void cancel_weather_timeout()
 
 static void inbox_received_callback(DictionaryIterator *iterator, void *context) 
 {
-  static char temperature_buffer[8];
-  static char weather_layer_buffer[32];
-  
   Tuple *t = dict_read_first(iterator);
 
-  int temperature;
-  int finalTemp;
-  int scale_option = persist_read_int(KEY_SCALE_OPTION);
+  bool recalc_weather_text = false;
   
   while(t != NULL) {
     switch(t->key) {
       case KEY_SCALE:
         if(strcmp(t->value->cstring, "F") == 0){
-          persist_write_int(KEY_SCALE_OPTION, 0);
-          scale_option = 0;
-          DictionaryIterator *iter;
-          app_message_outbox_begin(&iter);
-          dict_write_uint8(iter, 0, 0);
-          app_message_outbox_send();
+          s_temperatureScale = FAHRENHEIT;
         }
         else if(strcmp(t->value->cstring, "C") == 0){
-          persist_write_int(KEY_SCALE_OPTION, 1);
-          scale_option = 1;
-          DictionaryIterator *iter;
-          app_message_outbox_begin(&iter);
-          dict_write_uint8(iter, 0, 0);
-          app_message_outbox_send();
+          s_temperatureScale = CELSIUS;
         }
+
+        persist_write_int(KEY_SCALE, s_temperatureScale);
+        recalc_weather_text = true;
         break;
 
       case KEY_TEMPERATURE:
-        if(scale_option == 0){
-          temperature = t->value->int32;
-          finalTemp = (temperature - 273.15) * 1.8 + 32;
-          snprintf(temperature_buffer, sizeof(temperature_buffer), "%d°", finalTemp);
-        }
-        else if(scale_option == 1){
-          temperature = t->value->int32;
-          finalTemp = temperature - 273.15;
-          snprintf(temperature_buffer, sizeof(temperature_buffer), "%d°", finalTemp);
-        }
+        s_temperature = t->value->int32;
+        persist_write_int(KEY_TEMPERATURE, s_temperature);
+        recalc_weather_text = true;
         break;
         
       case KEY_ICON:
@@ -521,9 +529,11 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
 
     t = dict_read_next(iterator);
   }
-  
-  snprintf(weather_layer_buffer, sizeof(weather_layer_buffer), "%s", temperature_buffer);
-  text_layer_set_text(text_weather_layer, weather_layer_buffer);
+
+  if (recalc_weather_text)
+  {
+    update_weather_layer_text();
+  }
 }
 
 static void inbox_dropped_callback(AppMessageResult reason, void *context) 
@@ -677,6 +687,18 @@ static void main_window_unload(Window *window)
 
 void handle_init(void) 
 {
+  if (persist_exists(KEY_TEMPERATURE))
+  {
+    s_temperature = persist_read_int(KEY_TEMPERATURE);
+  }
+
+  if (persist_exists(KEY_SCALE))
+  {
+    s_temperatureScale = (TemperatureScale) persist_read_int(KEY_SCALE);
+  }
+
+  // TODO: Persist last time we updated weather, so we don't waste a bunch of API calls!
+
   window = window_create();
   
   window_set_window_handlers(window, (WindowHandlers) {
