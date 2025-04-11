@@ -52,6 +52,8 @@ int delay;//delay between each frame is in milliseconds
 static int ANIMATIONS = 7;
 int seed_images2, start_number_image;
 
+AppTimer* s_pKirbyAnimationTimer;
+
 static GBitmap *powers_image;
 static BitmapLayer *powers_layer;
 
@@ -222,7 +224,12 @@ static void kirby_animation_timer_handler(void* context)
     layer_mark_dirty(bitmap_layer_get_layer(s_kirbyLayer));
 
     // Timer for next frame
-    app_timer_register(next_delay, kirby_animation_timer_handler, NULL);
+    s_pKirbyAnimationTimer = app_timer_register(next_delay, kirby_animation_timer_handler, NULL);
+  }
+  else
+  {
+    // There were no more frames
+    s_pKirbyAnimationTimer = NULL;
   }
 
 }
@@ -236,6 +243,11 @@ static void load_power_sequence(int powerIdx, GRect* pFrame)
   }
 
   // Free old data
+  if (s_pKirbyAnimationTimer)
+  {
+    // Cancel any existing animation
+    app_timer_cancel(s_pKirbyAnimationTimer);
+  }  
   if (s_kirbySequence)
   {
     gbitmap_sequence_destroy(s_kirbySequence);
@@ -263,14 +275,13 @@ static void load_power_sequence(int powerIdx, GRect* pFrame)
 
 static void load_kirby_layer(int powerIdx)
 {
+  // Load the animation sequence for this power
   GRect frame;
-
   load_power_sequence(powerIdx, &frame);
-
   layer_set_frame(bitmap_layer_get_layer(s_kirbyLayer), frame);
 
   // Schedule timer to advance the first frame
-  app_timer_register(1, kirby_animation_timer_handler, NULL);
+  s_pKirbyAnimationTimer = app_timer_register(0, kirby_animation_timer_handler, NULL);
 }
 
 static void update_time()
@@ -512,7 +523,13 @@ static void handle_bluetooth(bool connected)
 }
 
 static void handle_tap(AccelAxisType axis, int32_t direction)
-{ 
+{
+  // Cancel any existing animation
+  if (s_pKirbyAnimationTimer)
+  {
+    app_timer_cancel(s_pKirbyAnimationTimer);
+  }
+
   gbitmap_sequence_restart(s_kirbySequence);
   app_timer_register(1, kirby_animation_timer_handler, NULL);
   auto_hide = time(NULL) + 4;
@@ -550,7 +567,6 @@ static void main_window_unload(Window *window)
   layer_remove_from_parent(bitmap_layer_get_layer(powers_layer));
   gbitmap_destroy(powers_image);
   bitmap_layer_destroy(powers_layer);
- 	 
   
   layer_remove_from_parent(bitmap_layer_get_layer(s_kirbyLayer));
   gbitmap_sequence_destroy(s_kirbySequence);
