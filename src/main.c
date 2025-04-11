@@ -38,8 +38,6 @@ TextLayer *text_date_layer;
 static Layer *steps_layer;
 int steps, steps_per_px, stepgoal;
 
-static GBitmapSequence *s_sequence = NULL;
-
 static uint8_t battery_level;
 static bool battery_plugged;
 static Layer *battery_layer;
@@ -673,8 +671,6 @@ static void main_window_unload(Window *window)
   gbitmap_destroy(kirby_image);
   bitmap_layer_destroy(kirby_layer);
   
-  gbitmap_sequence_destroy(s_sequence);
-
   layer_remove_from_parent(bitmap_layer_get_layer(boss_layer));
   gbitmap_destroy(boss_image);
   bitmap_layer_destroy(boss_layer);
