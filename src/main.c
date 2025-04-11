@@ -25,7 +25,6 @@ Window *window;
 time_t auto_hide;
 
 static bool initiate_watchface = true;
-static bool animate = true;
 static bool daytime;
 
 AppTimer *weather_timeout;
