@@ -50,7 +50,7 @@ int ending_frame;
 int delay;//delay between each frame is in milliseconds
 
 static int ANIMATIONS = 7;
-int seed_images2, start_number_image, random_image;
+int seed_images2, start_number_image;
 
 static GBitmap *powers_image;
 static BitmapLayer *powers_layer;
@@ -62,111 +62,6 @@ static GBitmap *s_kirbyBitmap;
 static GBitmapSequence *s_kirbySequence;
 static BitmapLayer *s_kirbyLayer;
 
-const int animation_frames[] = {  
-
-RESOURCE_ID_KIRBY_BEAM_1, //0
-RESOURCE_ID_KIRBY_BEAM_2,
-RESOURCE_ID_KIRBY_BEAM_3,
-RESOURCE_ID_KIRBY_BEAM_4,
-RESOURCE_ID_KIRBY_BEAM_5,
-RESOURCE_ID_KIRBY_BEAM_6,
-RESOURCE_ID_KIRBY_BEAM_7,
-RESOURCE_ID_KIRBY_BEAM_8,
-RESOURCE_ID_KIRBY_BEAM_9,
-RESOURCE_ID_KIRBY_BEAM_10,
-RESOURCE_ID_KIRBY_BEAM_11,
-RESOURCE_ID_KIRBY_BEAM_12,
-RESOURCE_ID_KIRBY_BEAM_13, //12
-  
-RESOURCE_ID_KIRBY_CUTTER_1, //13
-RESOURCE_ID_KIRBY_CUTTER_2,
-RESOURCE_ID_KIRBY_CUTTER_3,
-RESOURCE_ID_KIRBY_CUTTER_4,
-RESOURCE_ID_KIRBY_CUTTER_5,
-RESOURCE_ID_KIRBY_CUTTER_6,
-RESOURCE_ID_KIRBY_CUTTER_7,
-RESOURCE_ID_KIRBY_CUTTER_8,
-RESOURCE_ID_KIRBY_CUTTER_9,
-RESOURCE_ID_KIRBY_CUTTER_10,
-RESOURCE_ID_KIRBY_CUTTER_11,
-RESOURCE_ID_KIRBY_CUTTER_12,
-RESOURCE_ID_KIRBY_CUTTER_13,
-RESOURCE_ID_KIRBY_CUTTER_14,
-RESOURCE_ID_KIRBY_CUTTER_15,
-RESOURCE_ID_KIRBY_CUTTER_16,
-RESOURCE_ID_KIRBY_CUTTER_17, //29
-  
-RESOURCE_ID_KIRBY_FIRE_1, //30
-RESOURCE_ID_KIRBY_FIRE_2,
-RESOURCE_ID_KIRBY_FIRE_3,
-RESOURCE_ID_KIRBY_FIRE_4,
-RESOURCE_ID_KIRBY_FIRE_5,
-RESOURCE_ID_KIRBY_FIRE_6,
-RESOURCE_ID_KIRBY_FIRE_7,
-RESOURCE_ID_KIRBY_FIRE_8,
-RESOURCE_ID_KIRBY_FIRE_9,
-RESOURCE_ID_KIRBY_FIRE_10,
-RESOURCE_ID_KIRBY_FIRE_11,
-RESOURCE_ID_KIRBY_FIRE_12,
-RESOURCE_ID_KIRBY_FIRE_13,
-RESOURCE_ID_KIRBY_FIRE_14,
-RESOURCE_ID_KIRBY_FIRE_15,
-RESOURCE_ID_KIRBY_FIRE_16,
-RESOURCE_ID_KIRBY_FIRE_17,
-RESOURCE_ID_KIRBY_FIRE_18,
-RESOURCE_ID_KIRBY_FIRE_19,
-RESOURCE_ID_KIRBY_FIRE_20,
-RESOURCE_ID_KIRBY_FIRE_21,
-RESOURCE_ID_KIRBY_FIRE_22,
-RESOURCE_ID_KIRBY_FIRE_23, //52
-  
-RESOURCE_ID_KIRBY_HAMMER_1, //53
-RESOURCE_ID_KIRBY_HAMMER_2,
-RESOURCE_ID_KIRBY_HAMMER_3,
-RESOURCE_ID_KIRBY_HAMMER_4,
-RESOURCE_ID_KIRBY_HAMMER_5,
-RESOURCE_ID_KIRBY_HAMMER_6,
-RESOURCE_ID_KIRBY_HAMMER_7,
-RESOURCE_ID_KIRBY_HAMMER_8,
-RESOURCE_ID_KIRBY_HAMMER_9,
-RESOURCE_ID_KIRBY_HAMMER_10,
-RESOURCE_ID_KIRBY_HAMMER_11,
-RESOURCE_ID_KIRBY_HAMMER_12,
-RESOURCE_ID_KIRBY_HAMMER_13, //65
-  
-RESOURCE_ID_KIRBY_MIKE_1, //66
-RESOURCE_ID_KIRBY_MIKE_2,
-RESOURCE_ID_KIRBY_MIKE_3,
-RESOURCE_ID_KIRBY_MIKE_4,
-RESOURCE_ID_KIRBY_MIKE_5,
-RESOURCE_ID_KIRBY_MIKE_6,
-RESOURCE_ID_KIRBY_MIKE_7,
-RESOURCE_ID_KIRBY_MIKE_8,
-RESOURCE_ID_KIRBY_MIKE_9,
-RESOURCE_ID_KIRBY_MIKE_10,
-RESOURCE_ID_KIRBY_MIKE_11,
-RESOURCE_ID_KIRBY_MIKE_12,
-RESOURCE_ID_KIRBY_MIKE_13,
-RESOURCE_ID_KIRBY_MIKE_14, //79
-  
-RESOURCE_ID_KIRBY_SLEEP_1, //80
-RESOURCE_ID_KIRBY_SLEEP_2,
-RESOURCE_ID_KIRBY_SLEEP_3,
-RESOURCE_ID_KIRBY_SLEEP_4,
-RESOURCE_ID_KIRBY_SLEEP_5,
-RESOURCE_ID_KIRBY_SLEEP_6, //85
-  
-RESOURCE_ID_KIRBY_SWORD_1, //86
-RESOURCE_ID_KIRBY_SWORD_2,
-RESOURCE_ID_KIRBY_SWORD_3,
-RESOURCE_ID_KIRBY_SWORD_4,
-RESOURCE_ID_KIRBY_SWORD_5,
-RESOURCE_ID_KIRBY_SWORD_6,
-RESOURCE_ID_KIRBY_SWORD_7,
-RESOURCE_ID_KIRBY_SWORD_8,
-RESOURCE_ID_KIRBY_SWORD_9, //94
-};
-
 const int POWERS_IMAGE_RESOURCE_IDS[] = 
 {
   RESOURCE_ID_BEAM,
@@ -176,6 +71,40 @@ const int POWERS_IMAGE_RESOURCE_IDS[] =
   RESOURCE_ID_MIKE,
   RESOURCE_ID_SLEEP,
   RESOURCE_ID_SWORD,
+};
+
+const int POWERS_ANIMATIONS_RESOURCE_IDS[] = 
+{
+  // RESOURCE_ID_BEAM,
+  // RESOURCE_ID_CUTTER,
+  // RESOURCE_ID_FIRE,
+  // RESOURCE_ID_HAMMER,
+  // RESOURCE_ID_MIKE,
+  // RESOURCE_ID_SLEEP,
+  RESOURCE_ID_KIRBY_SWORD_ANIM,
+  RESOURCE_ID_KIRBY_SWORD_ANIM,
+  RESOURCE_ID_KIRBY_SWORD_ANIM,
+  RESOURCE_ID_KIRBY_SWORD_ANIM,
+  RESOURCE_ID_KIRBY_SWORD_ANIM,
+  RESOURCE_ID_KIRBY_SWORD_ANIM,
+  RESOURCE_ID_KIRBY_SWORD_ANIM,
+};
+
+const GPoint POWERS_ORIGINS[] =
+{
+  // GPoint(0, 54),  // Beam
+  // GPoint(0, 81),  // Cutter
+  // GPoint(0, 66),  // Fire
+  // GPoint(5, 69),  // Hammer
+  // GPoint(0, 80),  // Mike
+  // GPoint(13, 75), // Sleep
+  {0, 69},  // Sword
+  {0, 69},  // Sword
+  {0, 69},  // Sword
+  {0, 69},  // Sword
+  {0, 69},  // Sword
+  {0, 69},  // Sword
+  {0, 69},  // Sword
 };
 
 const int BOSSES_IMAGE_RESOURCE_IDS[] = 
@@ -298,129 +227,50 @@ static void kirby_animation_timer_handler(void* context)
 
 }
 
-static void timer_handler(void *context) 
+static void load_power_sequence(int powerIdx, GRect* pFrame)
 {
-  
-  // if(current_frame < ending_frame || replay > 0){
-  //   if(current_frame == ending_frame){
-  //    current_frame = starting_frame;
-  //    replay--;
-  //   }
-  //   if (s_kirbyBitmap != NULL) {
-  //     gbitmap_destroy(s_kirbyBitmap);
-  //     s_kirbyBitmap = NULL;
-  //   }
-    
-  //   s_kirbyBitmap = gbitmap_create_with_resource(animation_frames[current_frame]);
-    
-  //   bitmap_layer_set_bitmap(s_kirbyLayer, s_kirbyBitmap);
-  //   layer_mark_dirty(bitmap_layer_get_layer(s_kirbyLayer));
-
-  //   current_frame++;
-  //   app_timer_register(delay, timer_handler, NULL);
-  // }  
-  
-}
-
-
-static void load_sequence() 
-{
-  //Beam
-  if(random_image == 0){
-  current_frame = 0;
-  ending_frame = 13;
-  delay = 77;
-  }
-  
-  //Cutter
-  if(random_image == 1){
-  current_frame = 13;
-  ending_frame = 30;
-  delay = 59;
-  }
-  
-  //Fire
-  if(random_image == 2){
-  current_frame = 31;
-  ending_frame = 52;
-  delay = 88;
-  }
-  
-  //Hammer
-  if(random_image == 3){
-  current_frame = 53;
-  ending_frame = 66;
-  delay = 77;
-  }
-  
-  //Mike
-  if(random_image == 4){
-  current_frame = 67;
-  ending_frame = 80;
-  delay = 72;
-  }
-  
-  //Sleep
-  if(random_image == 5){
-  current_frame = 81;
-  ending_frame = 86;
-  delay = 167;
-  }
-  
-  //Sword
-  if(random_image == 6){
-  current_frame = 87;
-  ending_frame = 95;
-  delay = 111;
+  if (!pFrame)
+  {
+    // pFrame needs to point to a valid frame
+    return;
   }
 
-  starting_frame = current_frame;
-  app_timer_register(1, timer_handler, NULL);
-}
+  // Free old data
+  if (s_kirbySequence)
+  {
+    gbitmap_sequence_destroy(s_kirbySequence);
+    s_kirbySequence = NULL;
+  }
+  if (s_kirbyBitmap)
+  {
+    gbitmap_destroy(s_kirbyBitmap);
+    s_kirbyBitmap = NULL;
+  }
 
-static void load_kirby_layer()
-{ 
   // Create sequence
-  s_kirbySequence = gbitmap_sequence_create_with_resource(RESOURCE_ID_KIRBY_SWORD_ANIM);
+  s_kirbySequence = gbitmap_sequence_create_with_resource(POWERS_ANIMATIONS_RESOURCE_IDS[powerIdx]);
 
   // Create blank GBitmap using APNG frame size
   GSize frame_size = gbitmap_sequence_get_bitmap_size(s_kirbySequence);
   s_kirbyBitmap = gbitmap_create_blank(frame_size, GBitmapFormat8Bit);
 
   // Set Frame Location
-  GRect frame = (GRect) {
-    .origin = GPoint(0, 69),
+  *pFrame = (GRect) {
+    .origin = POWERS_ORIGINS[powerIdx],
     .size = frame_size
   };
+}
+
+static void load_kirby_layer(int powerIdx)
+{
+  GRect frame;
+
+  load_power_sequence(powerIdx, &frame);
 
   layer_set_frame(bitmap_layer_get_layer(s_kirbyLayer), frame);
 
-
   // Schedule timer to advance the first frame
   app_timer_register(1, kirby_animation_timer_handler, NULL);
-  
-  
-  // if(random_image == 0){//Beam
-  //  set_container_image(&s_kirbyBitmap, s_kirbyLayer, animation_frames[0], GPoint(0, 54));
-  // }
-  // else if(random_image == 1){//Cutter
-  //  set_container_image(&s_kirbyBitmap, s_kirbyLayer, animation_frames[13], GPoint(0, 81));
-  // }
-  // else if(random_image == 2){//Fire
-  //   set_container_image(&s_kirbyBitmap, s_kirbyLayer, animation_frames[30], GPoint(0, 66));
-  // }
-  // else if(random_image == 3){//Hammer
-  //   set_container_image(&s_kirbyBitmap, s_kirbyLayer, animation_frames[53], GPoint(5, 69));
-  // }
-  // else if(random_image == 4){//Mike
-  //   set_container_image(&s_kirbyBitmap, s_kirbyLayer, animation_frames[66], GPoint(0, 80));
-  // }
-  // else if(random_image == 5){//Sleep
-  //   set_container_image(&s_kirbyBitmap, s_kirbyLayer, animation_frames[80], GPoint(13, 75));
-  // }
-  // else if(random_image == 6){//Sword
-  //   set_container_image(&s_kirbyBitmap, s_kirbyLayer, animation_frames[86], GPoint(0, 69));
-  // }
 }
 
 static void update_time()
@@ -585,12 +435,11 @@ static void update_display(struct tm *current_time)
   static long seed_images = 100;
   seed_images  = (((seed_images * 214013L + 2531011L) >> 16) & 32767);
   seed_images2 = seed_images + start_number_image;
-  random_image = (seed_images2 % ANIMATIONS);
-  //APP_LOG(APP_LOG_LEVEL_DEBUG, "random character generated [#%d].", random_image);
+  int powerIdx = (seed_images2 % ANIMATIONS);
+  //APP_LOG(APP_LOG_LEVEL_DEBUG, "random character generated [#%d].", powerIdx);
 
-  // load_sequence();
-  set_container_image(&powers_image, powers_layer, POWERS_IMAGE_RESOURCE_IDS[random_image], GPoint(14, 26));
-  load_kirby_layer();
+  set_container_image(&powers_image, powers_layer, POWERS_IMAGE_RESOURCE_IDS[powerIdx], GPoint(14, 26));
+  load_kirby_layer(powerIdx);
   update_bg_color(current_time);
 }
 
@@ -664,8 +513,6 @@ static void handle_bluetooth(bool connected)
 
 static void handle_tap(AccelAxisType axis, int32_t direction)
 { 
-  // replay = 2;
-  // load_sequence();
   gbitmap_sequence_restart(s_kirbySequence);
   app_timer_register(1, kirby_animation_timer_handler, NULL);
   auto_hide = time(NULL) + 4;
