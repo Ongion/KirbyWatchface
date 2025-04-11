@@ -472,58 +472,58 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
   
   while(t != NULL) {
     switch(t->key) {
-    case KEY_SCALE:
-      if(strcmp(t->value->cstring, "F") == 0){
-        persist_write_int(KEY_SCALE_OPTION, 0);
-        DictionaryIterator *iter;
-        app_message_outbox_begin(&iter);
-        dict_write_uint8(iter, 0, 0);
-        app_message_outbox_send();
-      }
-      else if(strcmp(t->value->cstring, "C") == 0){
-        persist_write_int(KEY_SCALE_OPTION, 1);
-        DictionaryIterator *iter;
-        app_message_outbox_begin(&iter);
-        dict_write_uint8(iter, 0, 0);
-        app_message_outbox_send();
-      }
-      break;
-    case KEY_TEMPERATURE:
-      
-      if(scale_option == 0){
-      temperature = t->value->int32;
-      finalTemp = (temperature - 273.15) * 1.8 + 32;
-      snprintf(temperature_buffer, sizeof(temperature_buffer), "%d°", finalTemp);
-      }
-      else if(scale_option == 1){
-      temperature = t->value->int32;
-      finalTemp = temperature - 273.15;
-      snprintf(temperature_buffer, sizeof(temperature_buffer), "%d°", finalTemp);
-      }
-      break;
-      
+      case KEY_SCALE:
+        if(strcmp(t->value->cstring, "F") == 0){
+          persist_write_int(KEY_SCALE_OPTION, 0);
+          scale_option = 0;
+          DictionaryIterator *iter;
+          app_message_outbox_begin(&iter);
+          dict_write_uint8(iter, 0, 0);
+          app_message_outbox_send();
+        }
+        else if(strcmp(t->value->cstring, "C") == 0){
+          persist_write_int(KEY_SCALE_OPTION, 1);
+          scale_option = 1;
+          DictionaryIterator *iter;
+          app_message_outbox_begin(&iter);
+          dict_write_uint8(iter, 0, 0);
+          app_message_outbox_send();
+        }
+        break;
+
+      case KEY_TEMPERATURE:
+        if(scale_option == 0){
+          temperature = t->value->int32;
+          finalTemp = (temperature - 273.15) * 1.8 + 32;
+          snprintf(temperature_buffer, sizeof(temperature_buffer), "%d°", finalTemp);
+        }
+        else if(scale_option == 1){
+          temperature = t->value->int32;
+          finalTemp = temperature - 273.15;
+          snprintf(temperature_buffer, sizeof(temperature_buffer), "%d°", finalTemp);
+        }
+        break;
+        
       case KEY_ICON:
+        cancel_weather_timeout();
+        
+        if(t->value->int32 == 0 && daytime==true){
+        set_container_image(&boss_images[1], boss_layers[1], BOSSES_IMAGE_RESOURCE_IDS[0], GPoint(94, 56));
+        }
+        else if(t->value->int32 == 1){
+        set_container_image(&boss_images[1], boss_layers[1], BOSSES_IMAGE_RESOURCE_IDS[1], GPoint(64, 36));
+        }
+        else if(t->value->int32 == 0 && daytime==false){
+        set_container_image(&boss_images[1], boss_layers[1], BOSSES_IMAGE_RESOURCE_IDS[2], GPoint(97, 69));
+        }
+        break;
       
-      cancel_weather_timeout();
-      
-      if(t->value->int32 == 0 && daytime==true){
-      set_container_image(&boss_images[1], boss_layers[1], BOSSES_IMAGE_RESOURCE_IDS[0], GPoint(94, 56));
-      }
-      else if(t->value->int32 == 1){
-      set_container_image(&boss_images[1], boss_layers[1], BOSSES_IMAGE_RESOURCE_IDS[1], GPoint(64, 36));
-      }
-      else if(t->value->int32 == 0 && daytime==false){
-      set_container_image(&boss_images[1], boss_layers[1], BOSSES_IMAGE_RESOURCE_IDS[2], GPoint(97, 69));
-      }
-      break;
-    
       case KEY_STEPSGOAL:
-      
-      stepgoal = t->value->int16;
-		  //APP_LOG(APP_LOG_LEVEL_INFO, "stepgoal is %d", stepgoal);
-		  persist_write_int(KEY_STEPSGOAL, stepgoal);
-      break;
-  }
+        stepgoal = t->value->int16;
+        //APP_LOG(APP_LOG_LEVEL_INFO, "stepgoal is %d", stepgoal);
+        persist_write_int(KEY_STEPSGOAL, stepgoal);
+        break;
+    }
 
     t = dict_read_next(iterator);
   }
