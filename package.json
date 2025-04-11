@@ -25,12 +25,6 @@
         {
           "targetPlatforms": null,
           "type": "bitmap",
-          "name": "KIRBY_HAMMER_13",
-          "file": "images/KIRBY_HAMMER_13.png"
-        },
-        {
-          "targetPlatforms": null,
-          "type": "bitmap",
           "name": "KIRBY_MIKE_14",
           "file": "images/KIRBY_MIKE_14.png"
         },
@@ -147,78 +141,6 @@
           "type": "bitmap",
           "name": "KIRBY_MIKE_1",
           "file": "images/KIRBY_MIKE_1.png"
-        },
-        {
-          "targetPlatforms": null,
-          "type": "bitmap",
-          "name": "KIRBY_HAMMER_12",
-          "file": "images/KIRBY_HAMMER_12.png"
-        },
-        {
-          "targetPlatforms": null,
-          "type": "bitmap",
-          "name": "KIRBY_HAMMER_11",
-          "file": "images/KIRBY_HAMMER_11.png"
-        },
-        {
-          "targetPlatforms": null,
-          "type": "bitmap",
-          "name": "KIRBY_HAMMER_10",
-          "file": "images/KIRBY_HAMMER_10.png"
-        },
-        {
-          "targetPlatforms":null,
-          "type": "bitmap",
-          "name": "KIRBY_HAMMER_9",
-          "file": "images/KIRBY_HAMMER_9.png"
-        },
-        {
-          "targetPlatforms": null,
-          "type": "bitmap",
-          "name": "KIRBY_HAMMER_8",
-          "file": "images/KIRBY_HAMMER_8.png"
-        },
-        {
-          "targetPlatforms": null,
-          "type": "bitmap",
-          "name": "KIRBY_HAMMER_7",
-          "file": "images/KIRBY_HAMMER_7.png"
-        },
-        {
-          "targetPlatforms": null,
-          "type": "bitmap",
-          "name": "KIRBY_HAMMER_6",
-          "file": "images/KIRBY_HAMMER_6.png"
-        },
-        {
-          "targetPlatforms": null,
-          "type": "bitmap",
-          "name": "KIRBY_HAMMER_5",
-          "file": "images/KIRBY_HAMMER_5.png"
-        },
-        {
-          "targetPlatforms": null,
-          "type": "bitmap",
-          "name": "KIRBY_HAMMER_4",
-          "file": "images/KIRBY_HAMMER_4.png"
-        },
-        {
-          "targetPlatforms": null,
-          "type": "bitmap",
-          "name": "KIRBY_HAMMER_3",
-          "file": "images/KIRBY_HAMMER_3.png"
-        },
-        {
-          "targetPlatforms": null,
-          "type": "bitmap",
-          "name": "KIRBY_HAMMER_2",
-          "file": "images/KIRBY_HAMMER_2.png"
-        },
-        {
-          "targetPlatforms": null,
-          "type": "bitmap",
-          "name": "KIRBY_HAMMER_1",
-          "file": "images/KIRBY_HAMMER_1.png"
         },
         {
           "targetPlatforms": null,
@@ -452,6 +374,11 @@
           "type": "raw",
           "name": "KIRBY_BEAM_ANIM",
           "file": "images/KIRBY_BEAM_ANIM.png"
+        },
+        {
+          "type": "raw",
+          "name": "KIRBY_HAMMER_ANIM",
+          "file": "images/KIRBY_HAMMER_ANIM.png"
         },
         {
           "type": "raw",
