@@ -83,7 +83,7 @@ const int POWERS_ANIMATIONS_RESOURCE_IDS[] =
   // RESOURCE_ID_HAMMER,
   // RESOURCE_ID_MIKE,
   // RESOURCE_ID_SLEEP,
-  RESOURCE_ID_KIRBY_SWORD_ANIM,
+  RESOURCE_ID_KIRBY_BEAM_ANIM,
   RESOURCE_ID_KIRBY_SWORD_ANIM,
   RESOURCE_ID_KIRBY_SWORD_ANIM,
   RESOURCE_ID_KIRBY_SWORD_ANIM,
@@ -100,7 +100,7 @@ const GPoint POWERS_ORIGINS[] =
   // GPoint(5, 69),  // Hammer
   // GPoint(0, 80),  // Mike
   // GPoint(13, 75), // Sleep
-  {0, 69},  // Sword
+  {0, 53},  // Beam
   {0, 69},  // Sword
   {0, 69},  // Sword
   {0, 69},  // Sword
@@ -446,7 +446,7 @@ static void update_display(struct tm *current_time)
   static long seed_images = 100;
   seed_images  = (((seed_images * 214013L + 2531011L) >> 16) & 32767);
   seed_images2 = seed_images + start_number_image;
-  int powerIdx = (seed_images2 % ANIMATIONS);
+  int powerIdx = (seed_images2 % 2);
   //APP_LOG(APP_LOG_LEVEL_DEBUG, "random character generated [#%d].", powerIdx);
 
   set_container_image(&powers_image, powers_layer, POWERS_IMAGE_RESOURCE_IDS[powerIdx], GPoint(14, 26));

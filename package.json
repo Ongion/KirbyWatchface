@@ -13,12 +13,6 @@
         {
           "targetPlatforms": null,
           "type": "bitmap",
-          "name": "KIRBY_BEAM_13",
-          "file": "images/KIRBY_BEAM_13.png"
-        },
-        {
-          "targetPlatforms": null,
-          "type": "bitmap",
           "name": "KIRBY_CUTTER_17",
           "file": "images/KIRBY_CUTTER_17.png"
         },
@@ -455,76 +449,14 @@
           "file": "images/KIRBY_CUTTER_1.png"
         },
         {
-          "targetPlatforms": null,
-          "type": "bitmap",
-          "name": "KIRBY_BEAM_12",
-          "file": "images/KIRBY_BEAM_12.png"
+          "type": "raw",
+          "name": "KIRBY_BEAM_ANIM",
+          "file": "images/KIRBY_BEAM_ANIM.png"
         },
         {
-          "targetPlatforms": null,
-          "type": "bitmap",
-          "name": "KIRBY_BEAM_11",
-          "file": "images/KIRBY_BEAM_11.png"
-        },
-        {
-          "targetPlatforms": null,
-          "type": "bitmap",
-          "name": "KIRBY_BEAM_10",
-          "file": "images/KIRBY_BEAM_10.png"
-        },
-        {
-          "targetPlatforms": null,
-          "type": "bitmap",
-          "name": "KIRBY_BEAM_9",
-          "file": "images/KIRBY_BEAM_9.png"
-        },
-        {
-          "targetPlatforms": null,
-          "type": "bitmap",
-          "name": "KIRBY_BEAM_8",
-          "file": "images/KIRBY_BEAM_8.png"
-        },
-        {
-          "targetPlatforms": null,
-          "type": "bitmap",
-          "name": "KIRBY_BEAM_7",
-          "file": "images/KIRBY_BEAM_7.png"
-        },
-        {
-          "targetPlatforms": null,
-          "type": "bitmap",
-          "name": "KIRBY_BEAM_6",
-          "file": "images/KIRBY_BEAM_6.png"
-        },
-        {
-          "targetPlatforms": null,
-          "type": "bitmap",
-          "name": "KIRBY_BEAM_5",
-          "file": "images/KIRBY_BEAM_5.png"
-        },
-        {
-          "targetPlatforms": null,
-          "type": "bitmap",
-          "name": "KIRBY_BEAM_4",
-          "file": "images/KIRBY_BEAM_4.png"
-        },
-        {
-          "targetPlatforms": null,
-          "type": "bitmap",
-          "name": "KIRBY_BEAM_3",
-          "file": "images/KIRBY_BEAM_3.png"
-        },
-        {
-          "targetPlatforms": null,
-          "type": "bitmap",
-          "name": "KIRBY_BEAM_2",
-          "file": "images/KIRBY_BEAM_2.png"
-        },
-        {
-          "targetPlatforms": null,
-          "type": "bitmap",
-          "name": "KIRBY_BEAM_1",
-          "file": "images/KIRBY_BEAM_1.png"
+          "type": "raw",
+          "name": "KIRBY_SWORD_ANIM",
+          "file": "images/KIRBY_SWORD_ANIM.png"
         },
         {
           "targetPlatforms": null,
@@ -597,11 +529,6 @@
           "type": "bitmap",
           "name": "BEAM",
           "file": "images/BEAM.png"
-        },
-        {
-          "type": "raw",
-          "name": "KIRBY_SWORD_ANIM",
-          "file": "images/KIRBY_SWORD_ANIM.png"
         }
       ]
     },
