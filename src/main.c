@@ -55,17 +55,14 @@ int delay;//delay between each frame is in milliseconds
 static int ANIMATIONS = 7;
 int seed_images2, start_number_image, random_image;
 
-#define TOTAL_POWERS 2
-static GBitmap *powers_images[TOTAL_POWERS];
-static BitmapLayer *powers_layers[TOTAL_POWERS];
+static GBitmap *powers_image;
+static BitmapLayer *powers_layer;
 
-#define TOTAL_BOSS 2
-static GBitmap *boss_images[TOTAL_BOSS];
-static BitmapLayer *boss_layers[TOTAL_BOSS];
+static GBitmap *boss_image;
+static BitmapLayer *boss_layer;
 
-#define TOTAL_KIRBY 2
-static GBitmap *kirby_images[TOTAL_KIRBY];
-static BitmapLayer *kirby_layers[TOTAL_KIRBY];
+static GBitmap *kirby_image;
+static BitmapLayer *kirby_layer;
 
 const int animation_frames[] = {  
 
@@ -294,15 +291,15 @@ static void timer_handler(void *context)
      current_frame = starting_frame;
      replay--;
     }
-    if (kirby_images[1] != NULL) {
-      gbitmap_destroy(kirby_images[1]);
-      kirby_images[1] = NULL;
+    if (kirby_image != NULL) {
+      gbitmap_destroy(kirby_image);
+      kirby_image = NULL;
     }
     
-    kirby_images[1] = gbitmap_create_with_resource(animation_frames[current_frame]);
+    kirby_image = gbitmap_create_with_resource(animation_frames[current_frame]);
     
-    bitmap_layer_set_bitmap(kirby_layers[1], kirby_images[1]);
-    layer_mark_dirty(bitmap_layer_get_layer(kirby_layers[1]));
+    bitmap_layer_set_bitmap(kirby_layer, kirby_image);
+    layer_mark_dirty(bitmap_layer_get_layer(kirby_layer));
 
     current_frame++;
     app_timer_register(delay, timer_handler, NULL);
@@ -369,25 +366,25 @@ static void load_sequence()
 static void load_kirby_layer()
 { 
   if(random_image == 0){//Beam
-   set_container_image(&kirby_images[1], kirby_layers[1], animation_frames[0], GPoint(0, 54));
+   set_container_image(&kirby_image, kirby_layer, animation_frames[0], GPoint(0, 54));
   }
   else if(random_image == 1){//Cutter
-   set_container_image(&kirby_images[1], kirby_layers[1], animation_frames[13], GPoint(0, 81));
+   set_container_image(&kirby_image, kirby_layer, animation_frames[13], GPoint(0, 81));
   }
   else if(random_image == 2){//Fire
-    set_container_image(&kirby_images[1], kirby_layers[1], animation_frames[30], GPoint(0, 66));
+    set_container_image(&kirby_image, kirby_layer, animation_frames[30], GPoint(0, 66));
   }
   else if(random_image == 3){//Hammer
-    set_container_image(&kirby_images[1], kirby_layers[1], animation_frames[53], GPoint(5, 69));
+    set_container_image(&kirby_image, kirby_layer, animation_frames[53], GPoint(5, 69));
   }
   else if(random_image == 4){//Mike
-    set_container_image(&kirby_images[1], kirby_layers[1], animation_frames[66], GPoint(0, 80));
+    set_container_image(&kirby_image, kirby_layer, animation_frames[66], GPoint(0, 80));
   }
   else if(random_image == 5){//Sleep
-    set_container_image(&kirby_images[1], kirby_layers[1], animation_frames[80], GPoint(13, 75));
+    set_container_image(&kirby_image, kirby_layer, animation_frames[80], GPoint(13, 75));
   }
   else if(random_image == 6){//Sword
-    set_container_image(&kirby_images[1], kirby_layers[1], animation_frames[86], GPoint(0, 69));
+    set_container_image(&kirby_image, kirby_layer, animation_frames[86], GPoint(0, 69));
   }
 
 }
@@ -445,7 +442,7 @@ static void weather_ended()
 	
 	if (weather_timeout != NULL) {
 		//APP_LOG(APP_LOG_LEVEL_INFO, "Weather timer is not NULL");
-    set_container_image(&boss_images[1], boss_layers[1], BOSSES_IMAGE_RESOURCE_IDS[3], GPoint(82, 53));
+    set_container_image(&boss_image, boss_layer, BOSSES_IMAGE_RESOURCE_IDS[3], GPoint(82, 53));
 	}
 }
 
@@ -508,13 +505,13 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
         cancel_weather_timeout();
         
         if(t->value->int32 == 0 && daytime==true){
-        set_container_image(&boss_images[1], boss_layers[1], BOSSES_IMAGE_RESOURCE_IDS[0], GPoint(94, 56));
+        set_container_image(&boss_image, boss_layer, BOSSES_IMAGE_RESOURCE_IDS[0], GPoint(94, 56));
         }
         else if(t->value->int32 == 1){
-        set_container_image(&boss_images[1], boss_layers[1], BOSSES_IMAGE_RESOURCE_IDS[1], GPoint(64, 36));
+        set_container_image(&boss_image, boss_layer, BOSSES_IMAGE_RESOURCE_IDS[1], GPoint(64, 36));
         }
         else if(t->value->int32 == 0 && daytime==false){
-        set_container_image(&boss_images[1], boss_layers[1], BOSSES_IMAGE_RESOURCE_IDS[2], GPoint(97, 69));
+        set_container_image(&boss_image, boss_layer, BOSSES_IMAGE_RESOURCE_IDS[2], GPoint(97, 69));
         }
         break;
       
@@ -558,7 +555,7 @@ static void update_display(struct tm *current_time)
   //APP_LOG(APP_LOG_LEVEL_DEBUG, "random character generated [#%d].", random_image);
 
   load_sequence();
-  set_container_image(&powers_images[1], powers_layers[1], POWERS_IMAGE_RESOURCE_IDS[random_image], GPoint(14, 26));
+  set_container_image(&powers_image, powers_layer, POWERS_IMAGE_RESOURCE_IDS[random_image], GPoint(14, 26));
   load_kirby_layer();
   update_bg_color(current_time);
 }
@@ -654,38 +651,33 @@ static void main_window_load(Window *window)
 
 static void main_window_unload(Window *window) 
 {  
-   gbitmap_destroy(foreground_image);
-   bitmap_layer_destroy(foreground_layer);
+  gbitmap_destroy(foreground_image);
+  bitmap_layer_destroy(foreground_layer);
+
+  layer_destroy(steps_layer);
+
+  text_layer_destroy(text_weather_layer);
+
+  layer_destroy(battery_layer);
+
+  text_layer_destroy(text_time_layer);
+
+  text_layer_destroy(text_date_layer);
   
-   layer_destroy(steps_layer);
+  layer_remove_from_parent(bitmap_layer_get_layer(powers_layer));
+  gbitmap_destroy(powers_image);
+  bitmap_layer_destroy(powers_layer);
+ 	 
   
-   text_layer_destroy(text_weather_layer);
+  layer_remove_from_parent(bitmap_layer_get_layer(kirby_layer));
+  gbitmap_destroy(kirby_image);
+  bitmap_layer_destroy(kirby_layer);
   
-   layer_destroy(battery_layer);
-  
-   text_layer_destroy(text_time_layer);
-  
-   text_layer_destroy(text_date_layer);
-  
-   for (int i = 0; i < TOTAL_POWERS; i++) {
-     	layer_remove_from_parent(bitmap_layer_get_layer(powers_layers[i]));
-     	gbitmap_destroy(powers_images[i]);
-     	bitmap_layer_destroy(powers_layers[i]);
- 	 }
-  
-   for (int i = 0; i < TOTAL_KIRBY; i++) {
-     	layer_remove_from_parent(bitmap_layer_get_layer(kirby_layers[i]));
-     	gbitmap_destroy(kirby_images[i]);
-     	bitmap_layer_destroy(kirby_layers[i]);
- 	 }  
-  
-   gbitmap_sequence_destroy(s_sequence);
-  
-   for (int i = 0; i < TOTAL_BOSS; i++) {
-     	layer_remove_from_parent(bitmap_layer_get_layer(boss_layers[i]));
-     	gbitmap_destroy(boss_images[i]);
-     	bitmap_layer_destroy(boss_layers[i]);
- 	 }
+  gbitmap_sequence_destroy(s_sequence);
+
+  layer_remove_from_parent(bitmap_layer_get_layer(boss_layer));
+  gbitmap_destroy(boss_image);
+  bitmap_layer_destroy(boss_layer);
 }
 
 void handle_init(void) 
@@ -704,23 +696,17 @@ void handle_init(void)
   
   GRect dummy_frame = { {0, 0}, {0, 0} };
   
-for (int i = 0; i < TOTAL_POWERS; ++i) {
-   	powers_layers[i] = bitmap_layer_create(dummy_frame);
-   	layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(powers_layers[i]));
-    bitmap_layer_set_compositing_mode(powers_layers[i], GCompOpSet);
-}
+  powers_layer = bitmap_layer_create(dummy_frame);
+  layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(powers_layer));
+  bitmap_layer_set_compositing_mode(powers_layer, GCompOpSet);
   
-for (int i = 0; i < TOTAL_BOSS; ++i) {
-   	boss_layers[i] = bitmap_layer_create(dummy_frame);
-   	layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(boss_layers[i]));
-    bitmap_layer_set_compositing_mode(boss_layers[i], GCompOpSet);
-}
+  boss_layer = bitmap_layer_create(dummy_frame);
+  layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(boss_layer));
+  bitmap_layer_set_compositing_mode(boss_layer, GCompOpSet);
   
-  for (int i = 0; i < TOTAL_KIRBY; ++i) {
-   	kirby_layers[i] = bitmap_layer_create(dummy_frame);
-   	layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(kirby_layers[i]));
-    bitmap_layer_set_compositing_mode(kirby_layers[i], GCompOpSet);
-}
+  kirby_layer = bitmap_layer_create(dummy_frame);
+  layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(kirby_layer));
+  bitmap_layer_set_compositing_mode(kirby_layer, GCompOpSet);
 
 	handle_minute_tick(tick_time, MINUTE_UNIT);
   
