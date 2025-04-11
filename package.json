@@ -43,60 +43,6 @@
         {
           "targetPlatforms": null,
           "type": "bitmap",
-          "name": "KIRBY_SWORD_9",
-          "file": "images/KIRBY_SWORD_9.png"
-        },
-        {
-          "targetPlatforms": null,
-          "type": "bitmap",
-          "name": "KIRBY_SWORD_8",
-          "file": "images/KIRBY_SWORD_8.png"
-        },
-        {
-          "targetPlatforms": null,
-          "type": "bitmap",
-          "name": "KIRBY_SWORD_7",
-          "file": "images/KIRBY_SWORD_7.png"
-        },
-        {
-          "targetPlatforms": null,
-          "type": "bitmap",
-          "name": "KIRBY_SWORD_6",
-          "file": "images/KIRBY_SWORD_6.png"
-        },
-        {
-          "targetPlatforms": null,
-          "type": "bitmap",
-          "name": "KIRBY_SWORD_5",
-          "file": "images/KIRBY_SWORD_5.png"
-        },
-        {
-          "targetPlatforms": null,
-          "type": "bitmap",
-          "name": "KIRBY_SWORD_4",
-          "file": "images/KIRBY_SWORD_4.png"
-        },
-        {
-          "targetPlatforms": null,
-          "type": "bitmap",
-          "name": "KIRBY_SWORD_3",
-          "file": "images/KIRBY_SWORD_3.png"
-        },
-        {
-          "targetPlatforms": null,
-          "type": "bitmap",
-          "name": "KIRBY_SWORD_2",
-          "file": "images/KIRBY_SWORD_2.png"
-        },
-        {
-          "targetPlatforms": null,
-          "type": "bitmap",
-          "name": "KIRBY_SWORD_1",
-          "file": "images/KIRBY_SWORD_1.png"
-        },
-        {
-          "targetPlatforms": null,
-          "type": "bitmap",
           "name": "KIRBY_SLEEP_6",
           "file": "images/KIRBY_SLEEP_6.png"
         },
