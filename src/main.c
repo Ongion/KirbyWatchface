@@ -437,11 +437,11 @@ static void update_date_time_layers()
   struct tm *tick_time = localtime(&temp);
   
   static char time_text[] = "00:00";
- 	static char date_text[] = "00.00";
+ 	static char date_text[] = "00/00";
 
  	char *date_format;
   
-	date_format = "%m.%d";
+	date_format = "%m/%d";
   
   if(clock_is_24h_style() == true) {
     strftime(time_text, sizeof("00:00"), "%H:%M", tick_time);
