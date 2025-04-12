@@ -33,17 +33,17 @@ function locationSuccess(pos) {
 			console.log("City in response is " + city_called);
       
 
-      // Temperature in Kelvin requires adjustment
-      var temperature = Math.round(json.main.temp);
-      var icon = iconFromWeatherId(json.weather[0].id);
+      // // Temperature in Kelvin requires adjustment
+      // var temperature = Math.round(json.main.temp);
+      // var icon = iconFromWeatherId(json.weather[0].id);
       
-      console.log("Temperature is " + temperature);
-      console.log(icon);
+      // console.log("Temperature is " + temperature);
+      // console.log(icon);
 
       // Assemble dictionary using our keys
       var dictionary = {
-        "KEY_TEMPERATURE": temperature,
-        "KEY_ICON":icon
+        "KEY_TEMPERATURE": 271,
+        "KEY_ICON": 0
       };
 
       // Send to Pebble
@@ -71,6 +71,7 @@ function locationError(err) {
 }
 
 function getWeather() {
+  console.log("GETTING THE WEATHER");
   if (city === "") {
   navigator.geolocation.getCurrentPosition(
     locationSuccess,
@@ -86,7 +87,7 @@ Pebble.addEventListener('ready', function() {
   console.log('PebbleKit JS Ready!');
   city = localStorage.city;
 
-  Pebble.sendAppMessage({'0': 0
+  Pebble.sendAppMessage({'KEY_PEBBLEKIT_READY': 0
 	}, function(e) {
       console.log('Sent ready message!');
   }, function(e) {
@@ -94,16 +95,6 @@ Pebble.addEventListener('ready', function() {
 			console.log(e);
   });
 });
-  
-
-  // Listen for when the watchface is opened
-Pebble.addEventListener('ready', 
-  function(e) {
-    console.log("PebbleKit JS ready!");
-
-  // Get the initial weather
-    getWeather();
-  });
 
   // Listen for when an AppMessage is received
 Pebble.addEventListener('appmessage',

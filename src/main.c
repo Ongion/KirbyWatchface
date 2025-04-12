@@ -1,9 +1,10 @@
 #include <pebble.h>
 
+#define KEY_PEBBLEKIT_READY 0
 #define KEY_TEMPERATURE 1
 #define KEY_ICON 2
 #define KEY_SCALE 3
-#define KEY_SCALE_OPTION 4
+#define KEY_REQUEST_WEATHER 4
 #define KEY_STEPSGOAL 6
 
 /*
@@ -34,6 +35,8 @@ TextLayer *text_weather_layer;
 TextLayer *text_time_layer;
 TextLayer *text_date_layer;
 
+static char weather_layer_buffer[32];
+
 static Layer *steps_layer;
 int steps, steps_per_px, stepgoal;
 
@@ -43,6 +46,11 @@ static Layer *battery_layer;
 
 static GBitmap *foreground_image;
 static BitmapLayer *foreground_layer;
+
+static int s_temperature = -1;
+static int s_temperatureScale = -1;
+static int s_icon = -1;
+static time_t s_lastWeatherTime = 0;
 
 int replay = 2;
 int current_frame, starting_frame;
@@ -63,6 +71,12 @@ static BitmapLayer *boss_layer;
 static GBitmap *s_kirbyBitmap;
 static GBitmapSequence *s_kirbySequence;
 static BitmapLayer *s_kirbyLayer;
+
+typedef enum temperature_scales
+{
+  FAHRENHEIT,
+  CELSIUS
+} TemperatureScale;
 
 const int POWERS_IMAGE_RESOURCE_IDS[] = 
 {
@@ -144,12 +158,29 @@ static void load_step_layer(Layer *window_layer)
   layer_add_child(window_layer, steps_layer);
 }
 
+static void update_weather_layer_text()
+{
+  int finalTemp;
+
+  if(s_temperatureScale == FAHRENHEIT)
+  {
+    finalTemp = (s_temperature - 273.15) * 1.8 + 32;
+  }
+  else // (s_temperatureScale == CELSIUS)
+  {
+    finalTemp = s_temperature - 273.15;
+  }
+
+  snprintf(weather_layer_buffer, sizeof(weather_layer_buffer), "%d°", finalTemp);
+  text_layer_set_text(text_weather_layer, weather_layer_buffer);
+}
+
 static void load_weather_layer(Layer *window_layer)
 {
   text_weather_layer = text_layer_create(GRect(72, 130, 72, 26));
   text_layer_set_background_color(text_weather_layer, GColorClear);
   text_layer_set_text_color(text_weather_layer, GColorBlack);
-  text_layer_set_text(text_weather_layer, "...");
+  update_weather_layer_text();
   text_layer_set_font(text_weather_layer,fonts_get_system_font(FONT_KEY_LECO_20_BOLD_NUMBERS));
   text_layer_set_text_alignment(text_weather_layer, GTextAlignmentCenter);
   layer_add_child(window_layer, text_layer_get_layer(text_weather_layer));
@@ -197,18 +228,32 @@ static void load_date_text_layer(Layer *window_layer)
 
 static void set_container_image(GBitmap **bmp_image, BitmapLayer *bmp_layer, const int resource_id, GPoint origin) 
 {
-GBitmap *old_image = *bmp_image;
+  GBitmap *old_image = *bmp_image;
 
  	*bmp_image = gbitmap_create_with_resource(resource_id);
- 	GRect frame = (GRect) {
+ 	GRect frame = (GRect)
+  {
    	.origin = origin,
     .size = gbitmap_get_bounds(*bmp_image).size 
-};
+  };
  	bitmap_layer_set_bitmap(bmp_layer, *bmp_image);
   layer_set_frame(bitmap_layer_get_layer(bmp_layer), frame);
 
  	if (old_image != NULL) {
- 	gbitmap_destroy(old_image);
+ 	  gbitmap_destroy(old_image);
+  }
+}
+
+static void update_boss_layer()
+{
+  if(s_icon == 0 && daytime==true){
+    set_container_image(&boss_image, boss_layer, BOSSES_IMAGE_RESOURCE_IDS[0], GPoint(94, 56));
+  }
+  else if(s_icon == 1){
+    set_container_image(&boss_image, boss_layer, BOSSES_IMAGE_RESOURCE_IDS[1], GPoint(64, 36));
+  }
+  else if(s_icon == 0 && daytime==false){
+    set_container_image(&boss_image, boss_layer, BOSSES_IMAGE_RESOURCE_IDS[2], GPoint(97, 69));
   }
 }
 
@@ -330,6 +375,31 @@ static void update_bg_color(struct tm *current_time)
   }
 }
 
+static void request_weather_update()
+{
+  DictionaryIterator *iter;
+  
+  // Prepare the outbox buffer for this message 
+  AppMessageResult result = app_message_outbox_begin(&iter);
+
+  if (result == APP_MSG_OK)
+  {
+    int value = 0; // Just a dummy value, we don't use this on the other end
+    dict_write_int(iter, KEY_REQUEST_WEATHER, &result, sizeof(int), true /*isSigned*/);
+    result = app_message_outbox_send();
+
+    if (result != APP_MSG_OK)
+    {
+      APP_LOG(APP_LOG_LEVEL_ERROR, "Error sending the outbox: %d", (int)result);
+    }
+  }
+  else
+  {
+    // Outbox couldn't be used? Why?
+    APP_LOG(APP_LOG_LEVEL_ERROR, "Error preparing the outbox: %d", (int)result);
+  }
+}
+
 static void weather_ended() 
 {
 	// If the weather can't be updated show the error icon
@@ -353,61 +423,47 @@ static void cancel_weather_timeout()
 
 static void inbox_received_callback(DictionaryIterator *iterator, void *context) 
 {
-  static char temperature_buffer[8];
-  static char weather_layer_buffer[32];
-  
   Tuple *t = dict_read_first(iterator);
 
-  int temperature;
-  int finalTemp;
-  int scale_option = persist_read_int(KEY_SCALE_OPTION);
+  bool recalc_weather_text = false;
+  bool got_weather = false;
   
   while(t != NULL) {
     switch(t->key) {
+      case KEY_PEBBLEKIT_READY:
+        if ((time(NULL) - s_lastWeatherTime) > 1800)
+        {
+          // Weather last checked over 30 minutes ago.
+          request_weather_update();
+        }
+        break;
       case KEY_SCALE:
         if(strcmp(t->value->cstring, "F") == 0){
-          persist_write_int(KEY_SCALE_OPTION, 0);
-          scale_option = 0;
-          DictionaryIterator *iter;
-          app_message_outbox_begin(&iter);
-          dict_write_uint8(iter, 0, 0);
-          app_message_outbox_send();
+          s_temperatureScale = FAHRENHEIT;
         }
         else if(strcmp(t->value->cstring, "C") == 0){
-          persist_write_int(KEY_SCALE_OPTION, 1);
-          scale_option = 1;
-          DictionaryIterator *iter;
-          app_message_outbox_begin(&iter);
-          dict_write_uint8(iter, 0, 0);
-          app_message_outbox_send();
+          s_temperatureScale = CELSIUS;
         }
+
+        persist_write_int(KEY_SCALE, s_temperatureScale);
+        recalc_weather_text = true;
         break;
 
       case KEY_TEMPERATURE:
-        if(scale_option == 0){
-          temperature = t->value->int32;
-          finalTemp = (temperature - 273.15) * 1.8 + 32;
-          snprintf(temperature_buffer, sizeof(temperature_buffer), "%d°", finalTemp);
-        }
-        else if(scale_option == 1){
-          temperature = t->value->int32;
-          finalTemp = temperature - 273.15;
-          snprintf(temperature_buffer, sizeof(temperature_buffer), "%d°", finalTemp);
-        }
+        s_temperature = t->value->int32;
+        persist_write_int(KEY_TEMPERATURE, s_temperature);
+        recalc_weather_text = true;
+        got_weather = true;
         break;
         
       case KEY_ICON:
         cancel_weather_timeout();
+        s_icon = t->value->int32;
+        persist_write_int(KEY_ICON, s_icon);
+        got_weather = true;
         
-        if(t->value->int32 == 0 && daytime==true){
-        set_container_image(&boss_image, boss_layer, BOSSES_IMAGE_RESOURCE_IDS[0], GPoint(94, 56));
-        }
-        else if(t->value->int32 == 1){
-        set_container_image(&boss_image, boss_layer, BOSSES_IMAGE_RESOURCE_IDS[1], GPoint(64, 36));
-        }
-        else if(t->value->int32 == 0 && daytime==false){
-        set_container_image(&boss_image, boss_layer, BOSSES_IMAGE_RESOURCE_IDS[2], GPoint(97, 69));
-        }
+        update_boss_layer();
+
         break;
       
       case KEY_STEPSGOAL:
@@ -419,9 +475,16 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
 
     t = dict_read_next(iterator);
   }
+
+  if (recalc_weather_text)
+  {
+    update_weather_layer_text();
+  }
   
-  snprintf(weather_layer_buffer, sizeof(weather_layer_buffer), "%s", temperature_buffer);
-  text_layer_set_text(text_weather_layer, weather_layer_buffer);
+  if (got_weather)
+  {
+    persist_write_int(KEY_REQUEST_WEATHER, time(NULL));
+  }
 }
 
 static void inbox_dropped_callback(AppMessageResult reason, void *context) 
@@ -546,7 +609,7 @@ static void main_window_load(Window *window)
   load_weather_layer(window_layer);
   load_battery_layer(window_layer);
   load_time_text_layer(window_layer);
-  load_date_text_layer(window_layer);   
+  load_date_text_layer(window_layer);
 }
 
 static void main_window_unload(Window *window) 
@@ -580,6 +643,26 @@ static void main_window_unload(Window *window)
 
 void handle_init(void) 
 {
+  if (persist_exists(KEY_TEMPERATURE))
+  {
+    s_temperature = persist_read_int(KEY_TEMPERATURE);
+  }
+
+  if (persist_exists(KEY_SCALE))
+  {
+    s_temperatureScale = (TemperatureScale) persist_read_int(KEY_SCALE);
+  }
+
+  if (persist_exists(KEY_ICON))
+  {
+    s_icon = persist_read_int(KEY_ICON);
+  }
+
+  if (persist_exists(KEY_REQUEST_WEATHER))
+  {
+    s_lastWeatherTime = persist_read_int(KEY_REQUEST_WEATHER);
+  }
+
   window = window_create();
   
   window_set_window_handlers(window, (WindowHandlers) {
@@ -605,6 +688,8 @@ void handle_init(void)
   s_kirbyLayer = bitmap_layer_create(dummy_frame);
   layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(s_kirbyLayer));
   bitmap_layer_set_compositing_mode(s_kirbyLayer, GCompOpSet);
+
+  update_boss_layer();
 
 	handle_minute_tick(tick_time, MINUTE_UNIT);
   
