@@ -431,7 +431,7 @@ static void load_kirby_layer()
 
 }
 
-static void update_time()
+static void update_date_time_layers()
 {
   time_t temp = time(NULL); 
   struct tm *tick_time = localtime(&temp);
@@ -477,31 +477,6 @@ static void update_bg_color(struct tm *current_time)
   }
 }
 
-static void request_weather_update()
-{
-  DictionaryIterator *iter;
-  
-  // Prepare the outbox buffer for this message 
-  AppMessageResult result = app_message_outbox_begin(&iter);
-
-  if (result == APP_MSG_OK)
-  {
-    int value = 0; // Just a dummy value, we don't use this on the other end
-    dict_write_int(iter, KEY_REQUEST_WEATHER, &result, sizeof(int), true /*isSigned*/);
-    result = app_message_outbox_send();
-
-    if (result != APP_MSG_OK)
-    {
-      APP_LOG(APP_LOG_LEVEL_ERROR, "Error sending the outbox: %d", (int)result);
-    }
-  }
-  else
-  {
-    // Outbox couldn't be used? Why?
-    APP_LOG(APP_LOG_LEVEL_ERROR, "Error preparing the outbox: %d", (int)result);
-  }
-}
-
 static void weather_ended() 
 {
 	// If the weather can't be updated show the error icon
@@ -510,6 +485,7 @@ static void weather_ended()
 	if (weather_timeout != NULL) {
 		//APP_LOG(APP_LOG_LEVEL_INFO, "Weather timer is not NULL");
     set_container_image(&boss_image, boss_layer, BOSSES_IMAGE_RESOURCE_IDS[3], GPoint(82, 53));
+    weather_timeout = NULL;
 	}
 }
 
@@ -521,6 +497,31 @@ static void cancel_weather_timeout()
 			app_timer_cancel(weather_timeout);
 			weather_timeout = NULL;
 	}
+}
+
+static void request_weather_update()
+{
+  DictionaryIterator *iter;
+  
+  // Prepare the outbox buffer for this message 
+  AppMessageResult result = app_message_outbox_begin(&iter);
+
+  if (result != APP_MSG_OK)
+  {
+    // Outbox couldn't be used? Why?
+    APP_LOG(APP_LOG_LEVEL_ERROR, "Error preparing the outbox: %d", (int)result);
+  }
+
+  int value = 0; // Just a dummy value, we don't use this on the other end
+  dict_write_int(iter, KEY_REQUEST_WEATHER, &result, sizeof(int), true /*isSigned*/);
+  result = app_message_outbox_send();
+
+  if (result != APP_MSG_OK)
+  {
+    APP_LOG(APP_LOG_LEVEL_ERROR, "Error sending the outbox: %d", (int)result);
+  }
+
+  weather_timeout = app_timer_register(timeout, weather_ended, NULL);
 }
 
 static void inbox_received_callback(DictionaryIterator *iterator, void *context) 
@@ -559,7 +560,6 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
         break;
         
       case KEY_ICON:
-        cancel_weather_timeout();
         s_icon = t->value->int32;
         persist_write_int(KEY_ICON, s_icon);
         got_weather = true;
@@ -585,6 +585,7 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
   
   if (got_weather)
   {
+    cancel_weather_timeout();
     persist_write_int(KEY_REQUEST_WEATHER, time(NULL));
   }
 }
@@ -631,14 +632,10 @@ static void handle_minute_tick(struct tm *tick_time, TimeUnits units_changed)
   
   if( (units_changed & MINUTE_UNIT) != 0 ) {
 
-    update_time();
+    update_date_time_layers();
     
     if(tick_time->tm_min % 30 == 0) {
-    DictionaryIterator *iter;
-    app_message_outbox_begin(&iter);
-    dict_write_uint8(iter, 0, 0);
-    app_message_outbox_send();
-    weather_timeout = app_timer_register(timeout, weather_ended, NULL);
+      request_weather_update();
     }
  }
   
@@ -805,7 +802,7 @@ void handle_init(void)
   initiate_watchface = false;
   
   update_bg_color(tick_time); 
-  update_time();
+  update_date_time_layers();
   
   app_message_register_inbox_received(inbox_received_callback);
   app_message_register_inbox_dropped(inbox_dropped_callback);
