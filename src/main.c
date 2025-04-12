@@ -411,7 +411,7 @@ static void request_weather_update()
   }
 
   int value = 0; // Just a dummy value, we don't use this on the other end
-  dict_write_int(iter, KEY_REQUEST_WEATHER, &result, sizeof(int), true /*isSigned*/);
+  dict_write_int(iter, KEY_REQUEST_WEATHER, &value, sizeof(int), true /*isSigned*/);
   result = app_message_outbox_send();
 
   if (result != APP_MSG_OK)
@@ -432,7 +432,7 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
   while(t != NULL) {
     switch(t->key) {
       case KEY_PEBBLEKIT_READY:
-        if ((time(NULL) - s_lastWeatherTime) > 1800)
+        if (((unsigned int)time(NULL) - (unsigned int)s_lastWeatherTime) > 1800)
         {
           // Weather last checked over 30 minutes ago.
           request_weather_update();
@@ -484,7 +484,8 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
   if (got_weather)
   {
     cancel_weather_timeout();
-    persist_write_int(KEY_REQUEST_WEATHER, time(NULL));
+    s_lastWeatherTime = time(NULL);
+    persist_write_int(KEY_REQUEST_WEATHER, s_lastWeatherTime);
   }
 }
 
