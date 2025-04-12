@@ -17,13 +17,10 @@ Mike (Size 2483)
 Sleep (Size 1150)
 */
 
-//Fix Auto Hide Issue
 //Add animation for steps goal being reached
 //Fix memory fragmentation
 
 Window *window;
-
-time_t auto_hide;
 
 static bool initiate_watchface = true;
 static bool daytime;
@@ -61,6 +58,7 @@ static int ANIMATIONS = 7;
 int seed_images2, start_number_image;
 
 AppTimer* s_pKirbyAnimationTimer;
+AppTimer* s_showDateTimer;
 
 static GBitmap *powers_image;
 static BitmapLayer *powers_layer;
@@ -520,14 +518,7 @@ static void update_display(struct tm *current_time)
 }
 
 static void handle_minute_tick(struct tm *tick_time, TimeUnits units_changed)
-{    
-  if( (units_changed & SECOND_UNIT) != 0 ) {
-    if(time(NULL) == auto_hide){
-      layer_set_hidden(text_layer_get_layer(text_date_layer), false);
-      layer_set_hidden(text_layer_get_layer(text_weather_layer), true);
-    } 
-  }
-  
+{
   if( (units_changed & MINUTE_UNIT) != 0 ) {
 
     update_date_time_layers();
@@ -535,11 +526,11 @@ static void handle_minute_tick(struct tm *tick_time, TimeUnits units_changed)
     if(tick_time->tm_min % 30 == 0) {
       request_weather_update();
     }
- }
+  }
   
-    if( ((tick_time->tm_min == 0) && (tick_time->tm_sec == 0)) || (initiate_watchface == true) ){
-      update_display(tick_time);
-    }
+  if( ((tick_time->tm_min == 0) && (tick_time->tm_sec == 0)) || (initiate_watchface == true) ){
+    update_display(tick_time);
+  }
 }
 
 static void handle_health(HealthEventType event, void *context) 
@@ -583,6 +574,13 @@ static void handle_bluetooth(bool connected)
 	}
 }
 
+static void show_date_timer_handler(void* context)
+{
+  layer_set_hidden(text_layer_get_layer(text_date_layer), false);
+  layer_set_hidden(text_layer_get_layer(text_weather_layer), true);
+  s_showDateTimer = NULL;
+}
+
 static void handle_tap(AccelAxisType axis, int32_t direction)
 {
   // Cancel any existing animation
@@ -591,11 +589,19 @@ static void handle_tap(AccelAxisType axis, int32_t direction)
     app_timer_cancel(s_pKirbyAnimationTimer);
   }
 
+  if (s_showDateTimer)
+  {
+    app_timer_cancel(s_showDateTimer);
+  }
+
   gbitmap_sequence_restart(s_kirbySequence);
-  app_timer_register(1, kirby_animation_timer_handler, NULL);
-  auto_hide = time(NULL) + 4;
+  s_pKirbyAnimationTimer = app_timer_register(1, kirby_animation_timer_handler, NULL);
+
   layer_set_hidden(text_layer_get_layer(text_date_layer), true);
   layer_set_hidden(text_layer_get_layer(text_weather_layer), false);
+  s_showDateTimer = app_timer_register(2000, show_date_timer_handler, NULL);
+
+  light_enable_interaction();
 }
 
 static void main_window_load(Window *window) 
@@ -691,7 +697,7 @@ void handle_init(void)
 
 	handle_minute_tick(tick_time, MINUTE_UNIT);
   
- 	tick_timer_service_subscribe(MINUTE_UNIT | SECOND_UNIT, handle_minute_tick);
+ 	tick_timer_service_subscribe(MINUTE_UNIT, handle_minute_tick);
   
   health_service_events_subscribe(handle_health, NULL);
   battery_state_service_subscribe (&handle_battery);
