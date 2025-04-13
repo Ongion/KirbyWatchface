@@ -664,7 +664,7 @@
       "KEY_SCALE": 3,
       "KEY_REQUEST_WEATHER": 4
     },
-    "enableMultiJS": false,
+    "enableMultiJS": true,
     "displayName": "Kirby",
     "watchapp": {
       "onlyShownOnCommunication": false,
