@@ -106,39 +106,3 @@ Pebble.addEventListener('appmessage',
     console.log("AppMessage received!");
     getWeather();
   });
-
-  //Show Configuration
-
-Pebble.addEventListener('showConfiguration', function() {
-  var url = 'http://winterwinter.github.io/KirbyGT/';
-
-  Pebble.openURL(url);
-});
-
-Pebble.addEventListener('webviewclosed', function(e) {
-  // Decode the user's preferences
-  var configData = JSON.parse(decodeURIComponent(e.response));
-  
-  city = configData.city;
-	console.log("Entered city is " + city);
-  localStorage.city = city;
-  
-
-                        
-  // Send to the watchapp via AppMessage
-var dict = {
-  "KEY_SCALE" : configData.scale,
-  "KEY_STEPSGOAL" : configData.stepsgoal
-};
-
-  // Send to the watchapp
-Pebble.sendAppMessage(dict, function() {
-  console.log('Config data sent successfully!');
-}, function(e) {
-  console.log('Error sending config data!');
-
-});
-});
-
-
-

@@ -253,7 +253,7 @@ void battery_layer_update_callback(Layer *layer, GContext *ctx)
 
 static void load_battery_layer(Layer *window_layer)
 {  
- 	BatteryChargeState initial = battery_state_service_peek();  
+ 	BatteryChargeState initial = battery_state_service_peek();
  	battery_level = initial.charge_percent;
  	battery_plugged = initial.is_plugged;
  	battery_layer = layer_create(GRect(9,13,50,10));
@@ -572,7 +572,7 @@ static void inbox_received_callback(DictionaryIterator *iter, void *context)
   if (temperature_t)
   {
     s_temperature = temperature_t->value->int32;
-    persist_write_int(MESSAGE_KEY_Temperature, s_temperature);
+    persist_write_int(STORAGE_KEY_LastSeenTemperature, s_temperature);
     recalc_weather_text = true;
     got_weather = true;
   }
@@ -582,7 +582,7 @@ static void inbox_received_callback(DictionaryIterator *iter, void *context)
   if (icon_t)
   {
     s_icon = icon_t->value->int32;
-    persist_write_int(MESSAGE_KEY_Icon, s_icon);
+    persist_write_int(STORAGE_KEY_LastSeenIcon, s_icon);
     got_weather = true;
     
     update_boss_layer();
@@ -592,7 +592,7 @@ static void inbox_received_callback(DictionaryIterator *iter, void *context)
   {
     cancel_weather_timeout();
     s_lastWeatherTime = time(NULL);
-    persist_write_int(MESSAGE_KEY_RequestWeather, s_lastWeatherTime);
+    persist_write_int(STORAGE_KEY_LastTimeRecievedWeather, s_lastWeatherTime);
   }
 
   if (recalc_weather_text)
@@ -773,19 +773,19 @@ void handle_init(void)
     }
   }
 
-  if (persist_exists(MESSAGE_KEY_Temperature))
+  if (persist_exists(STORAGE_KEY_LastSeenTemperature))
   {
-    s_temperature = persist_read_int(MESSAGE_KEY_Temperature);
+    s_temperature = persist_read_int(STORAGE_KEY_LastSeenTemperature);
   }
 
-  if (persist_exists(MESSAGE_KEY_Icon))
+  if (persist_exists(STORAGE_KEY_LastSeenIcon))
   {
-    s_icon = persist_read_int(MESSAGE_KEY_Icon);
+    s_icon = persist_read_int(STORAGE_KEY_LastSeenIcon);
   }
 
-  if (persist_exists(MESSAGE_KEY_RequestWeather))
+  if (persist_exists(STORAGE_KEY_LastTimeRecievedWeather))
   {
-    s_lastWeatherTime = persist_read_int(MESSAGE_KEY_RequestWeather);
+    s_lastWeatherTime = persist_read_int(STORAGE_KEY_LastTimeRecievedWeather);
   }
 
   window = window_create();
