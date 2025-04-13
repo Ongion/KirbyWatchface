@@ -2,7 +2,9 @@
   "version": "2.0.0",
   "author": "Ongion, Game Time",
   "private": true,
-  "dependencies": {},
+  "dependencies": {
+    "pebble-clay": "^1.0.4"
+  },
   "keywords": [
     "pebble-app"
   ],
@@ -227,7 +229,7 @@
           "file": "images/KIRBY_HAMMER_10.png"
         },
         {
-          "targetPlatforms":null,
+          "targetPlatforms": null,
           "type": "bitmap",
           "name": "KIRBY_HAMMER_9",
           "file": "images/KIRBY_HAMMER_9.png"
