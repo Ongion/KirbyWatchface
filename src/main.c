@@ -1,11 +1,11 @@
 #include <pebble.h>
 
-#define KEY_PEBBLEKIT_READY 0
-#define KEY_TEMPERATURE 1
-#define KEY_ICON 2
-#define KEY_SCALE 3
-#define KEY_REQUEST_WEATHER 4
-#define KEY_STEPSGOAL 6
+// #define KEY_PEBBLEKIT_READY 0
+// #define KEY_TEMPERATURE 1
+// #define KEY_ICON 2e
+// #define KEY_SCALE 3
+// #define KEY_REQUEST_WEATHER 4
+// #define KEY_STEPSGOAL 6
 
 /*
 Fire (Size 11512)
@@ -210,7 +210,7 @@ static void load_foreground_layer(Layer *window_layer)
 
 void step_layer_update_callback(Layer *layer, GContext *ctx) 
 {
-  stepgoal = persist_read_int(KEY_STEPSGOAL);
+  stepgoal = persist_read_int(MESSAGE_KEY_StepsGoal);
   steps_per_px = stepgoal / 50;
   graphics_context_set_compositing_mode(ctx, GCompOpAssign);
   GColor8 stepColor = GColorWhite;
@@ -513,7 +513,7 @@ static void request_weather_update()
   }
 
   int value = 0; // Just a dummy value, we don't use this on the other end
-  dict_write_int(iter, KEY_REQUEST_WEATHER, &value, sizeof(int), true /*isSigned*/);
+  dict_write_int(iter, MESSAGE_KEY_RequestWeather, &value, sizeof(int), true /*isSigned*/);
   result = app_message_outbox_send();
 
   if (result != APP_MSG_OK)
@@ -524,58 +524,65 @@ static void request_weather_update()
   weather_timeout = app_timer_register(timeout, weather_ended, NULL);
 }
 
-static void inbox_received_callback(DictionaryIterator *iterator, void *context) 
+static void inbox_received_callback(DictionaryIterator *iter, void *context) 
 {
-  Tuple *t = dict_read_first(iterator);
-
   bool recalc_weather_text = false;
   bool got_weather = false;
-  
-  while(t != NULL) {
-    switch(t->key) {
-      case KEY_PEBBLEKIT_READY:
-        if (((unsigned int)time(NULL) - (unsigned int)s_lastWeatherTime) > 1800)
-        {
-          // Weather last checked over 30 minutes ago.
-          request_weather_update();
-        }
-        break;
-      case KEY_SCALE:
-        if(strcmp(t->value->cstring, "F") == 0){
-          s_temperatureScale = FAHRENHEIT;
-        }
-        else if(strcmp(t->value->cstring, "C") == 0){
-          s_temperatureScale = CELSIUS;
-        }
 
-        persist_write_int(KEY_SCALE, s_temperatureScale);
-        recalc_weather_text = true;
-        break;
+  // PebbleKitReady
+  Tuple* pebblekit_ready_t = dict_find(iter, MESSAGE_KEY_PebbleKitReady);
+  if (pebblekit_ready_t)
+  {
+    if (((unsigned int)time(NULL) - (unsigned int)s_lastWeatherTime) > 1800)
+    {
+      // Weather last checked over 30 minutes ago.
+      request_weather_update();
+    }
+  }
 
-      case KEY_TEMPERATURE:
-        s_temperature = t->value->int32;
-        persist_write_int(KEY_TEMPERATURE, s_temperature);
-        recalc_weather_text = true;
-        got_weather = true;
-        break;
-        
-      case KEY_ICON:
-        s_icon = t->value->int32;
-        persist_write_int(KEY_ICON, s_icon);
-        got_weather = true;
-        
-        update_boss_layer();
-
-        break;
-      
-      case KEY_STEPSGOAL:
-        stepgoal = t->value->int16;
-        //APP_LOG(APP_LOG_LEVEL_INFO, "stepgoal is %d", stepgoal);
-        persist_write_int(KEY_STEPSGOAL, stepgoal);
-        break;
+  // ScalePreference
+  Tuple* scale_preference_t = dict_find(iter, MESSAGE_KEY_ScalePreference);
+  if (scale_preference_t)
+  {
+    if(strcmp(scale_preference_t->value->cstring, "F") == 0){
+      s_temperatureScale = FAHRENHEIT;
+    }
+    else if(strcmp(scale_preference_t->value->cstring, "C") == 0){
+      s_temperatureScale = CELSIUS;
     }
 
-    t = dict_read_next(iterator);
+    persist_write_int(MESSAGE_KEY_ScalePreference, s_temperatureScale);
+    recalc_weather_text = true;
+  }
+
+  // StepsGoal
+  Tuple* stepsgoal_t = dict_find(iter, MESSAGE_KEY_StepsGoal);
+  if (stepsgoal_t)
+  {
+    stepgoal = stepsgoal_t->value->int16;
+    APP_LOG(APP_LOG_LEVEL_INFO, "stepgoal is %d", stepgoal);
+    persist_write_int(MESSAGE_KEY_StepsGoal, stepgoal);
+  }
+
+  // Temperature
+  Tuple* temperature_t = dict_find(iter, MESSAGE_KEY_Temperature);
+  if (temperature_t)
+  {
+    s_temperature = temperature_t->value->int32;
+    persist_write_int(MESSAGE_KEY_Temperature, s_temperature);
+    recalc_weather_text = true;
+    got_weather = true;
+  }
+
+  // Icon
+  Tuple* icon_t = dict_find(iter, MESSAGE_KEY_Icon);
+  if (icon_t)
+  {
+    s_icon = icon_t->value->int32;
+    persist_write_int(MESSAGE_KEY_Icon, s_icon);
+    got_weather = true;
+    
+    update_boss_layer();
   }
 
   if (recalc_weather_text)
@@ -587,7 +594,7 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
   {
     cancel_weather_timeout();
     s_lastWeatherTime = time(NULL);
-    persist_write_int(KEY_REQUEST_WEATHER, s_lastWeatherTime);
+    persist_write_int(MESSAGE_KEY_RequestWeather, s_lastWeatherTime);
   }
 }
 
@@ -738,24 +745,24 @@ static void main_window_unload(Window *window)
 
 void handle_init(void) 
 {
-  if (persist_exists(KEY_TEMPERATURE))
+  if (persist_exists(MESSAGE_KEY_Temperature))
   {
-    s_temperature = persist_read_int(KEY_TEMPERATURE);
+    s_temperature = persist_read_int(MESSAGE_KEY_Temperature);
   }
 
-  if (persist_exists(KEY_SCALE))
+  if (persist_exists(MESSAGE_KEY_ScalePreference))
   {
-    s_temperatureScale = (TemperatureScale) persist_read_int(KEY_SCALE);
+    s_temperatureScale = (TemperatureScale) persist_read_int(MESSAGE_KEY_ScalePreference);
   }
 
-  if (persist_exists(KEY_ICON))
+  if (persist_exists(MESSAGE_KEY_Icon))
   {
-    s_icon = persist_read_int(KEY_ICON);
+    s_icon = persist_read_int(MESSAGE_KEY_Icon);
   }
 
-  if (persist_exists(KEY_REQUEST_WEATHER))
+  if (persist_exists(MESSAGE_KEY_RequestWeather))
   {
-    s_lastWeatherTime = persist_read_int(KEY_REQUEST_WEATHER);
+    s_lastWeatherTime = persist_read_int(MESSAGE_KEY_RequestWeather);
   }
 
   window = window_create();

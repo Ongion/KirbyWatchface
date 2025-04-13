@@ -658,14 +658,14 @@
     },
     "projectType": "native",
     "uuid": "6afd9dc5-4457-43e7-902e-1055ca4283ae",
-    "messageKeys": {
-      "KEY_PEBBLEKIT_READY": 0,
-      "KEY_TEMPERATURE": 1,
-      "KEY_STEPSGOAL": 6,
-      "KEY_ICON": 2,
-      "KEY_SCALE": 3,
-      "KEY_REQUEST_WEATHER": 4
-    },
+    "messageKeys": [
+      "PebbleKitReady",
+      "Temperature",
+      "StepsGoal",
+      "Icon",
+      "ScalePreference",
+      "RequestWeather"
+    ],
     "enableMultiJS": true,
     "displayName": "Kirby",
     "watchapp": {

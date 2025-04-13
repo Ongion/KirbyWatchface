@@ -46,8 +46,8 @@ function locationSuccess(pos) {
 
       // Assemble dictionary using our keys
       var dictionary = {
-        "KEY_TEMPERATURE": 271,
-        "KEY_ICON": 0
+        "Temperature": 271,
+        "Icon": 0
       };
 
       // Send to Pebble
@@ -91,7 +91,7 @@ Pebble.addEventListener('ready', function() {
   console.log('PebbleKit JS Ready!');
   city = localStorage.city;
 
-  Pebble.sendAppMessage({'KEY_PEBBLEKIT_READY': 0
+  Pebble.sendAppMessage({'PebbleKitReady': 0
 	}, function(e) {
       console.log('Sent ready message!');
   }, function(e) {

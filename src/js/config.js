@@ -19,16 +19,16 @@ module.exports = [
             {
                 "type": "radiogroup",
                 "label": "Temperature Scale",
-                "messageKey": "KEY_SCALE",
-                "defaultValue": "celcius",
+                "messageKey": "ScalePreference",
+                "defaultValue": "C",
                 "options": [
                     {
                         "label": "Celcius",
-                        "value": "celcius"
+                        "value": "C"
                     },
                     {
                         "label": "Fahrenheit",
-                        "value": "fahrenheit"
+                        "value": "F"
                     },
                 ]
             },
@@ -49,6 +49,7 @@ module.exports = [
             },
             {
                 "type": "slider",
+                "messageKey": "StepsGoal",
                 "label": "Daily Steps Goal",
                 "defaultValue": 5000,
                 "min": 0,
