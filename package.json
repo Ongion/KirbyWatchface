@@ -664,7 +664,9 @@
       "StepsGoal",
       "Icon",
       "ScalePreference",
-      "RequestWeather"
+      "RequestWeather",
+      "OpenWeatherAPIKey",
+      "City"
     ],
     "enableMultiJS": true,
     "displayName": "Kirby",

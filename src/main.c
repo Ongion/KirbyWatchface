@@ -1,11 +1,5 @@
 #include <pebble.h>
-
-// #define KEY_PEBBLEKIT_READY 0
-// #define KEY_TEMPERATURE 1
-// #define KEY_ICON 2e
-// #define KEY_SCALE 3
-// #define KEY_REQUEST_WEATHER 4
-// #define KEY_STEPSGOAL 6
+#include "main.h"
 
 /*
 Fire (Size 11512)
@@ -25,6 +19,7 @@ Window *window;
 
 time_t auto_hide;
 
+static ClaySettings settings;
 static bool initiate_watchface = true;
 static bool daytime;
 
@@ -38,7 +33,7 @@ TextLayer *text_date_layer;
 static char weather_layer_buffer[32];
 
 static Layer *steps_layer;
-int steps, steps_per_px, stepgoal;
+int steps;
 
 static uint8_t battery_level;
 static bool battery_plugged;
@@ -48,7 +43,6 @@ static GBitmap *foreground_image;
 static BitmapLayer *foreground_layer;
 
 static int s_temperature = -1;
-static int s_temperatureScale = -1;
 static int s_icon = -1;
 static time_t s_lastWeatherTime = 0;
 
@@ -174,12 +168,6 @@ RESOURCE_ID_KIRBY_SWORD_8,
 RESOURCE_ID_KIRBY_SWORD_9, //94
 };
 
-typedef enum temperature_scales
-{
-  FAHRENHEIT,
-  CELSIUS
-} TemperatureScale;
-
 const int POWERS_IMAGE_RESOURCE_IDS[] = 
 {
   RESOURCE_ID_BEAM,
@@ -210,8 +198,7 @@ static void load_foreground_layer(Layer *window_layer)
 
 void step_layer_update_callback(Layer *layer, GContext *ctx) 
 {
-  stepgoal = persist_read_int(MESSAGE_KEY_StepsGoal);
-  steps_per_px = stepgoal / 50;
+  uint16_t steps_per_px = settings.stepsGoal / 50;
   graphics_context_set_compositing_mode(ctx, GCompOpAssign);
   GColor8 stepColor = GColorWhite;
   graphics_context_set_stroke_color(ctx, stepColor);
@@ -230,11 +217,11 @@ static void update_weather_layer_text()
 {
   int finalTemp;
 
-  if(s_temperatureScale == FAHRENHEIT)
+  if(settings.scalePreference == FAHRENHEIT)
   {
     finalTemp = (s_temperature - 273.15) * 1.8 + 32;
   }
-  else // (s_temperatureScale == CELSIUS)
+  else // (settings.scalePreference == CELSIUS)
   {
     finalTemp = s_temperature - 273.15;
   }
@@ -526,8 +513,25 @@ static void request_weather_update()
 
 static void inbox_received_callback(DictionaryIterator *iter, void *context) 
 {
+  bool updated_settings = false;
   bool recalc_weather_text = false;
   bool got_weather = false;
+
+  // OpenWeatherAPIKey
+  Tuple* openWeatherAPIKey_t = dict_find(iter, MESSAGE_KEY_OpenWeatherAPIKey);
+  if (openWeatherAPIKey_t)
+  {
+    strncpy(settings.openWeatherMapAPIKey, openWeatherAPIKey_t->value->cstring, sizeof(settings.openWeatherMapAPIKey));
+    updated_settings = true;
+  }
+
+  // City
+  Tuple* city_t = dict_find(iter, MESSAGE_KEY_City);
+  if (city_t)
+  {
+    strncpy(settings.city, city_t->value->cstring, sizeof(settings.city));
+    updated_settings = true;
+  }
 
   // PebbleKitReady
   Tuple* pebblekit_ready_t = dict_find(iter, MESSAGE_KEY_PebbleKitReady);
@@ -545,13 +549,13 @@ static void inbox_received_callback(DictionaryIterator *iter, void *context)
   if (scale_preference_t)
   {
     if(strcmp(scale_preference_t->value->cstring, "F") == 0){
-      s_temperatureScale = FAHRENHEIT;
+      settings.scalePreference = FAHRENHEIT;
     }
     else if(strcmp(scale_preference_t->value->cstring, "C") == 0){
-      s_temperatureScale = CELSIUS;
+      settings.scalePreference = CELSIUS;
     }
 
-    persist_write_int(MESSAGE_KEY_ScalePreference, s_temperatureScale);
+    updated_settings = true;
     recalc_weather_text = true;
   }
 
@@ -559,9 +563,8 @@ static void inbox_received_callback(DictionaryIterator *iter, void *context)
   Tuple* stepsgoal_t = dict_find(iter, MESSAGE_KEY_StepsGoal);
   if (stepsgoal_t)
   {
-    stepgoal = stepsgoal_t->value->int16;
-    APP_LOG(APP_LOG_LEVEL_INFO, "stepgoal is %d", stepgoal);
-    persist_write_int(MESSAGE_KEY_StepsGoal, stepgoal);
+    settings.stepsGoal = stepsgoal_t->value->uint16;
+    updated_settings = true;
   }
 
   // Temperature
@@ -585,17 +588,24 @@ static void inbox_received_callback(DictionaryIterator *iter, void *context)
     update_boss_layer();
   }
 
-  if (recalc_weather_text)
-  {
-    update_weather_layer_text();
-  }
-  
   if (got_weather)
   {
     cancel_weather_timeout();
     s_lastWeatherTime = time(NULL);
     persist_write_int(MESSAGE_KEY_RequestWeather, s_lastWeatherTime);
   }
+
+  if (recalc_weather_text)
+  {
+    update_weather_layer_text();
+  }
+
+  if (updated_settings)
+  {
+    persist_write_int(STORAGE_KEY_ClaySettingsVersion, 1);
+    persist_write_data(STORAGE_KEY_ClaySettings, &settings, sizeof(settings));
+  }
+  
 }
 
 static void inbox_dropped_callback(AppMessageResult reason, void *context) 
@@ -743,16 +753,29 @@ static void main_window_unload(Window *window)
   bitmap_layer_destroy(boss_layer);
 }
 
+static void load_default_settings()
+{
+  settings.openWeatherMapAPIKey[0] = '\0';
+  settings.city[0] = '\0';
+  settings.scalePreference = CELSIUS;
+  settings.stepsGoal = 5000;
+}
+
 void handle_init(void) 
 {
+  load_default_settings();
+
+  if (persist_exists(STORAGE_KEY_ClaySettings) && persist_exists(STORAGE_KEY_ClaySettingsVersion))
+  {
+    if (persist_read_int(STORAGE_KEY_ClaySettingsVersion) == 1)
+    {
+      persist_read_data(STORAGE_KEY_ClaySettings, &settings, sizeof(settings));
+    }
+  }
+
   if (persist_exists(MESSAGE_KEY_Temperature))
   {
     s_temperature = persist_read_int(MESSAGE_KEY_Temperature);
-  }
-
-  if (persist_exists(MESSAGE_KEY_ScalePreference))
-  {
-    s_temperatureScale = (TemperatureScale) persist_read_int(MESSAGE_KEY_ScalePreference);
   }
 
   if (persist_exists(MESSAGE_KEY_Icon))

@@ -14,7 +14,7 @@ module.exports = [
                 "type": "input",
                 "label": "API Key",
                 "description": "An API key is required to featch OpenWeatherMap data. These can be freely obtained from OpenWeatherMap.org.",
-                "id": "KeyOpenWeatherMapAPIKey"
+                "messageKey": "OpenWeatherAPIKey"
             },
             {
                 "type": "radiogroup",
@@ -36,7 +36,7 @@ module.exports = [
                 "type": "input",
                 "label": "City",
                 "description": "Leave blank for GPS location.",
-                "id": "KeyCity"
+                "messageKey": "KeyCity"
             }
         ]
     },
