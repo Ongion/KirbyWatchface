@@ -312,7 +312,12 @@ static void update_boss_layer()
   // {
   //   set_container_image(&boss_image, boss_layer, RESOURCE_ID_KRACKO, GPoint(64, 36));
   // }
-  if ((200 <= s_weatherCondition && s_weatherCondition < 600) || s_weatherCondition > 800)
+  if (200 <= s_weatherCondition && s_weatherCondition < 300)
+  {
+    set_container_image(&boss_image, boss_layer, RESOURCE_ID_KRACKO_LIGHTNING, GPoint(64, 24));
+
+  }
+  else if ((300 <= s_weatherCondition && s_weatherCondition < 600) || s_weatherCondition > 800)
   {
     set_container_image(&boss_image, boss_layer, RESOURCE_ID_KRACKO, GPoint(64, 36));
   }

@@ -624,6 +624,11 @@
           "file": "images/KRACKO.png"
         },
         {
+          "type": "bitmap",
+          "name": "KRACKO_LIGHTNING",
+          "file": "images/KRACKO_LIGHTNING.png"
+        },
+        {
           "targetPlatforms": null,
           "type": "bitmap",
           "name": "KING",
