@@ -181,14 +181,6 @@ const int POWERS_IMAGE_RESOURCE_IDS[] =
   RESOURCE_ID_SWORD,
 };
 
-const int BOSSES_IMAGE_RESOURCE_IDS[] = 
-{
-  RESOURCE_ID_MR_BRIGHT,
-  RESOURCE_ID_KRACKO,
-  RESOURCE_ID_MR_SHINE,
-  RESOURCE_ID_KING,
-};
-
 static void load_foreground_layer(Layer *window_layer)
 {
   foreground_image = gbitmap_create_with_resource(RESOURCE_ID_FOREGROUND);
@@ -493,7 +485,7 @@ static void weather_ended()
 	
 	if (weather_timeout != NULL) {
 		//APP_LOG(APP_LOG_LEVEL_INFO, "Weather timer is not NULL");
-    set_container_image(&boss_image, boss_layer, BOSSES_IMAGE_RESOURCE_IDS[3], GPoint(82, 53));
+    set_container_image(&boss_image, boss_layer, RESOURCE_ID_KING, GPoint(82, 53));
     weather_timeout = NULL;
 	}
 }
