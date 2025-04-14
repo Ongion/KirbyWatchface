@@ -2,8 +2,8 @@ var Clay = require('pebble-clay');
 var clayConfig = require('./config');
 var clay = new Clay(clayConfig);
 
+var api_key;
 var city = "";
-
 
 var xhrRequest = function (url, type, callback) {
   var xhr = new XMLHttpRequest();
@@ -19,12 +19,10 @@ function locationSuccess(pos) {
   var url;
   
   if (pos !== undefined) {
-
-  url = "http://api.openweathermap.org/data/2.5/weather?lat=" + pos.coords.latitude + "&lon=" + pos.coords.longitude + '&appid=' + '4f4f0b5ecd03fb8e857be86378159a38';
+    url = "http://api.openweathermap.org/data/2.5/weather?lat=" + pos.coords.latitude + "&lon=" + pos.coords.longitude + '&appid=' + api_key;
   }
   else{
-    
-  url = 'http://api.openweathermap.org/data/2.5/weather?&q=' + city + '&appid=4f4f0b5ecd03fb8e857be86378159a38';
+    url = 'http://api.openweathermap.org/data/2.5/weather?&q=' + city + '&appid=' + api_key;
   }
   
   // Send request to OpenWeatherMap
@@ -38,16 +36,16 @@ function locationSuccess(pos) {
       
 
       // // Temperature in Kelvin requires adjustment
-      // var temperature = Math.round(json.main.temp);
-      // var icon = iconFromWeatherId(json.weather[0].id);
+      var temperature = Math.round(json.main.temp);
+      var icon = iconFromWeatherId(json.weather[0].id);
       
-      // console.log("Temperature is " + temperature);
-      // console.log(icon);
+      console.log("Temperature is " + temperature);
+      console.log(icon);
 
       // Assemble dictionary using our keys
       var dictionary = {
-        "Temperature": 271,
-        "Icon": 0
+        "Temperature": temperature,
+        "Icon": icon
       };
 
       // Send to Pebble
@@ -75,7 +73,6 @@ function locationError(err) {
 }
 
 function getWeather() {
-  console.log("GETTING THE WEATHER");
   if (city === "") {
   navigator.geolocation.getCurrentPosition(
     locationSuccess,
@@ -103,6 +100,14 @@ Pebble.addEventListener('ready', function() {
   // Listen for when an AppMessage is received
 Pebble.addEventListener('appmessage',
   function(e) {
-    console.log("AppMessage received!");
-    getWeather();
+    var dict = e.payload;
+
+    if (dict['RequestWeather'] && dict['OpenWeatherAPIKey'])
+    {
+      api_key = dict['OpenWeatherAPIKey'];
+      city = dict['City']
+
+      console.log("Requesting Weather!");
+      getWeather();
+    }
   });

@@ -23,6 +23,8 @@ static ClaySettings settings;
 static bool initiate_watchface = true;
 static bool daytime;
 
+static bool pebbleKitReady = false;
+
 AppTimer *weather_timeout;
 static int timeout = 60000;
 
@@ -499,8 +501,11 @@ static void request_weather_update()
     APP_LOG(APP_LOG_LEVEL_ERROR, "Error preparing the outbox: %d", (int)result);
   }
 
-  int value = 0; // Just a dummy value, we don't use this on the other end
+  int value = 1;
   dict_write_int(iter, MESSAGE_KEY_RequestWeather, &value, sizeof(int), true /*isSigned*/);
+
+  dict_write_cstring(iter, MESSAGE_KEY_OpenWeatherAPIKey, settings.openWeatherMapAPIKey);
+  dict_write_cstring(iter, MESSAGE_KEY_City, settings.city);  
   result = app_message_outbox_send();
 
   if (result != APP_MSG_OK)
@@ -530,6 +535,7 @@ static void inbox_received_callback(DictionaryIterator *iter, void *context)
   if (city_t)
   {
     strncpy(settings.city, city_t->value->cstring, sizeof(settings.city));
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "GOT CITY %s", settings.city);
     updated_settings = true;
   }
 
@@ -537,6 +543,9 @@ static void inbox_received_callback(DictionaryIterator *iter, void *context)
   Tuple* pebblekit_ready_t = dict_find(iter, MESSAGE_KEY_PebbleKitReady);
   if (pebblekit_ready_t)
   {
+    pebbleKitReady = true;
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "It is now %d", time(NULL));
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "last got weather at %d", s_lastWeatherTime);
     if (((unsigned int)time(NULL) - (unsigned int)s_lastWeatherTime) > 1800)
     {
       // Weather last checked over 30 minutes ago.
@@ -604,6 +613,11 @@ static void inbox_received_callback(DictionaryIterator *iter, void *context)
   {
     persist_write_int(STORAGE_KEY_ClaySettingsVersion, 1);
     persist_write_data(STORAGE_KEY_ClaySettings, &settings, sizeof(settings));
+    
+    if (pebbleKitReady)
+    {
+      request_weather_update();
+    }
   }
   
 }
@@ -755,6 +769,7 @@ static void main_window_unload(Window *window)
 
 static void load_default_settings()
 {
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "Loading defaults....");
   settings.openWeatherMapAPIKey[0] = '\0';
   settings.city[0] = '\0';
   settings.scalePreference = CELSIUS;
@@ -771,6 +786,9 @@ void handle_init(void)
     {
       persist_read_data(STORAGE_KEY_ClaySettings, &settings, sizeof(settings));
     }
+
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "LOADED CITY %s", settings.city);
+
   }
 
   if (persist_exists(STORAGE_KEY_LastSeenTemperature))
@@ -840,7 +858,7 @@ void handle_init(void)
   app_message_register_outbox_failed(outbox_failed_callback);
   app_message_register_outbox_sent(outbox_sent_callback);
   
-  app_message_open(64,64); 
+  app_message_open(150,150); 
 }
 
 void handle_deinit(void) 
