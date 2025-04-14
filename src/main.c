@@ -45,7 +45,7 @@ static GBitmap *foreground_image;
 static BitmapLayer *foreground_layer;
 
 static int s_temperature = -1;
-static int s_icon = -1;
+static int s_weatherCondition = -1;
 static time_t s_lastWeatherTime = 0;
 
 int replay = 2;
@@ -303,13 +303,13 @@ static void set_container_image(GBitmap **bmp_image, BitmapLayer *bmp_layer, con
 
 static void update_boss_layer()
 {
-  if(s_icon == 0 && daytime==true){
+  if(s_weatherCondition == 0 && daytime==true){
     set_container_image(&boss_image, boss_layer, BOSSES_IMAGE_RESOURCE_IDS[0], GPoint(94, 56));
   }
-  else if(s_icon == 1){
+  else if(s_weatherCondition == 1){
     set_container_image(&boss_image, boss_layer, BOSSES_IMAGE_RESOURCE_IDS[1], GPoint(64, 36));
   }
-  else if(s_icon == 0 && daytime==false){
+  else if(s_weatherCondition == 0 && daytime==false){
     set_container_image(&boss_image, boss_layer, BOSSES_IMAGE_RESOURCE_IDS[2], GPoint(97, 69));
   }
 }
@@ -586,12 +586,12 @@ static void inbox_received_callback(DictionaryIterator *iter, void *context)
     got_weather = true;
   }
 
-  // Icon
-  Tuple* icon_t = dict_find(iter, MESSAGE_KEY_Icon);
+  // WeatherCondition
+  Tuple* icon_t = dict_find(iter, MESSAGE_KEY_WeatherCondition);
   if (icon_t)
   {
-    s_icon = icon_t->value->int32;
-    persist_write_int(STORAGE_KEY_LastSeenIcon, s_icon);
+    s_weatherCondition = icon_t->value->int32;
+    persist_write_int(STORAGE_KEY_LastSeenWeatherCondition, s_weatherCondition);
     got_weather = true;
     
     update_boss_layer();
@@ -796,9 +796,9 @@ void handle_init(void)
     s_temperature = persist_read_int(STORAGE_KEY_LastSeenTemperature);
   }
 
-  if (persist_exists(STORAGE_KEY_LastSeenIcon))
+  if (persist_exists(STORAGE_KEY_LastSeenWeatherCondition))
   {
-    s_icon = persist_read_int(STORAGE_KEY_LastSeenIcon);
+    s_weatherCondition = persist_read_int(STORAGE_KEY_LastSeenWeatherCondition);
   }
 
   if (persist_exists(STORAGE_KEY_LastTimeRecievedWeather))
@@ -832,8 +832,6 @@ void handle_init(void)
   layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(kirby_layer));
   bitmap_layer_set_compositing_mode(kirby_layer, GCompOpSet);
 
-  update_boss_layer();
-
 	handle_minute_tick(tick_time, MINUTE_UNIT);
   
  	tick_timer_service_subscribe(MINUTE_UNIT | SECOND_UNIT, handle_minute_tick);
@@ -852,6 +850,7 @@ void handle_init(void)
   
   update_bg_color(tick_time); 
   update_date_time_layers();
+  update_boss_layer();
   
   app_message_register_inbox_received(inbox_received_callback);
   app_message_register_inbox_dropped(inbox_dropped_callback);

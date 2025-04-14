@@ -37,15 +37,15 @@ function locationSuccess(pos) {
 
       // // Temperature in Kelvin requires adjustment
       var temperature = Math.round(json.main.temp);
-      var icon = iconFromWeatherId(json.weather[0].id);
+      var condition = conditionFromWeatherId(json.weather[0].id);
       
       console.log("Temperature is " + temperature);
-      console.log(icon);
+      console.log(condition);
 
       // Assemble dictionary using our keys
       var dictionary = {
         "Temperature": temperature,
-        "Icon": icon
+        "WeatherCondition": condition
       };
 
       // Send to Pebble
@@ -60,7 +60,7 @@ function locationSuccess(pos) {
   );
 }
 
-function iconFromWeatherId(weatherId) {
+function conditionFromWeatherId(weatherId) {
   if (weatherId < 300 || weatherId < 600 || weatherId < 700 || weatherId > 800) {
     return 1;
   } else {

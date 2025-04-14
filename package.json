@@ -662,7 +662,7 @@
       "PebbleKitReady",
       "Temperature",
       "StepsGoal",
-      "Icon",
+      "WeatherCondition",
       "ScalePreference",
       "RequestWeather",
       "OpenWeatherAPIKey",

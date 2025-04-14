@@ -5,7 +5,7 @@
 #define STORAGE_KEY_ClaySettingsVersion 1
 #define STORAGE_KEY_ClaySettings 2
 #define STORAGE_KEY_LastSeenTemperature 3
-#define STORAGE_KEY_LastSeenIcon 4
+#define STORAGE_KEY_LastSeenWeatherCondition 4
 #define STORAGE_KEY_LastTimeRecievedWeather 5
 
 typedef enum temperature_scales
