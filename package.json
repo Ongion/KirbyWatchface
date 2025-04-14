@@ -2,7 +2,9 @@
   "version": "2.0.0",
   "author": "Ongion, Game Time",
   "private": true,
-  "dependencies": {},
+  "dependencies": {
+    "pebble-clay": "^1.0.4"
+  },
   "keywords": [
     "pebble-app"
   ],
@@ -410,6 +412,11 @@
           "file": "images/MR_BRIGHT.png"
         },
         {
+          "type": "bitmap",
+          "name": "MR_FROSTY",
+          "file": "images/MR_FROSTY.png"
+        },
+        {
           "targetPlatforms": null,
           "type": "bitmap",
           "name": "MIKE",
@@ -420,6 +427,11 @@
           "type": "bitmap",
           "name": "KRACKO",
           "file": "images/KRACKO.png"
+        },
+        {
+          "type": "bitmap",
+          "name": "KRACKO_LIGHTNING",
+          "file": "images/KRACKO_LIGHTNING.png"
         },
         {
           "targetPlatforms": null,
@@ -461,15 +473,17 @@
     },
     "projectType": "native",
     "uuid": "6afd9dc5-4457-43e7-902e-1055ca4283ae",
-    "messageKeys": {
-      "KEY_PEBBLEKIT_READY": 0,
-      "KEY_TEMPERATURE": 1,
-      "KEY_STEPSGOAL": 6,
-      "KEY_ICON": 2,
-      "KEY_SCALE": 3,
-      "KEY_REQUEST_WEATHER": 4
-    },
-    "enableMultiJS": false,
+    "messageKeys": [
+      "PebbleKitReady",
+      "Temperature",
+      "StepsGoal",
+      "WeatherCondition",
+      "ScalePreference",
+      "RequestWeather",
+      "OpenWeatherAPIKey",
+      "City"
+    ],
+    "enableMultiJS": true,
     "displayName": "Kirby",
     "watchapp": {
       "onlyShownOnCommunication": false,

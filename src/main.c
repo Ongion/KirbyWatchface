@@ -1,11 +1,5 @@
 #include <pebble.h>
-
-#define KEY_PEBBLEKIT_READY 0
-#define KEY_TEMPERATURE 1
-#define KEY_ICON 2
-#define KEY_SCALE 3
-#define KEY_REQUEST_WEATHER 4
-#define KEY_STEPSGOAL 6
+#include "main.h"
 
 /*
 Fire (Size 11512)
@@ -22,8 +16,11 @@ Sleep (Size 1150)
 
 Window *window;
 
+static ClaySettings settings;
 static bool initiate_watchface = true;
 static bool daytime;
+
+static bool pebbleKitReady = false;
 
 AppTimer *weather_timeout;
 static int timeout = 60000;
@@ -35,7 +32,7 @@ TextLayer *text_date_layer;
 static char weather_layer_buffer[32];
 
 static Layer *steps_layer;
-int steps, steps_per_px, stepgoal;
+int steps;
 
 static uint8_t battery_level;
 static bool battery_plugged;
@@ -45,8 +42,7 @@ static GBitmap *foreground_image;
 static BitmapLayer *foreground_layer;
 
 static int s_temperature = -1;
-static int s_temperatureScale = -1;
-static int s_icon = -1;
+static int s_weatherCondition = -1;
 static time_t s_lastWeatherTime = 0;
 
 int replay = 2;
@@ -69,12 +65,6 @@ static BitmapLayer *boss_layer;
 static GBitmap *s_kirbyBitmap;
 static GBitmapSequence *s_kirbySequence;
 static BitmapLayer *s_kirbyLayer;
-
-typedef enum temperature_scales
-{
-  FAHRENHEIT,
-  CELSIUS
-} TemperatureScale;
 
 const int POWERS_IMAGE_RESOURCE_IDS[] = 
 {
@@ -121,14 +111,6 @@ const GPoint POWERS_ORIGINS[] =
   {0, 69},  // Sword
 };
 
-const int BOSSES_IMAGE_RESOURCE_IDS[] = 
-{
-  RESOURCE_ID_MR_BRIGHT,
-  RESOURCE_ID_KRACKO,
-  RESOURCE_ID_MR_SHINE,
-  RESOURCE_ID_KING,
-};
-
 static void load_foreground_layer(Layer *window_layer)
 {
   foreground_image = gbitmap_create_with_resource(RESOURCE_ID_FOREGROUND);
@@ -140,8 +122,7 @@ static void load_foreground_layer(Layer *window_layer)
 
 void step_layer_update_callback(Layer *layer, GContext *ctx) 
 {
-  stepgoal = persist_read_int(KEY_STEPSGOAL);
-  steps_per_px = stepgoal / 50;
+  uint16_t steps_per_px = settings.stepsGoal / 50;
   graphics_context_set_compositing_mode(ctx, GCompOpAssign);
   GColor8 stepColor = GColorWhite;
   graphics_context_set_stroke_color(ctx, stepColor);
@@ -160,11 +141,11 @@ static void update_weather_layer_text()
 {
   int finalTemp;
 
-  if(s_temperatureScale == FAHRENHEIT)
+  if(settings.scalePreference == FAHRENHEIT)
   {
     finalTemp = (s_temperature - 273.15) * 1.8 + 32;
   }
-  else // (s_temperatureScale == CELSIUS)
+  else // (settings.scalePreference == CELSIUS)
   {
     finalTemp = s_temperature - 273.15;
   }
@@ -196,7 +177,7 @@ void battery_layer_update_callback(Layer *layer, GContext *ctx)
 
 static void load_battery_layer(Layer *window_layer)
 {  
- 	BatteryChargeState initial = battery_state_service_peek();  
+ 	BatteryChargeState initial = battery_state_service_peek();
  	battery_level = initial.charge_percent;
  	battery_plugged = initial.is_plugged;
  	battery_layer = layer_create(GRect(9,13,50,10));
@@ -244,14 +225,26 @@ static void set_container_image(GBitmap **bmp_image, BitmapLayer *bmp_layer, con
 
 static void update_boss_layer()
 {
-  if(s_icon == 0 && daytime==true){
-    set_container_image(&boss_image, boss_layer, BOSSES_IMAGE_RESOURCE_IDS[0], GPoint(94, 56));
+  if (200 <= s_weatherCondition && s_weatherCondition < 300)
+  {
+    set_container_image(&boss_image, boss_layer, RESOURCE_ID_KRACKO_LIGHTNING, GPoint(64, 24));
+
   }
-  else if(s_icon == 1){
-    set_container_image(&boss_image, boss_layer, BOSSES_IMAGE_RESOURCE_IDS[1], GPoint(64, 36));
+  else if ((300 <= s_weatherCondition && s_weatherCondition < 600) || s_weatherCondition > 800)
+  {
+    set_container_image(&boss_image, boss_layer, RESOURCE_ID_KRACKO, GPoint(64, 36));
   }
-  else if(s_icon == 0 && daytime==false){
-    set_container_image(&boss_image, boss_layer, BOSSES_IMAGE_RESOURCE_IDS[2], GPoint(97, 69));
+  else if (600 <= s_weatherCondition && s_weatherCondition < 700)
+  {
+    set_container_image(&boss_image, boss_layer, RESOURCE_ID_MR_FROSTY, GPoint(96, 69));
+  }
+  else if (daytime)
+  {
+    set_container_image(&boss_image, boss_layer, RESOURCE_ID_MR_BRIGHT, GPoint(94, 56));
+  }
+  else
+  {
+    set_container_image(&boss_image, boss_layer, RESOURCE_ID_MR_SHINE, GPoint(97, 69));
   }
 }
 
@@ -380,7 +373,7 @@ static void weather_ended()
 	
 	if (weather_timeout != NULL) {
 		//APP_LOG(APP_LOG_LEVEL_INFO, "Weather timer is not NULL");
-    set_container_image(&boss_image, boss_layer, BOSSES_IMAGE_RESOURCE_IDS[3], GPoint(82, 53));
+    set_container_image(&boss_image, boss_layer, RESOURCE_ID_KING, GPoint(82, 53));
     weather_timeout = NULL;
 	}
 }
@@ -408,8 +401,11 @@ static void request_weather_update()
     APP_LOG(APP_LOG_LEVEL_ERROR, "Error preparing the outbox: %d", (int)result);
   }
 
-  int value = 0; // Just a dummy value, we don't use this on the other end
-  dict_write_int(iter, KEY_REQUEST_WEATHER, &value, sizeof(int), true /*isSigned*/);
+  int value = 1;
+  dict_write_int(iter, MESSAGE_KEY_RequestWeather, &value, sizeof(int), true /*isSigned*/);
+
+  dict_write_cstring(iter, MESSAGE_KEY_OpenWeatherAPIKey, settings.openWeatherMapAPIKey);
+  dict_write_cstring(iter, MESSAGE_KEY_City, settings.city);  
   result = app_message_outbox_send();
 
   if (result != APP_MSG_OK)
@@ -420,71 +416,109 @@ static void request_weather_update()
   weather_timeout = app_timer_register(timeout, weather_ended, NULL);
 }
 
-static void inbox_received_callback(DictionaryIterator *iterator, void *context) 
+static void inbox_received_callback(DictionaryIterator *iter, void *context) 
 {
-  Tuple *t = dict_read_first(iterator);
-
+  bool updated_settings = false;
   bool recalc_weather_text = false;
   bool got_weather = false;
-  
-  while(t != NULL) {
-    switch(t->key) {
-      case KEY_PEBBLEKIT_READY:
-        if (((unsigned int)time(NULL) - (unsigned int)s_lastWeatherTime) > 1800)
-        {
-          // Weather last checked over 30 minutes ago.
-          request_weather_update();
-        }
-        break;
-      case KEY_SCALE:
-        if(strcmp(t->value->cstring, "F") == 0){
-          s_temperatureScale = FAHRENHEIT;
-        }
-        else if(strcmp(t->value->cstring, "C") == 0){
-          s_temperatureScale = CELSIUS;
-        }
 
-        persist_write_int(KEY_SCALE, s_temperatureScale);
-        recalc_weather_text = true;
-        break;
-
-      case KEY_TEMPERATURE:
-        s_temperature = t->value->int32;
-        persist_write_int(KEY_TEMPERATURE, s_temperature);
-        recalc_weather_text = true;
-        got_weather = true;
-        break;
-        
-      case KEY_ICON:
-        s_icon = t->value->int32;
-        persist_write_int(KEY_ICON, s_icon);
-        got_weather = true;
-        
-        update_boss_layer();
-
-        break;
-      
-      case KEY_STEPSGOAL:
-        stepgoal = t->value->int16;
-        //APP_LOG(APP_LOG_LEVEL_INFO, "stepgoal is %d", stepgoal);
-        persist_write_int(KEY_STEPSGOAL, stepgoal);
-        break;
-    }
-
-    t = dict_read_next(iterator);
+  // OpenWeatherAPIKey
+  Tuple* openWeatherAPIKey_t = dict_find(iter, MESSAGE_KEY_OpenWeatherAPIKey);
+  if (openWeatherAPIKey_t)
+  {
+    strncpy(settings.openWeatherMapAPIKey, openWeatherAPIKey_t->value->cstring, sizeof(settings.openWeatherMapAPIKey));
+    updated_settings = true;
   }
 
-  if (recalc_weather_text)
+  // City
+  Tuple* city_t = dict_find(iter, MESSAGE_KEY_City);
+  if (city_t)
   {
-    update_weather_layer_text();
+    strncpy(settings.city, city_t->value->cstring, sizeof(settings.city));
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "GOT CITY %s", settings.city);
+    updated_settings = true;
+  }
+
+  // PebbleKitReady
+  Tuple* pebblekit_ready_t = dict_find(iter, MESSAGE_KEY_PebbleKitReady);
+  if (pebblekit_ready_t)
+  {
+    pebbleKitReady = true;
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "It is now %d", time(NULL));
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "last got weather at %d", s_lastWeatherTime);
+    if (((unsigned int)time(NULL) - (unsigned int)s_lastWeatherTime) > 1800)
+    {
+      // Weather last checked over 30 minutes ago.
+      request_weather_update();
+    }
+  }
+
+  // ScalePreference
+  Tuple* scale_preference_t = dict_find(iter, MESSAGE_KEY_ScalePreference);
+  if (scale_preference_t)
+  {
+    if(strcmp(scale_preference_t->value->cstring, "F") == 0){
+      settings.scalePreference = FAHRENHEIT;
+    }
+    else if(strcmp(scale_preference_t->value->cstring, "C") == 0){
+      settings.scalePreference = CELSIUS;
+    }
+
+    updated_settings = true;
+    recalc_weather_text = true;
+  }
+
+  // StepsGoal
+  Tuple* stepsgoal_t = dict_find(iter, MESSAGE_KEY_StepsGoal);
+  if (stepsgoal_t)
+  {
+    settings.stepsGoal = stepsgoal_t->value->uint16;
+    updated_settings = true;
+  }
+
+  // Temperature
+  Tuple* temperature_t = dict_find(iter, MESSAGE_KEY_Temperature);
+  if (temperature_t)
+  {
+    s_temperature = temperature_t->value->int32;
+    persist_write_int(STORAGE_KEY_LastSeenTemperature, s_temperature);
+    recalc_weather_text = true;
+    got_weather = true;
+  }
+
+  // WeatherCondition
+  Tuple* icon_t = dict_find(iter, MESSAGE_KEY_WeatherCondition);
+  if (icon_t)
+  {
+    s_weatherCondition = icon_t->value->int32;
+    persist_write_int(STORAGE_KEY_LastSeenWeatherCondition, s_weatherCondition);
+    got_weather = true;
   }
   
   if (got_weather)
   {
     cancel_weather_timeout();
     s_lastWeatherTime = time(NULL);
-    persist_write_int(KEY_REQUEST_WEATHER, s_lastWeatherTime);
+    persist_write_int(STORAGE_KEY_LastTimeRecievedWeather, s_lastWeatherTime);
+    update_boss_layer();
   }
+
+  if (recalc_weather_text)
+  {
+    update_weather_layer_text();
+  }
+
+  if (updated_settings)
+  {
+    persist_write_int(STORAGE_KEY_ClaySettingsVersion, 1);
+    persist_write_data(STORAGE_KEY_ClaySettings, &settings, sizeof(settings));
+    
+    if (pebbleKitReady)
+    {
+      request_weather_update();
+    }
+  }
+  
 }
 
 static void inbox_dropped_callback(AppMessageResult reason, void *context) 
@@ -523,7 +557,7 @@ static void handle_minute_tick(struct tm *tick_time, TimeUnits units_changed)
 
     update_date_time_layers();
     
-    if(tick_time->tm_min % 30 == 0) {
+    if(tick_time->tm_min % 30 == 0 && pebbleKitReady) {
       request_weather_update();
     }
   }
@@ -645,26 +679,43 @@ static void main_window_unload(Window *window)
   bitmap_layer_destroy(boss_layer);
 }
 
+static void load_default_settings()
+{
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "Loading defaults....");
+  settings.openWeatherMapAPIKey[0] = '\0';
+  settings.city[0] = '\0';
+  settings.scalePreference = CELSIUS;
+  settings.stepsGoal = 5000;
+}
+
 void handle_init(void) 
 {
-  if (persist_exists(KEY_TEMPERATURE))
+  load_default_settings();
+
+  if (persist_exists(STORAGE_KEY_ClaySettings) && persist_exists(STORAGE_KEY_ClaySettingsVersion))
   {
-    s_temperature = persist_read_int(KEY_TEMPERATURE);
+    if (persist_read_int(STORAGE_KEY_ClaySettingsVersion) == 1)
+    {
+      persist_read_data(STORAGE_KEY_ClaySettings, &settings, sizeof(settings));
+    }
+
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "LOADED CITY %s", settings.city);
+
   }
 
-  if (persist_exists(KEY_SCALE))
+  if (persist_exists(STORAGE_KEY_LastSeenTemperature))
   {
-    s_temperatureScale = (TemperatureScale) persist_read_int(KEY_SCALE);
+    s_temperature = persist_read_int(STORAGE_KEY_LastSeenTemperature);
   }
 
-  if (persist_exists(KEY_ICON))
+  if (persist_exists(STORAGE_KEY_LastSeenWeatherCondition))
   {
-    s_icon = persist_read_int(KEY_ICON);
+    s_weatherCondition = persist_read_int(STORAGE_KEY_LastSeenWeatherCondition);
   }
 
-  if (persist_exists(KEY_REQUEST_WEATHER))
+  if (persist_exists(STORAGE_KEY_LastTimeRecievedWeather))
   {
-    s_lastWeatherTime = persist_read_int(KEY_REQUEST_WEATHER);
+    s_lastWeatherTime = persist_read_int(STORAGE_KEY_LastTimeRecievedWeather);
   }
 
   window = window_create();
@@ -693,8 +744,6 @@ void handle_init(void)
   layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(s_kirbyLayer));
   bitmap_layer_set_compositing_mode(s_kirbyLayer, GCompOpSet);
 
-  update_boss_layer();
-
 	handle_minute_tick(tick_time, MINUTE_UNIT);
   
  	tick_timer_service_subscribe(MINUTE_UNIT, handle_minute_tick);
@@ -713,13 +762,14 @@ void handle_init(void)
   
   update_bg_color(tick_time); 
   update_date_time_layers();
+  update_boss_layer();
   
   app_message_register_inbox_received(inbox_received_callback);
   app_message_register_inbox_dropped(inbox_dropped_callback);
   app_message_register_outbox_failed(outbox_failed_callback);
   app_message_register_outbox_sent(outbox_sent_callback);
   
-  app_message_open(64,64); 
+  app_message_open(150,150); 
 }
 
 void handle_deinit(void) 
