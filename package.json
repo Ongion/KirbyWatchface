@@ -33,42 +33,6 @@
         {
           "targetPlatforms": null,
           "type": "bitmap",
-          "name": "KIRBY_SLEEP_6",
-          "file": "images/KIRBY_SLEEP_6.png"
-        },
-        {
-          "targetPlatforms": null,
-          "type": "bitmap",
-          "name": "KIRBY_SLEEP_5",
-          "file": "images/KIRBY_SLEEP_5.png"
-        },
-        {
-          "targetPlatforms": null,
-          "type": "bitmap",
-          "name": "KIRBY_SLEEP_4",
-          "file": "images/KIRBY_SLEEP_4.png"
-        },
-        {
-          "targetPlatforms": null,
-          "type": "bitmap",
-          "name": "KIRBY_SLEEP_3",
-          "file": "images/KIRBY_SLEEP_3.png"
-        },
-        {
-          "targetPlatforms": null,
-          "type": "bitmap",
-          "name": "KIRBY_SLEEP_2",
-          "file": "images/KIRBY_SLEEP_2.png"
-        },
-        {
-          "targetPlatforms": null,
-          "type": "bitmap",
-          "name": "KIRBY_SLEEP_1",
-          "file": "images/KIRBY_SLEEP_1.png"
-        },
-        {
-          "targetPlatforms": null,
-          "type": "bitmap",
           "name": "KIRBY_MIKE_13",
           "file": "images/KIRBY_MIKE_13.png"
         },
@@ -381,6 +345,11 @@
           "type": "raw",
           "name": "KIRBY_HAMMER_ANIM",
           "file": "images/KIRBY_HAMMER_ANIM.png"
+        },
+        {
+          "type": "raw",
+          "name": "KIRBY_SLEEP_ANIM",
+          "file": "images/KIRBY_SLEEP_ANIM.png"
         },
         {
           "type": "raw",

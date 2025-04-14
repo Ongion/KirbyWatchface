@@ -90,7 +90,7 @@ const int POWERS_ANIMATIONS_RESOURCE_IDS[] =
   RESOURCE_ID_KIRBY_SWORD_ANIM,
   RESOURCE_ID_KIRBY_HAMMER_ANIM,
   RESOURCE_ID_KIRBY_SWORD_ANIM,
-  RESOURCE_ID_KIRBY_SWORD_ANIM,
+  RESOURCE_ID_KIRBY_SLEEP_ANIM,
   RESOURCE_ID_KIRBY_SWORD_ANIM,
 };
 
@@ -107,7 +107,7 @@ const GPoint POWERS_ORIGINS[] =
   {0, 69},  // Sword
   {5, 69},  // Hammer
   {0, 69},  // Sword
-  {0, 69},  // Sword
+  {11, 59},  // Sleep
   {0, 69},  // Sword
 };
 
@@ -634,8 +634,6 @@ static void handle_tap(AccelAxisType axis, int32_t direction)
   layer_set_hidden(text_layer_get_layer(text_date_layer), true);
   layer_set_hidden(text_layer_get_layer(text_weather_layer), false);
   s_showDateTimer = app_timer_register(2000, show_date_timer_handler, NULL);
-
-  light_enable_interaction();
 }
 
 static void main_window_load(Window *window) 
