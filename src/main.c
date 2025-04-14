@@ -303,14 +303,34 @@ static void set_container_image(GBitmap **bmp_image, BitmapLayer *bmp_layer, con
 
 static void update_boss_layer()
 {
-  if(s_weatherCondition == 0 && daytime==true){
-    set_container_image(&boss_image, boss_layer, BOSSES_IMAGE_RESOURCE_IDS[0], GPoint(94, 56));
+  // // Thunderstorm
+  // if (200 <= s_weatherCondition && s_weatherCondition < 300)
+  // {
+  //   set_container_image(&boss_image, boss_layer, RESOURCE_ID_KRACKO, GPoint(64, 36));
+  // }
+
+  // // Drizzle
+  // else if (300 <= s_weatherCondition && s_weatherCondition < 400)
+  // {
+  //   set_container_image(&boss_image, boss_layer, RESOURCE_ID_KRACKO, GPoint(64, 36));
+  // }
+
+  // // Rain
+  // else if (500 <= s_weatherCondition && s_weatherCondition < 600)
+  // {
+  //   set_container_image(&boss_image, boss_layer, RESOURCE_ID_KRACKO, GPoint(64, 36));
+  // }
+  if ((200 <= s_weatherCondition && s_weatherCondition < 700) || s_weatherCondition > 800)
+  {
+    set_container_image(&boss_image, boss_layer, RESOURCE_ID_KRACKO, GPoint(64, 36));
   }
-  else if(s_weatherCondition == 1){
-    set_container_image(&boss_image, boss_layer, BOSSES_IMAGE_RESOURCE_IDS[1], GPoint(64, 36));
+  else if (daytime)
+  {
+    set_container_image(&boss_image, boss_layer, RESOURCE_ID_MR_BRIGHT, GPoint(94, 56));
   }
-  else if(s_weatherCondition == 0 && daytime==false){
-    set_container_image(&boss_image, boss_layer, BOSSES_IMAGE_RESOURCE_IDS[2], GPoint(97, 69));
+  else
+  {
+    set_container_image(&boss_image, boss_layer, RESOURCE_ID_MR_SHINE, GPoint(97, 69));
   }
 }
 

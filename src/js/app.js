@@ -15,16 +15,14 @@ var xhrRequest = function (url, type, callback) {
 };
 
 function locationSuccess(pos) {
-  // Construct URL
-  var url;
-  
-  if (pos !== undefined) {
-    url = "http://api.openweathermap.org/data/2.5/weather?lat=" + pos.coords.latitude + "&lon=" + pos.coords.longitude + '&appid=' + api_key;
-  }
-  else{
-    url = 'http://api.openweathermap.org/data/2.5/weather?&q=' + city + '&appid=' + api_key;
-  }
-  
+  getWeatherWithLatLong(pos.coords.latitude, pos.coords.longitude);
+}
+
+function getWeatherWithLatLong(lat, long)
+{
+  var url = "http://api.openweathermap.org/data/2.5/weather?lat=" + lat + "&lon=" + long + '&appid=' + api_key;
+
+  console.log(url)
   // Send request to OpenWeatherMap
   xhrRequest(url, 'GET', 
     function(text) {
@@ -32,12 +30,11 @@ function locationSuccess(pos) {
       var json = JSON.parse(text);
       
       var city_called = json.name;
-			console.log("City in response is " + city_called);
-      
+      console.log("City in response is " + city_called);
 
       // // Temperature in Kelvin requires adjustment
       var temperature = Math.round(json.main.temp);
-      var condition = conditionFromWeatherId(json.weather[0].id);
+      var condition = json.weather[0].id;
       
       console.log("Temperature is " + temperature);
       console.log(condition);
@@ -57,19 +54,27 @@ function locationSuccess(pos) {
           console.log("Error sending weather info to Pebble!");
         }
       );}      
-  );
+  );  
 }
 
-function conditionFromWeatherId(weatherId) {
-  if (weatherId < 300 || weatherId < 600 || weatherId < 700 || weatherId > 800) {
-    return 1;
-  } else {
-    return 0;
-  }
+function getWeatherWithCity()
+{
+  console.log("Getting weather by city")
+  var url = "http://api.openweathermap.org/geo/1.0/direct?q="+city+"&limit=1&appid="+api_key;
+
+  xhrRequest(url, 'GET', 
+    function(text) {
+      // responseText contains a JSON object with location info
+      var json = JSON.parse(text);
+
+      getWeatherWithLatLong(json[0].lat, json[0].lon);
+    }
+  );
 }
 
 function locationError(err) {
   console.log("Error requesting location!");
+  getWeatherWithCity()
 }
 
 function getWeather() {
@@ -80,7 +85,7 @@ function getWeather() {
     {timeout: 15000, maximumAge: 60000}
   );
   }else{
-    locationSuccess();
+    getWeatherWithCity();
   }
 }
 
