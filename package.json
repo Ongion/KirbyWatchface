@@ -607,6 +607,11 @@
           "file": "images/MR_BRIGHT.png"
         },
         {
+          "type": "bitmap",
+          "name": "MR_FROSTY",
+          "file": "images/MR_FROSTY.png"
+        },
+        {
           "targetPlatforms": null,
           "type": "bitmap",
           "name": "MIKE",

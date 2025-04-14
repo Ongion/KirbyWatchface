@@ -312,9 +312,13 @@ static void update_boss_layer()
   // {
   //   set_container_image(&boss_image, boss_layer, RESOURCE_ID_KRACKO, GPoint(64, 36));
   // }
-  if ((200 <= s_weatherCondition && s_weatherCondition < 700) || s_weatherCondition > 800)
+  if ((200 <= s_weatherCondition && s_weatherCondition < 600) || s_weatherCondition > 800)
   {
     set_container_image(&boss_image, boss_layer, RESOURCE_ID_KRACKO, GPoint(64, 36));
+  }
+  else if (600 <= s_weatherCondition && s_weatherCondition < 700)
+  {
+    set_container_image(&boss_image, boss_layer, RESOURCE_ID_MR_FROSTY, GPoint(96, 69));
   }
   else if (daytime)
   {
@@ -605,15 +609,14 @@ static void inbox_received_callback(DictionaryIterator *iter, void *context)
     s_weatherCondition = icon_t->value->int32;
     persist_write_int(STORAGE_KEY_LastSeenWeatherCondition, s_weatherCondition);
     got_weather = true;
-    
-    update_boss_layer();
   }
-
+  
   if (got_weather)
   {
     cancel_weather_timeout();
     s_lastWeatherTime = time(NULL);
     persist_write_int(STORAGE_KEY_LastTimeRecievedWeather, s_lastWeatherTime);
+    update_boss_layer();
   }
 
   if (recalc_weather_text)
@@ -678,7 +681,7 @@ static void handle_minute_tick(struct tm *tick_time, TimeUnits units_changed)
 
     update_date_time_layers();
     
-    if(tick_time->tm_min % 30 == 0) {
+    if(tick_time->tm_min % 30 == 0 && pebbleKitReady) {
       request_weather_update();
     }
  }
