@@ -89,7 +89,7 @@ const int POWERS_ANIMATIONS_RESOURCE_IDS[] =
   RESOURCE_ID_KIRBY_SWORD_ANIM,
   RESOURCE_ID_KIRBY_SWORD_ANIM,
   RESOURCE_ID_KIRBY_HAMMER_ANIM,
-  RESOURCE_ID_KIRBY_SWORD_ANIM,
+  RESOURCE_ID_KIRBY_MIKE_ANIM_1,
   RESOURCE_ID_KIRBY_SLEEP_ANIM,
   RESOURCE_ID_KIRBY_SWORD_ANIM,
 };
@@ -106,7 +106,7 @@ const GPoint POWERS_ORIGINS[] =
   {0, 69},  // Sword
   {0, 69},  // Sword
   {5, 69},  // Hammer
-  {0, 69},  // Sword
+  {0, 80},  // Mike
   {11, 59},  // Sleep
   {0, 69},  // Sword
 };
