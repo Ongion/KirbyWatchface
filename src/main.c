@@ -164,7 +164,7 @@ void battery_layer_update_callback(Layer *layer, GContext *ctx)
 }
 
 static void load_battery_layer(Layer *window_layer)
-{  
+{
  	BatteryChargeState initial = battery_state_service_peek();
  	battery_level = initial.charge_percent;
  	battery_plugged = initial.is_plugged;
