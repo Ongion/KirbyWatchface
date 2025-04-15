@@ -13,111 +13,14 @@
     "resources": {
       "media": [
         {
-          "targetPlatforms": null,
-          "type": "bitmap",
-          "name": "KIRBY_CUTTER_17",
-          "file": "images/KIRBY_CUTTER_17.png"
-        },
-        {
-          "targetPlatforms": null,
-          "type": "bitmap",
-          "name": "KIRBY_CUTTER_16",
-          "file": "images/KIRBY_CUTTER_16.png"
-        },
-        {
-          "targetPlatforms": null,
-          "type": "bitmap",
-          "name": "KIRBY_CUTTER_15",
-          "file": "images/KIRBY_CUTTER_15.png"
-        },
-        {
-          "targetPlatforms": null,
-          "type": "bitmap",
-          "name": "KIRBY_CUTTER_14",
-          "file": "images/KIRBY_CUTTER_14.png"
-        },
-        {
-          "targetPlatforms": null,
-          "type": "bitmap",
-          "name": "KIRBY_CUTTER_13",
-          "file": "images/KIRBY_CUTTER_13.png"
-        },
-        {
-          "targetPlatforms": null,
-          "type": "bitmap",
-          "name": "KIRBY_CUTTER_12",
-          "file": "images/KIRBY_CUTTER_12.png"
-        },
-        {
-          "targetPlatforms": null,
-          "type": "bitmap",
-          "name": "KIRBY_CUTTER_11",
-          "file": "images/KIRBY_CUTTER_11.png"
-        },
-        {
-          "targetPlatforms": null,
-          "type": "bitmap",
-          "name": "KIRBY_CUTTER_10",
-          "file": "images/KIRBY_CUTTER_10.png"
-        },
-        {
-          "targetPlatforms": null,
-          "type": "bitmap",
-          "name": "KIRBY_CUTTER_9",
-          "file": "images/KIRBY_CUTTER_9.png"
-        },
-        {
-          "targetPlatforms": null,
-          "type": "bitmap",
-          "name": "KIRBY_CUTTER_8",
-          "file": "images/KIRBY_CUTTER_8.png"
-        },
-        {
-          "targetPlatforms": null,
-          "type": "bitmap",
-          "name": "KIRBY_CUTTER_7",
-          "file": "images/KIRBY_CUTTER_7.png"
-        },
-        {
-          "targetPlatforms": null,
-          "type": "bitmap",
-          "name": "KIRBY_CUTTER_6",
-          "file": "images/KIRBY_CUTTER_6.png"
-        },
-        {
-          "targetPlatforms": null,
-          "type": "bitmap",
-          "name": "KIRBY_CUTTER_5",
-          "file": "images/KIRBY_CUTTER_5.png"
-        },
-        {
-          "targetPlatforms": null,
-          "type": "bitmap",
-          "name": "KIRBY_CUTTER_4",
-          "file": "images/KIRBY_CUTTER_4.png"
-        },
-        {
-          "targetPlatforms": null,
-          "type": "bitmap",
-          "name": "KIRBY_CUTTER_3",
-          "file": "images/KIRBY_CUTTER_3.png"
-        },
-        {
-          "targetPlatforms": null,
-          "type": "bitmap",
-          "name": "KIRBY_CUTTER_2",
-          "file": "images/KIRBY_CUTTER_2.png"
-        },
-        {
-          "targetPlatforms": null,
-          "type": "bitmap",
-          "name": "KIRBY_CUTTER_1",
-          "file": "images/KIRBY_CUTTER_1.png"
-        },
-        {
           "type": "raw",
           "name": "KIRBY_BEAM_ANIM",
           "file": "images/KIRBY_BEAM_ANIM.png"
+        },
+        {
+          "type": "raw",
+          "name": "KIRBY_CUTTER_ANIM",
+          "file": "images/KIRBY_CUTTER_ANIM.png"
         },
         {
           "type": "raw",
@@ -163,7 +66,6 @@
           "file": "images/MR_SHINE.png"
         },
         {
-          "targetPlatforms": null,
           "type": "bitmap",
           "name": "MR_BRIGHT",
           "file": "images/MR_BRIGHT.png"
@@ -174,13 +76,11 @@
           "file": "images/MR_FROSTY.png"
         },
         {
-          "targetPlatforms": null,
           "type": "bitmap",
           "name": "MIKE",
           "file": "images/MIKE.png"
         },
         {
-          "targetPlatforms": null,
           "type": "bitmap",
           "name": "KRACKO",
           "file": "images/KRACKO.png"
@@ -191,37 +91,31 @@
           "file": "images/KRACKO_LIGHTNING.png"
         },
         {
-          "targetPlatforms": null,
           "type": "bitmap",
           "name": "KING",
           "file": "images/KING.png"
         },
         {
-          "targetPlatforms": null,
           "type": "bitmap",
           "name": "HAMMER",
           "file": "images/HAMMER.png"
         },
         {
-          "targetPlatforms": null,
           "type": "bitmap",
           "name": "FOREGROUND",
           "file": "images/FOREGROUND.png"
         },
         {
-          "targetPlatforms": null,
           "type": "bitmap",
           "name": "FIRE",
           "file": "images/FIRE.png"
         },
         {
-          "targetPlatforms": null,
           "type": "bitmap",
           "name": "CUTTER",
           "file": "images/CUTTER.png"
         },
         {
-          "targetPlatforms": null,
           "type": "bitmap",
           "name": "BEAM",
           "file": "images/BEAM.png"

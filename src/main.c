@@ -79,14 +79,8 @@ const int POWERS_IMAGE_RESOURCE_IDS[] =
 
 const int POWERS_ANIMATIONS_RESOURCE_IDS[] = 
 {
-  // RESOURCE_ID_BEAM,
-  // RESOURCE_ID_CUTTER,
-  // RESOURCE_ID_FIRE,
-  // RESOURCE_ID_HAMMER,
-  // RESOURCE_ID_MIKE,
-  // RESOURCE_ID_SLEEP,
   RESOURCE_ID_KIRBY_BEAM_ANIM,
-  RESOURCE_ID_KIRBY_SWORD_ANIM,
+  RESOURCE_ID_KIRBY_CUTTER_ANIM,
   RESOURCE_ID_KIRBY_FIRE_ANIM,
   RESOURCE_ID_KIRBY_HAMMER_ANIM,
   RESOURCE_ID_KIRBY_MIKE_ANIM_1,
@@ -96,14 +90,8 @@ const int POWERS_ANIMATIONS_RESOURCE_IDS[] =
 
 const GPoint POWERS_ORIGINS[] =
 {
-  // GPoint(0, 54),  // Beam
-  // GPoint(0, 81),  // Cutter
-  // GPoint(0, 66),  // Fire
-  // GPoint(5, 69),  // Hammer
-  // GPoint(0, 80),  // Mike
-  // GPoint(13, 75), // Sleep
   {0, 53},  // Beam
-  {0, 69},  // Sword
+  {1, 82},  // Cutter
   {0, 67},  // Fire
   {5, 69},  // Hammer
   {0, 80},  // Mike
