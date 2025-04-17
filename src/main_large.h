@@ -35,3 +35,5 @@ static const GPoint KIRBY_ABILITIES_ORIGINS[] =
   {11, 59},  // Sleep
   {0, 69},  // Sword
 };
+
+#define BATTERY_LAYER_RECT GRect(14,7,72,10)

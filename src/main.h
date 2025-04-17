@@ -37,6 +37,7 @@ static TextLayer *s_pTextLayerDate;
 static Layer *s_pLayerSteps;
 static int steps;
 
+static GBitmap* s_pBitmapBatteryBar;
 static Layer *s_pLayerBattery;
 static uint8_t battery_level;
 static bool battery_plugged;

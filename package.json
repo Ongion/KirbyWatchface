@@ -48,19 +48,26 @@
           "file": "images/KIRBY_SWORD_ANIM.png"
         },
         {
-          "targetPlatforms": null,
+          "type": "bitmap",
+          "name": "HEALTH_DISCHARGE",
+          "file": "images/HealthDischarging.png"
+        },
+        {
+          "type": "bitmap",
+          "name": "HEALTH_CHARGE",
+          "file": "images/HealthCharging.png"
+        },
+        {
           "type": "bitmap",
           "name": "SWORD",
           "file": "images/SWORD.png"
         },
         {
-          "targetPlatforms": null,
           "type": "bitmap",
           "name": "SLEEP",
           "file": "images/SLEEP.png"
         },
         {
-          "targetPlatforms": null,
           "type": "bitmap",
           "name": "MR_SHINE",
           "file": "images/MR_SHINE.png"

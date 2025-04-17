@@ -72,7 +72,26 @@ void battery_layer_update_callback(Layer *layer, GContext *ctx)
   GColor8 batteryColor = GColorRed;
   graphics_context_set_stroke_color(ctx, batteryColor);
   graphics_context_set_fill_color(ctx,  batteryColor);
-  graphics_fill_rect(ctx, GRect(0, 0, (uint8_t)(battery_level)/2, 10), 0, GCornerNone);
+  graphics_draw_bitmap_in_rect(ctx, s_pBitmapBatteryBar, GRect(0, 0, (battery_level*BATTERY_LAYER_RECT.size.w)/100, 10));
+}
+
+static void load_battery_resource()
+{
+  if (s_pBitmapBatteryBar)
+  {
+    gbitmap_destroy(s_pBitmapBatteryBar);
+    s_pBitmapBatteryBar = NULL;
+  }
+
+  if (battery_plugged)
+  {
+    s_pBitmapBatteryBar = gbitmap_create_with_resource(RESOURCE_ID_HEALTH_CHARGE);
+  }
+  else
+  {
+    s_pBitmapBatteryBar = gbitmap_create_with_resource(RESOURCE_ID_HEALTH_DISCHARGE);
+
+  }
 }
 
 static void load_battery_layer(Layer *window_layer)
@@ -80,7 +99,8 @@ static void load_battery_layer(Layer *window_layer)
  	BatteryChargeState initial = battery_state_service_peek();
  	battery_level = initial.charge_percent;
  	battery_plugged = initial.is_plugged;
- 	s_pLayerBattery = layer_create(GRect(9,13,50,10));
+  load_battery_resource();
+ 	s_pLayerBattery = layer_create(BATTERY_LAYER_RECT);
  	layer_set_update_proc(s_pLayerBattery, &battery_layer_update_callback);  
   layer_add_child(window_layer, s_pLayerBattery);
 }
@@ -483,6 +503,7 @@ void handle_battery(BatteryChargeState charge)
 {
 	battery_level = charge.charge_percent;
   battery_plugged = charge.is_plugged;
+  load_battery_resource();
   layer_mark_dirty(s_pLayerBattery);
 }
 
