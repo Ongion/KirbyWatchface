@@ -1,0 +1,37 @@
+#pragma once
+#include <pebble.h>
+
+#define NUM_ABILITIES 7
+
+static const int ABILITIES_NAME_RESOURCE_IDS[] = 
+{
+  RESOURCE_ID_BEAM,
+  RESOURCE_ID_CUTTER,
+  RESOURCE_ID_FIRE,
+  RESOURCE_ID_HAMMER,
+  RESOURCE_ID_MIKE,
+  RESOURCE_ID_SLEEP,
+  RESOURCE_ID_SWORD,
+};
+
+static const int ABILITY_ANIMATIONS_RESOURCE_IDS[] = 
+{
+  RESOURCE_ID_KIRBY_BEAM_ANIM,
+  RESOURCE_ID_KIRBY_CUTTER_ANIM,
+  RESOURCE_ID_KIRBY_FIRE_ANIM,
+  RESOURCE_ID_KIRBY_HAMMER_ANIM,
+  RESOURCE_ID_KIRBY_MIKE_ANIM_1,
+  RESOURCE_ID_KIRBY_SLEEP_ANIM,
+  RESOURCE_ID_KIRBY_SWORD_ANIM,
+};
+
+static const GPoint KIRBY_ABILITIES_ORIGINS[] =
+{
+  {0, 53},  // Beam
+  {1, 82},  // Cutter
+  {0, 67},  // Fire
+  {5, 69},  // Hammer
+  {0, 80},  // Mike
+  {11, 59},  // Sleep
+  {0, 69},  // Sword
+};
