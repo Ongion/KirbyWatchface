@@ -36,8 +36,10 @@ static const GPoint KIRBY_ABILITIES_ORIGINS[] =
   {0, 69},  // Sword
 };
 
-#define BATTERY_LAYER_RECT GRect(9,13,50,10)
+#define ABILITY_NAME_LAYER_ORIGIN GPoint(14, 26)
 
+#define BATTERY_LAYER_RECT GRect(9,13,50,10)
 #define TIME_LAYER_RECT GRect(1, 130, 72, 26)
 #define DATE_TEMPERATURE_RECT GRect(72, 130, 72, 26)
-#define SYSTEM_FONT FONT_KEY_LECO_20_BOLD_NUMBERS
+
+#define FONT fonts_get_system_font(FONT_KEY_LECO_20_BOLD_NUMBERS)

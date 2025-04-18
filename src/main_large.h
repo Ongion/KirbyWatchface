@@ -3,6 +3,8 @@
 
 #define NUM_ABILITIES 7
 
+static GFont s_font;
+
 static const int ABILITIES_NAME_RESOURCE_IDS[] = 
 {
   RESOURCE_ID_BEAM,
@@ -28,7 +30,7 @@ static const int ABILITY_ANIMATIONS_RESOURCE_IDS[] =
 static const GPoint KIRBY_ABILITIES_ORIGINS[] =
 {
   {24, 52},  // Beam
-  {15, 112},  // Cutter
+  {27, 110},  // Cutter
   {26, 101},  // Fire
   {0, 73},  // Hammer
   {19, 110},  // Mike
@@ -36,7 +38,10 @@ static const GPoint KIRBY_ABILITIES_ORIGINS[] =
   {9, 81},  // Sword
 };
 
+#define ABILITY_NAME_LAYER_ORIGIN GPoint(14, 25)
+
 #define BATTERY_LAYER_RECT GRect(14,7,72,10)
 #define TIME_LAYER_RECT GRect(10, 175, 82, 38)
 #define DATE_TEMPERATURE_RECT GRect(108, 175, 82, 38)
-#define SYSTEM_FONT FONT_KEY_LECO_26_BOLD_NUMBERS_AM_PM
+
+#define FONT s_font

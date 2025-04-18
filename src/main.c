@@ -60,7 +60,7 @@ static void load_weather_layer(Layer *window_layer)
   text_layer_set_background_color(s_pTextLayerWeather, GColorClear);
   text_layer_set_text_color(s_pTextLayerWeather, GColorBlack);
   update_weather_layer_text();
-  text_layer_set_font(s_pTextLayerWeather,fonts_get_system_font(SYSTEM_FONT));
+  text_layer_set_font(s_pTextLayerWeather, FONT);
   text_layer_set_text_alignment(s_pTextLayerWeather, GTextAlignmentCenter);
   layer_add_child(window_layer, text_layer_get_layer(s_pTextLayerWeather));
   layer_set_hidden(text_layer_get_layer(s_pTextLayerWeather), true);
@@ -111,7 +111,7 @@ static void load_time_text_layer(Layer *window_layer)
  	text_layer_set_text_alignment(s_pTextLayerTime, GTextAlignmentCenter);
  	text_layer_set_text_color(s_pTextLayerTime, GColorBlack);
  	text_layer_set_background_color(s_pTextLayerTime, GColorClear);
-  text_layer_set_font(s_pTextLayerTime, fonts_get_system_font(SYSTEM_FONT));
+  text_layer_set_font(s_pTextLayerTime, FONT);
  	layer_add_child(window_layer, text_layer_get_layer(s_pTextLayerTime));  
 }
 
@@ -121,7 +121,7 @@ static void load_date_text_layer(Layer *window_layer)
 	text_layer_set_text_alignment(s_pTextLayerDate, GTextAlignmentCenter);
  	text_layer_set_text_color(s_pTextLayerDate, GColorBlack);
  	text_layer_set_background_color(s_pTextLayerDate, GColorClear);
-  text_layer_set_font(s_pTextLayerDate,fonts_get_system_font(SYSTEM_FONT));
+  text_layer_set_font(s_pTextLayerDate, FONT);
  	layer_add_child(window_layer, text_layer_get_layer(s_pTextLayerDate)); 
 }
 
@@ -463,7 +463,7 @@ static void update_display(struct tm *current_time)
   int powerIdx = (rand() % NUM_ABILITIES);
   //APP_LOG(APP_LOG_LEVEL_DEBUG, "random character generated [#%d].", powerIdx);
 
-  set_container_image(&s_pBitmapAbilityName, s_pLayerAbilityName, ABILITIES_NAME_RESOURCE_IDS[powerIdx], GPoint(14, 26));
+  set_container_image(&s_pBitmapAbilityName, s_pLayerAbilityName, ABILITIES_NAME_RESOURCE_IDS[powerIdx], ABILITY_NAME_LAYER_ORIGIN);
   load_kirby_layer(powerIdx);
   update_bg_color(current_time);
 }
@@ -635,6 +635,10 @@ void handle_init(void)
   }
 
   s_WindowMain = window_create();
+
+  #if PBL_DISPLAY_HEIGHT == 228
+  s_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_HELVETICA_CUSTOM_BLACK_26));
+  #endif
   
   window_set_window_handlers(s_WindowMain, (WindowHandlers) {
     .load = main_window_load,
@@ -690,6 +694,10 @@ void handle_init(void)
 
 void handle_deinit(void) 
 {
+  #if PBL_DISPLAY_HEIGHT == 228
+  fonts_unload_custom_font(s_font);
+  #endif
+
 	window_destroy(s_WindowMain);
   battery_state_service_unsubscribe();
   accel_tap_service_unsubscribe();

@@ -13,6 +13,12 @@
     "resources": {
       "media": [
         {
+          "targetPlatforms": ["emery"],
+          "type": "font",
+          "name": "HELVETICA_CUSTOM_BLACK_26",
+          "file": "fonts/HelveticaCustomRounded-Black.ttf"
+        },
+        {
           "type": "raw",
           "name": "KIRBY_BEAM_ANIM",
           "file": "images/KIRBY_BEAM_ANIM.png"
