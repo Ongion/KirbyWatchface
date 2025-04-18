@@ -107,11 +107,11 @@ static void load_battery_layer(Layer *window_layer)
 
 static void load_time_text_layer(Layer *window_layer)
 {
-  s_pTextLayerTime = text_layer_create(GRect(1, 130, 72, 26));
+  s_pTextLayerTime = text_layer_create(TIME_LAYER_RECT);
  	text_layer_set_text_alignment(s_pTextLayerTime, GTextAlignmentCenter);
  	text_layer_set_text_color(s_pTextLayerTime, GColorBlack);
  	text_layer_set_background_color(s_pTextLayerTime, GColorClear);
-  text_layer_set_font(s_pTextLayerTime,fonts_get_system_font(FONT_KEY_LECO_20_BOLD_NUMBERS));
+  text_layer_set_font(s_pTextLayerTime, TIME_LAYER_FONT);
  	layer_add_child(window_layer, text_layer_get_layer(s_pTextLayerTime));  
 }
 
@@ -689,7 +689,7 @@ void handle_init(void)
 }
 
 void handle_deinit(void) 
-{  
+{
 	window_destroy(s_WindowMain);
   battery_state_service_unsubscribe();
   accel_tap_service_unsubscribe();

@@ -27,13 +27,15 @@ static const int ABILITY_ANIMATIONS_RESOURCE_IDS[] =
 
 static const GPoint KIRBY_ABILITIES_ORIGINS[] =
 {
-  {0, 53},  // Beam
-  {1, 82},  // Cutter
-  {0, 67},  // Fire
-  {5, 69},  // Hammer
-  {0, 80},  // Mike
-  {11, 59},  // Sleep
-  {0, 69},  // Sword
+  {24, 52},  // Beam
+  {15, 112},  // Cutter
+  {26, 101},  // Fire
+  {0, 73},  // Hammer
+  {19, 110},  // Mike
+  {22, 83},  // Sleep
+  {9, 81},  // Sword
 };
 
 #define BATTERY_LAYER_RECT GRect(14,7,72,10)
+#define TIME_LAYER_RECT GRect(10, 175, 82, 38)
+#define TIME_LAYER_FONT fonts_get_system_font(FONT_KEY_LECO_26_BOLD_NUMBERS_AM_PM)

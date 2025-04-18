@@ -37,3 +37,6 @@ static const GPoint KIRBY_ABILITIES_ORIGINS[] =
 };
 
 #define BATTERY_LAYER_RECT GRect(9,13,50,10)
+
+#define TIME_LAYER_RECT GRect(1, 130, 72, 26)
+#define TIME_LAYER_FONT fonts_get_system_font(FONT_KEY_LECO_20_BOLD_NUMBERS)
