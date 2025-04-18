@@ -535,19 +535,17 @@ static void show_date_timer_handler(void* context)
 
 static void handle_tap(AccelAxisType axis, int32_t direction)
 {
-  // Cancel any existing animation
-  if (s_pKirbyAnimationTimer)
-  {
-    app_timer_cancel(s_pKirbyAnimationTimer);
-  }
-
+  // Cancel existing showDate timer 
   if (s_pShowDateTimer)
   {
     app_timer_cancel(s_pShowDateTimer);
   }
 
-  gbitmap_sequence_restart(s_pBitmapSequenceKirby);
-  s_pKirbyAnimationTimer = app_timer_register(1, kirby_animation_timer_handler, NULL);
+  if (!s_pKirbyAnimationTimer)
+  {
+    gbitmap_sequence_restart(s_pBitmapSequenceKirby);
+    s_pKirbyAnimationTimer = app_timer_register(1, kirby_animation_timer_handler, NULL);
+  }
 
   layer_set_hidden(text_layer_get_layer(s_pTextLayerDate), true);
   layer_set_hidden(text_layer_get_layer(s_pTextLayerWeather), false);
