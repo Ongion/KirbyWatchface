@@ -56,11 +56,11 @@ static void update_weather_layer_text()
 
 static void load_weather_layer(Layer *window_layer)
 {
-  s_pTextLayerWeather = text_layer_create(GRect(72, 130, 72, 26));
+  s_pTextLayerWeather = text_layer_create(DATE_TEMPERATURE_RECT);
   text_layer_set_background_color(s_pTextLayerWeather, GColorClear);
   text_layer_set_text_color(s_pTextLayerWeather, GColorBlack);
   update_weather_layer_text();
-  text_layer_set_font(s_pTextLayerWeather,fonts_get_system_font(FONT_KEY_LECO_20_BOLD_NUMBERS));
+  text_layer_set_font(s_pTextLayerWeather,fonts_get_system_font(SYSTEM_FONT));
   text_layer_set_text_alignment(s_pTextLayerWeather, GTextAlignmentCenter);
   layer_add_child(window_layer, text_layer_get_layer(s_pTextLayerWeather));
   layer_set_hidden(text_layer_get_layer(s_pTextLayerWeather), true);
@@ -111,17 +111,17 @@ static void load_time_text_layer(Layer *window_layer)
  	text_layer_set_text_alignment(s_pTextLayerTime, GTextAlignmentCenter);
  	text_layer_set_text_color(s_pTextLayerTime, GColorBlack);
  	text_layer_set_background_color(s_pTextLayerTime, GColorClear);
-  text_layer_set_font(s_pTextLayerTime, TIME_LAYER_FONT);
+  text_layer_set_font(s_pTextLayerTime, fonts_get_system_font(SYSTEM_FONT));
  	layer_add_child(window_layer, text_layer_get_layer(s_pTextLayerTime));  
 }
 
 static void load_date_text_layer(Layer *window_layer)
 {
-  s_pTextLayerDate = text_layer_create(GRect(72, 130, 72, 26));	
+  s_pTextLayerDate = text_layer_create(DATE_TEMPERATURE_RECT);	
 	text_layer_set_text_alignment(s_pTextLayerDate, GTextAlignmentCenter);
  	text_layer_set_text_color(s_pTextLayerDate, GColorBlack);
  	text_layer_set_background_color(s_pTextLayerDate, GColorClear);
-  text_layer_set_font(s_pTextLayerDate,fonts_get_system_font(FONT_KEY_LECO_20_BOLD_NUMBERS));
+  text_layer_set_font(s_pTextLayerDate,fonts_get_system_font(SYSTEM_FONT));
  	layer_add_child(window_layer, text_layer_get_layer(s_pTextLayerDate)); 
 }
 
