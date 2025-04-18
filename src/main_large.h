@@ -33,7 +33,7 @@ static const GPoint KIRBY_ABILITIES_ORIGINS[] =
   {27, 110},  // Cutter
   {26, 101},  // Fire
   {0, 73},  // Hammer
-  {19, 110},  // Mike
+  {20, 110},  // Mike
   {22, 83},  // Sleep
   {9, 81},  // Sword
 };
