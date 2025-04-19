@@ -10,24 +10,24 @@
 
 typedef enum temperature_scales
 {
-  FAHRENHEIT,
-  CELSIUS
+	FAHRENHEIT,
+	CELSIUS
 } TemperatureScale;
 
 typedef struct ClaySettingsV1
 {
-    char openWeatherMapAPIKey[33];
-    char city[86];
-    TemperatureScale scalePreference;
-    uint16_t stepsGoal;
+	char openWeatherMapAPIKey[33];
+	char city[86];
+	TemperatureScale scalePreference;
+	uint16_t stepsGoal;
 } ClaySettingsV1;
 
 typedef ClaySettingsV1 ClaySettings;
 
 typedef struct AbilityAnimation
 {
-  uint32_t resourceID;
-  GPoint origin;
+	uint32_t resourceID;
+	GPoint origin;
 } AbilityAnimation;
 
 static ClaySettings settings;
@@ -36,20 +36,20 @@ static bool daytime;
 
 static bool pebbleKitReady = false;
 
-static TextLayer *s_pTextLayerWeather;
-static TextLayer *s_pTextLayerTime;
-static TextLayer *s_pTextLayerDate;
+static TextLayer* s_pTextLayerWeather;
+static TextLayer* s_pTextLayerTime;
+static TextLayer* s_pTextLayerDate;
 
-static Layer *s_pLayerSteps;
+static Layer* s_pLayerSteps;
 static int steps;
 
 static GBitmap* s_pBitmapBatteryBar;
-static Layer *s_pLayerBattery;
+static Layer* s_pLayerBattery;
 static uint8_t battery_level;
 static bool battery_plugged;
 
-static GBitmap *s_pBitmapBackground;
-static BitmapLayer *s_pLayerBackground;
+static GBitmap* s_pBitmapBackground;
+static BitmapLayer* s_pLayerBackground;
 
 static int s_temperature = -1;
 static int s_weatherCondition = -1;
@@ -64,11 +64,11 @@ static AppTimer* s_pWeatherTimeoutTimer;
 static GBitmap* s_pBitmapAbilityName;
 static BitmapLayer* s_pLayerAbilityName;
 
-static GBitmap *s_pBitmapBoss;
-static BitmapLayer *s_pLayerBoss;
+static GBitmap* s_pBitmapBoss;
+static BitmapLayer* s_pLayerBoss;
 
-static GBitmap *s_pBitmapKirby;
-static GBitmapSequence *s_pBitmapSequenceKirby;
-static BitmapLayer *s_pLayerKirby;
+static GBitmap* s_pBitmapKirby;
+static GBitmapSequence* s_pBitmapSequenceKirby;
+static BitmapLayer* s_pLayerKirby;
 
-Window *s_WindowMain;
+Window* s_WindowMain;
