@@ -35,8 +35,14 @@
         },
         {
           "type": "raw",
-          "name": "KIRBY_HAMMER_ANIM",
-          "file": "images/KIRBY_HAMMER_ANIM.png"
+          "name": "KIRBY_HAMMER_POUND_ANIM",
+          "file": "images/KIRBY_HAMMER_POUND_ANIM.png"
+        },
+        {
+          "targetPlatforms": ["emery"],
+          "type": "raw",
+          "name": "KIRBY_HAMMER_FIRE_ANIM",
+          "file": "images/KIRBY_HAMMER_FIRE_ANIM.png"
         },
         {
           "type": "raw",

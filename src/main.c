@@ -175,9 +175,9 @@ static void kirby_animation_timer_handler(void* context)
   // Advance to the next APNG frame, and get the delay for this frame
   if (gbitmap_sequence_update_bitmap_next_frame(s_pBitmapSequenceKirby, s_pBitmapKirby, &next_delay))
   {
+
     // Set the new frame into the BitmapLayer
     bitmap_layer_set_bitmap(s_pLayerKirby, s_pBitmapKirby);
-    layer_mark_dirty(bitmap_layer_get_layer(s_pLayerKirby));
 
     // Timer for next frame
     s_pKirbyAnimationTimer = app_timer_register(next_delay, kirby_animation_timer_handler, NULL);
@@ -187,69 +187,66 @@ static void kirby_animation_timer_handler(void* context)
     // There were no more frames
     s_pKirbyAnimationTimer = NULL;
   }
-
 }
 
-static void load_power_sequence(int powerIdx, GRect* pFrame)
+static void load_random_ability_animation()
 {
-  if (!pFrame)
+  // Load an animation sequence for this ability
+
+  // Cancel any existing animation
+  if (s_pKirbyAnimationTimer)
   {
-    // pFrame needs to point to a valid frame
-    return;
+    app_timer_cancel(s_pKirbyAnimationTimer);
+    s_pKirbyAnimationTimer = NULL;
   }
 
   // Free old data
-  if (s_pKirbyAnimationTimer)
-  {
-    // Cancel any existing animation
-    app_timer_cancel(s_pKirbyAnimationTimer);
-  }  
   if (s_pBitmapSequenceKirby)
   {
     gbitmap_sequence_destroy(s_pBitmapSequenceKirby);
-    s_pBitmapSequenceKirby = NULL;
-  }
-  if (s_pBitmapKirby)
-  {
-    gbitmap_destroy(s_pBitmapKirby);
-    s_pBitmapKirby = NULL;
   }
 
+  unsigned int animationIdx = rand() % NUM_ABILITY_ANIMATIONS[abilityIdx];
+
+  AbilityAnimation animation = ABILITY_ANIMATION_SETS[abilityIdx][animationIdx];
+
   // Create sequence
-  s_pBitmapSequenceKirby = gbitmap_sequence_create_with_resource(ABILITY_ANIMATIONS_RESOURCE_IDS[powerIdx]);
+  s_pBitmapSequenceKirby = gbitmap_sequence_create_with_resource(animation.resourceID);
+
+  // Store the old bitmap so we can destroy it later
+  GBitmap* pOldBitmap = s_pBitmapKirby;
 
   // Create blank GBitmap using APNG frame size
   GSize frame_size = gbitmap_sequence_get_bitmap_size(s_pBitmapSequenceKirby);
   s_pBitmapKirby = gbitmap_create_blank(frame_size, GBitmapFormat8Bit);
 
   // Set Frame Location
-  *pFrame = (GRect) {
-    .origin = KIRBY_ABILITIES_ORIGINS[powerIdx],
+  GRect frame = {
+    .origin = animation.origin,
     .size = frame_size
   };
-}
 
-static void load_kirby_layer(int powerIdx)
-{
-  // Load the animation sequence for this power
-  GRect frame;
-  load_power_sequence(powerIdx, &frame);
   layer_set_frame(bitmap_layer_get_layer(s_pLayerKirby), frame);
 
-  // Schedule timer to advance the first frame
-  s_pKirbyAnimationTimer = app_timer_register(0, kirby_animation_timer_handler, NULL);
+  kirby_animation_timer_handler(NULL);
+
+  // Destroy the old bitmap if it exists.
+  if (pOldBitmap)
+  {
+    gbitmap_destroy(pOldBitmap);
+  };
 }
 
 static void update_date_time_layers()
 {
   time_t temp = time(NULL); 
   struct tm *tick_time = localtime(&temp);
-  
+
   static char time_text[] = "00:00";
  	static char date_text[] = "00/00";
 
  	char *date_format;
-  
+
 	date_format = "%m/%d";
   
   if(clock_is_24h_style() == true) {
@@ -458,17 +455,7 @@ static void outbox_sent_callback(DictionaryIterator *iterator, void *context)
   //APP_LOG(APP_LOG_LEVEL_INFO, "Outbox send success!");
 }
 
-static void update_display(struct tm *current_time) 
-{
-  int powerIdx = (rand() % NUM_ABILITIES);
-  //APP_LOG(APP_LOG_LEVEL_DEBUG, "random character generated [#%d].", powerIdx);
-
-  set_container_image(&s_pBitmapAbilityName, s_pLayerAbilityName, ABILITIES_NAME_RESOURCE_IDS[powerIdx], ABILITY_NAME_LAYER_ORIGIN);
-  load_kirby_layer(powerIdx);
-  update_bg_color(current_time);
-}
-
-static void handle_minute_tick(struct tm *tick_time, TimeUnits units_changed)
+static void handle_tick(struct tm *tick_time, TimeUnits units_changed)
 {
   if( (units_changed & MINUTE_UNIT) != 0 ) {
 
@@ -479,8 +466,16 @@ static void handle_minute_tick(struct tm *tick_time, TimeUnits units_changed)
     }
   }
   
-  if( ((tick_time->tm_min == 0) && (tick_time->tm_sec == 0)) || (initiate_watchface == true) ){
-    update_display(tick_time);
+  if ((units_changed & HOUR_UNIT) != 0)
+  {
+    // Change abilities
+    abilityIdx = (rand() % NUM_ABILITIES);
+    //APP_LOG(APP_LOG_LEVEL_DEBUG, "random character generated [#%d].", powerIdx);
+  
+    set_container_image(&s_pBitmapAbilityName, s_pLayerAbilityName, ABILITIES_NAME_RESOURCE_IDS[abilityIdx], ABILITY_NAME_LAYER_ORIGIN);
+    load_random_ability_animation();
+    update_bg_color(tick_time);
+  
   }
 }
 
@@ -543,8 +538,7 @@ static void handle_tap(AccelAxisType axis, int32_t direction)
 
   if (!s_pKirbyAnimationTimer)
   {
-    gbitmap_sequence_restart(s_pBitmapSequenceKirby);
-    s_pKirbyAnimationTimer = app_timer_register(1, kirby_animation_timer_handler, NULL);
+    load_random_ability_animation();
   }
 
   layer_set_hidden(text_layer_get_layer(s_pTextLayerDate), true);
@@ -662,9 +656,9 @@ void handle_init(void)
   layer_add_child(window_get_root_layer(s_WindowMain), bitmap_layer_get_layer(s_pLayerKirby));
   bitmap_layer_set_compositing_mode(s_pLayerKirby, GCompOpSet);
 
-	handle_minute_tick(tick_time, MINUTE_UNIT);
+	handle_tick(tick_time, MINUTE_UNIT | HOUR_UNIT);
   
- 	tick_timer_service_subscribe(MINUTE_UNIT, handle_minute_tick);
+ 	tick_timer_service_subscribe(MINUTE_UNIT | HOUR_UNIT, handle_tick);
   
   health_service_events_subscribe(handle_health, NULL);
   battery_state_service_subscribe (&handle_battery);

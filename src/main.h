@@ -24,6 +24,12 @@ typedef struct ClaySettingsV1
 
 typedef ClaySettingsV1 ClaySettings;
 
+typedef struct AbilityAnimation
+{
+  uint32_t resourceID;
+  GPoint origin;
+} AbilityAnimation;
+
 static ClaySettings settings;
 static bool initiate_watchface = true;
 static bool daytime;
@@ -48,6 +54,8 @@ static BitmapLayer *s_pLayerBackground;
 static int s_temperature = -1;
 static int s_weatherCondition = -1;
 static time_t s_lastWeatherTime = 0;
+
+static unsigned int abilityIdx = 0;
 
 static AppTimer* s_pKirbyAnimationTimer;
 static AppTimer* s_pShowDateTimer;

@@ -1,8 +1,6 @@
 #pragma once
 #include <pebble.h>
 
-#define NUM_ABILITIES 7
-
 static const int ABILITIES_NAME_RESOURCE_IDS[] = 
 {
   RESOURCE_ID_BEAM,
@@ -14,27 +12,64 @@ static const int ABILITIES_NAME_RESOURCE_IDS[] =
   RESOURCE_ID_SWORD,
 };
 
-static const int ABILITY_ANIMATIONS_RESOURCE_IDS[] = 
+static const AbilityAnimation BEAM_ANIMATIONS[] =
 {
-  RESOURCE_ID_KIRBY_BEAM_ANIM,
-  RESOURCE_ID_KIRBY_CUTTER_ANIM,
-  RESOURCE_ID_KIRBY_FIRE_ANIM,
-  RESOURCE_ID_KIRBY_HAMMER_ANIM,
-  RESOURCE_ID_KIRBY_MIKE_ANIM_1,
-  RESOURCE_ID_KIRBY_SLEEP_ANIM,
-  RESOURCE_ID_KIRBY_SWORD_ANIM,
+  {RESOURCE_ID_KIRBY_BEAM_ANIM, {0, 53}}
 };
 
-static const GPoint KIRBY_ABILITIES_ORIGINS[] =
+static const AbilityAnimation CUTTER_ANIMATIONS[] =
 {
-  {0, 53},  // Beam
-  {1, 82},  // Cutter
-  {0, 67},  // Fire
-  {5, 69},  // Hammer
-  {0, 80},  // Mike
-  {11, 59},  // Sleep
-  {0, 69},  // Sword
+  {RESOURCE_ID_KIRBY_CUTTER_ANIM, {1, 82}}
 };
+
+static const AbilityAnimation FIRE_ANIMATIONS[] =
+{
+  {RESOURCE_ID_KIRBY_FIRE_ANIM, {0, 67}}
+};
+
+static const AbilityAnimation HAMMER_ANIMATIONS[] =
+{
+  {RESOURCE_ID_KIRBY_HAMMER_POUND_ANIM, {5, 69}}
+};
+
+static const AbilityAnimation MIKE_ANIMATIONS[] =
+{
+  {RESOURCE_ID_KIRBY_MIKE_ANIM_1, {0, 80}}
+};
+
+static const AbilityAnimation SLEEP_ANIMATIONS[] =
+{
+  {RESOURCE_ID_KIRBY_SLEEP_ANIM, {11, 59}}
+};
+
+static const AbilityAnimation SWORD_ANIMATIONS[] =
+{
+  {RESOURCE_ID_KIRBY_SWORD_ANIM, {0, 69}}
+};
+
+static const unsigned int NUM_ABILITY_ANIMATIONS[] =
+{
+  1,  // Beam
+  1,  // Cutter
+  1,  // Fire
+  1,  // Hammer
+  1,  // Mike
+  1,  // Sleep
+  1,  // Sword
+};
+
+static const AbilityAnimation* ABILITY_ANIMATION_SETS[] = 
+{
+  BEAM_ANIMATIONS,
+  CUTTER_ANIMATIONS,
+  FIRE_ANIMATIONS,
+  HAMMER_ANIMATIONS,
+  MIKE_ANIMATIONS,
+  SLEEP_ANIMATIONS,
+  SWORD_ANIMATIONS,
+};
+
+#define NUM_ABILITIES 7
 
 #define ABILITY_NAME_LAYER_ORIGIN GPoint(14, 26)
 
