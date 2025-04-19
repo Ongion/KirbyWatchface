@@ -203,15 +203,17 @@ static void load_random_ability_animation()
 		gbitmap_sequence_destroy(s_pBitmapSequenceKirby);
 	}
 
+	if (s_pBitmapKirby)
+	{
+		gbitmap_destroy(s_pBitmapKirby);
+	}
+
 	unsigned int animationIdx = rand() % NUM_ABILITY_ANIMATIONS[abilityIdx];
 
 	AbilityAnimation animation = ABILITY_ANIMATION_SETS[abilityIdx][animationIdx];
 
 	// Create sequence
 	s_pBitmapSequenceKirby = gbitmap_sequence_create_with_resource(animation.resourceID);
-
-	// Store the old bitmap so we can destroy it later
-	GBitmap* pOldBitmap = s_pBitmapKirby;
 
 	// Create blank GBitmap using APNG frame size
 	GSize frame_size = gbitmap_sequence_get_bitmap_size(s_pBitmapSequenceKirby);
@@ -225,12 +227,6 @@ static void load_random_ability_animation()
 	layer_set_frame(bitmap_layer_get_layer(s_pLayerKirby), frame);
 
 	kirby_animation_timer_handler(NULL);
-
-	// Destroy the old bitmap if it exists.
-	if (pOldBitmap)
-	{
-		gbitmap_destroy(pOldBitmap);
-	};
 }
 
 static void update_date_time_layers()
@@ -466,7 +462,6 @@ static void handle_tick(struct tm* tick_time, TimeUnits units_changed)
 {
 	if ((units_changed & MINUTE_UNIT) != 0)
 	{
-
 		update_date_time_layers();
 
 		if (tick_time->tm_min % 30 == 0)
@@ -517,7 +512,6 @@ static void handle_bluetooth(bool connected)
 {
 	if (connected)
 	{
-
 		if (!initiate_watchface)
 		{
 			vibes_double_pulse();
@@ -525,7 +519,6 @@ static void handle_bluetooth(bool connected)
 	}
 	else
 	{
-
 		if (!initiate_watchface)
 		{
 			vibes_enqueue_custom_pattern((VibePattern) {
@@ -582,6 +575,7 @@ static void main_window_unload(Window* window)
 
 	text_layer_destroy(s_pTextLayerWeather);
 
+	gbitmap_destroy(s_pBitmapBatteryBar);
 	layer_destroy(s_pLayerBattery);
 
 	text_layer_destroy(s_pTextLayerTime);
@@ -648,7 +642,7 @@ void handle_init(void)
 
 	window_set_window_handlers(s_WindowMain, (WindowHandlers) {
 		.load = main_window_load,
-			.unload = main_window_unload,
+		.unload = main_window_unload,
 	});
 
 	time_t now = time(NULL);
