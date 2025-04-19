@@ -19,7 +19,7 @@ static const AbilityAnimation BEAM_ANIMATIONS[] =
 
 static const AbilityAnimation CUTTER_ANIMATIONS[] =
 {
-  {RESOURCE_ID_KIRBY_CUTTER_ANIM, {1, 82}}
+  {RESOURCE_ID_KIRBY_CUTTER_THROW_ANIM, {1, 82}}
 };
 
 static const AbilityAnimation FIRE_ANIMATIONS[] =

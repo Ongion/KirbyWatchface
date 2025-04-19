@@ -21,7 +21,8 @@ static const AbilityAnimation BEAM_ANIMATIONS[] =
 
 static const AbilityAnimation CUTTER_ANIMATIONS[] =
 {
-  {RESOURCE_ID_KIRBY_CUTTER_ANIM, {27, 110}}
+  {RESOURCE_ID_KIRBY_CUTTER_THROW_ANIM, {27, 110}},
+  {RESOURCE_ID_KIRBY_CUTTER_COMBO_ANIM, {17, 41}}
 };
 
 static const AbilityAnimation FIRE_ANIMATIONS[] =
@@ -53,7 +54,7 @@ static const AbilityAnimation SWORD_ANIMATIONS[] =
 static const unsigned int NUM_ABILITY_ANIMATIONS[] =
 {
   1,  // Beam
-  1,  // Cutter
+  2,  // Cutter
   1,  // Fire
   2,  // Hammer
   1,  // Mike

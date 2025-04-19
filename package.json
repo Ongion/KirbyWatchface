@@ -25,8 +25,14 @@
         },
         {
           "type": "raw",
-          "name": "KIRBY_CUTTER_ANIM",
-          "file": "images/KIRBY_CUTTER_ANIM.png"
+          "name": "KIRBY_CUTTER_THROW_ANIM",
+          "file": "images/KIRBY_CUTTER_THROW_ANIM.png"
+        },
+        {
+          "targetPlatforms": ["emery"],
+          "type": "raw",
+          "name": "KIRBY_CUTTER_COMBO_ANIM",
+          "file": "images/KIRBY_CUTTER_COMBO_ANIM.png"
         },
         {
           "type": "raw",
