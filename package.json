@@ -16,7 +16,8 @@
           "targetPlatforms": ["emery"],
           "type": "font",
           "name": "HELVETICA_CUSTOM_BLACK_26",
-          "file": "fonts/HelveticaCustomRounded-Black.ttf"
+          "file": "fonts/HelveticaCustomRounded-Black.ttf",
+          "characterRegex": "[0-9:/°FC]"
         },
         {
           "type": "raw",

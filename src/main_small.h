@@ -75,9 +75,10 @@ static const AbilityAnimation* ABILITY_ANIMATION_SETS[] =
 
 #define HUD_KIRBY_LAYER_RECT GRect(1, 1, 66, 25)
 #define HUD_BOSS_LAYER_RECT GRect(77, 1, 66, 25)
-#define BATTERY_LAYER_RECT GRect(9,13,50,10)
+#define BATTERY_LAYER_RECT GRect(8,12,50,10)
 #define TIME_LAYER_RECT GRect(1, 130, 72, 26)
-#define DATE_TEMPERATURE_RECT GRect(72, 130, 72, 26)
+#define DATE_RECT GRect(72, 130, 72, 26)
+#define TEMPERATURE_RECT GRect(72, 130, 72, 26)
 
 #define KING_ORIGIN GPoint(82, 53)
 #define KRACKO_ORIGIN GPoint(64, 36)

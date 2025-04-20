@@ -57,7 +57,7 @@ static BitmapLayer* s_pLayerHUDKirby;
 static GBitmap* s_pBitmapHUDBoss;
 static BitmapLayer* s_pLayerHUDBoss;
 
-static int s_temperature = -1;
+static int s_temperature = 255;
 static int s_weatherCondition = -1;
 static time_t s_lastWeatherTime = 0;
 
@@ -76,5 +76,10 @@ static BitmapLayer* s_pLayerBoss;
 static GBitmap* s_pBitmapKirby;
 static GBitmapSequence* s_pBitmapSequenceKirby;
 static BitmapLayer* s_pLayerKirby;
+
+void update_battery_resource();
+void update_weather_layer_text();
+void battery_layer_update_callback(Layer* layer, GContext* ctx);
+void step_layer_update_callback(Layer* layer, GContext* ctx);
 
 Window* s_WindowMain;

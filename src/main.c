@@ -10,31 +10,243 @@
 // Add animation for steps goal being reached
 // Fix memory fragmentation
 
-static void load_background_layer(Layer* window_layer)
+static void load_background_layer(Layer* parent_layer)
 {
 	s_pBitmapBackground = gbitmap_create_with_resource(RESOURCE_ID_BACKGROUND);
-	s_pLayerBackground = bitmap_layer_create(layer_get_frame(window_layer));
+	s_pLayerBackground = bitmap_layer_create(layer_get_frame(parent_layer));
 	bitmap_layer_set_compositing_mode(s_pLayerBackground, GCompOpSet);
 	bitmap_layer_set_bitmap(s_pLayerBackground, s_pBitmapBackground);
-	layer_add_child(window_layer, bitmap_layer_get_layer(s_pLayerBackground));
+	layer_add_child(parent_layer, bitmap_layer_get_layer(s_pLayerBackground));
 }
 
-static void load_HUD_layers(Layer* window_layer)
+static void unload_background_layer()
+{
+	if (s_pLayerBackground)
+	{
+		layer_remove_from_parent(bitmap_layer_get_layer(s_pLayerBackground));
+		bitmap_layer_destroy(s_pLayerBackground);
+	}
+	if (s_pBitmapBackground)
+	{
+		gbitmap_destroy(s_pBitmapBackground);
+	}
+}
+
+static void load_HUD_layers(Layer* parent_layer)
 {
 	s_pBitmapHUDKirby = gbitmap_create_with_resource(RESOURCE_ID_HUD_KIRBY);
-	s_pBitmapHUDBoss = gbitmap_create_with_resource(RESOURCE_ID_HUD_BOSS);
-
 	s_pLayerHUDKirby = bitmap_layer_create(HUD_KIRBY_LAYER_RECT);
-	s_pLayerHUDBoss = bitmap_layer_create(HUD_BOSS_LAYER_RECT);
-
 	bitmap_layer_set_compositing_mode(s_pLayerHUDKirby, GCompOpSet);
-	bitmap_layer_set_compositing_mode(s_pLayerHUDBoss, GCompOpSet);
-
 	bitmap_layer_set_bitmap(s_pLayerHUDKirby, s_pBitmapHUDKirby);
+	layer_add_child(parent_layer, bitmap_layer_get_layer(s_pLayerHUDKirby));
+	
+	s_pBitmapHUDBoss = gbitmap_create_with_resource(RESOURCE_ID_HUD_BOSS);
+	s_pLayerHUDBoss = bitmap_layer_create(HUD_BOSS_LAYER_RECT);
+	bitmap_layer_set_compositing_mode(s_pLayerHUDBoss, GCompOpSet);
 	bitmap_layer_set_bitmap(s_pLayerHUDBoss, s_pBitmapHUDBoss);
+	layer_add_child(parent_layer, bitmap_layer_get_layer(s_pLayerHUDBoss));
+}
 
-	layer_add_child(window_layer, bitmap_layer_get_layer(s_pLayerHUDKirby));
-	layer_add_child(window_layer, bitmap_layer_get_layer(s_pLayerHUDBoss));
+static void unload_HUD_layers()
+{
+	if (s_pLayerHUDBoss)
+	{
+		layer_remove_from_parent(bitmap_layer_get_layer(s_pLayerHUDBoss));
+		bitmap_layer_destroy(s_pLayerHUDBoss);
+	}
+
+	if (s_pLayerHUDKirby)
+	{
+		layer_remove_from_parent(bitmap_layer_get_layer(s_pLayerHUDKirby));
+		bitmap_layer_destroy(s_pLayerHUDKirby);
+	}
+
+	if (s_pBitmapBoss)
+	{
+		gbitmap_destroy(s_pBitmapHUDBoss);
+	}
+
+	if (s_pBitmapKirby)
+	{
+		gbitmap_destroy(s_pBitmapHUDKirby);
+	}
+}
+
+static void load_ability_name_layer(Layer* parent_layer)
+{
+	s_pLayerAbilityName = bitmap_layer_create(GRectZero);
+	bitmap_layer_set_compositing_mode(s_pLayerAbilityName, GCompOpSet);
+	layer_add_child(parent_layer, bitmap_layer_get_layer(s_pLayerAbilityName));
+}
+
+static void unload_ability_name_layer()
+{
+	if (s_pLayerAbilityName)
+	{
+		layer_remove_from_parent(bitmap_layer_get_layer(s_pLayerAbilityName));
+		bitmap_layer_destroy(s_pLayerAbilityName);
+	}
+
+	if (s_pBitmapAbilityName)
+	{
+		gbitmap_destroy(s_pBitmapAbilityName);
+	}
+}
+
+static void load_boss_layer(Layer* parent_layer)
+{
+	s_pLayerBoss = bitmap_layer_create(GRectZero);
+	bitmap_layer_set_compositing_mode(s_pLayerBoss, GCompOpSet);
+	layer_add_child(parent_layer, bitmap_layer_get_layer(s_pLayerBoss));
+}
+
+static void unload_boss_layer()
+{
+	if (s_pLayerBoss)
+	{
+		layer_remove_from_parent(bitmap_layer_get_layer(s_pLayerBoss));
+		bitmap_layer_destroy(s_pLayerBoss);
+	}
+
+	if (s_pBitmapBoss)
+	{
+		gbitmap_destroy(s_pBitmapBoss);
+	}
+}
+
+static void load_kirby_layer(Layer* parent_layer)
+{
+	s_pLayerKirby = bitmap_layer_create(GRectZero);
+	bitmap_layer_set_compositing_mode(s_pLayerKirby, GCompOpSet);
+	layer_add_child(parent_layer, bitmap_layer_get_layer(s_pLayerKirby));
+}
+
+static void unload_kirby_layer()
+{
+	if (s_pLayerKirby)
+	{
+		layer_remove_from_parent(bitmap_layer_get_layer(s_pLayerKirby));
+		bitmap_layer_destroy(s_pLayerKirby);
+	}
+
+	if (s_pBitmapSequenceKirby)
+	{
+		gbitmap_sequence_destroy(s_pBitmapSequenceKirby);
+	}
+
+	if (s_pBitmapKirby)
+	{
+		gbitmap_destroy(s_pBitmapKirby);
+	}
+}
+
+static void load_battery_layer(Layer* parent_layer)
+{
+	BatteryChargeState initial = battery_state_service_peek();
+	battery_level = initial.charge_percent;
+	battery_plugged = initial.is_plugged;
+	update_battery_resource();
+	s_pLayerBattery = layer_create(BATTERY_LAYER_RECT);
+	layer_set_update_proc(s_pLayerBattery, &battery_layer_update_callback);
+	layer_add_child(parent_layer, s_pLayerBattery);
+}
+
+static void unload_battery_layer()
+{
+	if (s_pLayerBattery)
+	{
+		layer_remove_from_parent(s_pLayerBattery);
+		layer_destroy(s_pLayerBattery);
+	}
+
+	if (s_pBitmapBatteryBar)
+	{
+		gbitmap_destroy(s_pBitmapBatteryBar);
+	}
+}
+
+static void load_step_layer(Layer* parent_layer)
+{
+	s_pLayerSteps = layer_create(GRect(85, 13, 50, 10));
+	layer_set_update_proc(s_pLayerSteps, &step_layer_update_callback);
+	layer_add_child(parent_layer, s_pLayerSteps);
+}
+
+static void unload_step_layer()
+{
+	if (s_pLayerSteps)
+	{
+		layer_remove_from_parent(s_pLayerSteps);
+		layer_destroy(s_pLayerSteps);
+	}
+}
+
+static void load_time_layer(Layer* parent_layer)
+{
+	s_pTextLayerTime = text_layer_create(TIME_LAYER_RECT);
+	text_layer_set_text_alignment(s_pTextLayerTime, GTextAlignmentCenter);
+	text_layer_set_text_color(s_pTextLayerTime, GColorBlack);
+	text_layer_set_background_color(s_pTextLayerTime, GColorClear);
+	text_layer_set_font(s_pTextLayerTime, FONT);
+	layer_add_child(parent_layer, text_layer_get_layer(s_pTextLayerTime));
+}
+
+static void unload_time_layer()
+{
+	if (s_pTextLayerTime)
+	{
+		layer_remove_from_parent(text_layer_get_layer(s_pTextLayerTime));
+		text_layer_destroy(s_pTextLayerTime);
+	}
+}
+
+static void load_date_layer(Layer* parent_layer)
+{
+	s_pTextLayerDate = text_layer_create(DATE_RECT);
+	text_layer_set_text_alignment(s_pTextLayerDate, GTextAlignmentCenter);
+	text_layer_set_text_color(s_pTextLayerDate, GColorBlack);
+	text_layer_set_background_color(s_pTextLayerDate, GColorClear);
+	text_layer_set_font(s_pTextLayerDate, FONT);
+	layer_add_child(parent_layer, text_layer_get_layer(s_pTextLayerDate));
+}
+
+static void unload_date_layer()
+{
+	if (s_pTextLayerDate)
+	{
+		layer_remove_from_parent(text_layer_get_layer(s_pTextLayerDate));
+		text_layer_destroy(s_pTextLayerDate);
+	}
+}
+
+static void load_weather_layer(Layer* parent_layer)
+{
+	s_pTextLayerWeather = text_layer_create(TEMPERATURE_RECT);
+	text_layer_set_background_color(s_pTextLayerWeather, GColorClear);
+	text_layer_set_text_color(s_pTextLayerWeather, GColorBlack);
+	text_layer_set_font(s_pTextLayerWeather, FONT);
+	text_layer_set_text_alignment(s_pTextLayerWeather, GTextAlignmentCenter);
+	update_weather_layer_text();
+	layer_add_child(parent_layer, text_layer_get_layer(s_pTextLayerWeather));
+	layer_set_hidden(text_layer_get_layer(s_pTextLayerWeather), true);
+}
+
+static void unload_weather_layer()
+{
+	if (s_pTextLayerWeather)
+	{
+		layer_remove_from_parent(text_layer_get_layer(s_pTextLayerWeather));
+		text_layer_destroy(s_pTextLayerWeather);
+	}
+}
+
+void battery_layer_update_callback(Layer* layer, GContext* ctx)
+{
+	graphics_context_set_compositing_mode(ctx, GCompOpAssign);
+	GColor8 batteryColor = GColorRed;
+	graphics_context_set_stroke_color(ctx, batteryColor);
+	graphics_context_set_fill_color(ctx, batteryColor);
+	graphics_draw_bitmap_in_rect(ctx, s_pBitmapBatteryBar, GRect(0, 0, (battery_level * BATTERY_LAYER_RECT.size.w) / 100, 10));
 }
 
 void step_layer_update_callback(Layer* layer, GContext* ctx)
@@ -47,17 +259,10 @@ void step_layer_update_callback(Layer* layer, GContext* ctx)
 	graphics_fill_rect(ctx, GRect(50 - (steps / steps_per_px), 0, (steps / steps_per_px), 10), 0, GCornerNone);
 }
 
-static void load_step_layer(Layer* window_layer)
+void update_weather_layer_text()
 {
-	s_pLayerSteps = layer_create(GRect(85, 13, 50, 10));
-	layer_set_update_proc(s_pLayerSteps, &step_layer_update_callback);
-	layer_add_child(window_layer, s_pLayerSteps);
-}
-
-static void update_weather_layer_text()
-{
-	int finalTemp;
 	static char weather_layer_buffer[10];
+	int finalTemp;
 
 	if (settings.scalePreference == FAHRENHEIT)
 	{
@@ -68,37 +273,20 @@ static void update_weather_layer_text()
 		finalTemp = s_temperature - 273.15;
 	}
 
+#if PBL_DISPLAY_HEIGHT == 228
+	char scale = settings.scalePreference == FAHRENHEIT ? 'F' : 'C';
+	snprintf(weather_layer_buffer, sizeof(weather_layer_buffer), "%d°%c", finalTemp, scale);
+#else
 	snprintf(weather_layer_buffer, sizeof(weather_layer_buffer), "%d°", finalTemp);
+#endif
 	text_layer_set_text(s_pTextLayerWeather, weather_layer_buffer);
 }
 
-static void load_weather_layer(Layer* window_layer)
-{
-	s_pTextLayerWeather = text_layer_create(DATE_TEMPERATURE_RECT);
-	text_layer_set_background_color(s_pTextLayerWeather, GColorClear);
-	text_layer_set_text_color(s_pTextLayerWeather, GColorBlack);
-	update_weather_layer_text();
-	text_layer_set_font(s_pTextLayerWeather, FONT);
-	text_layer_set_text_alignment(s_pTextLayerWeather, GTextAlignmentCenter);
-	layer_add_child(window_layer, text_layer_get_layer(s_pTextLayerWeather));
-	layer_set_hidden(text_layer_get_layer(s_pTextLayerWeather), true);
-}
-
-void battery_layer_update_callback(Layer* layer, GContext* ctx)
-{
-	graphics_context_set_compositing_mode(ctx, GCompOpAssign);
-	GColor8 batteryColor = GColorRed;
-	graphics_context_set_stroke_color(ctx, batteryColor);
-	graphics_context_set_fill_color(ctx, batteryColor);
-	graphics_draw_bitmap_in_rect(ctx, s_pBitmapBatteryBar, GRect(0, 0, (battery_level * BATTERY_LAYER_RECT.size.w) / 100, 10));
-}
-
-static void load_battery_resource()
+void update_battery_resource()
 {
 	if (s_pBitmapBatteryBar)
 	{
 		gbitmap_destroy(s_pBitmapBatteryBar);
-		s_pBitmapBatteryBar = NULL;
 	}
 
 	if (battery_plugged)
@@ -109,37 +297,6 @@ static void load_battery_resource()
 	{
 		s_pBitmapBatteryBar = gbitmap_create_with_resource(RESOURCE_ID_HEALTH_DISCHARGE);
 	}
-}
-
-static void load_battery_layer(Layer* window_layer)
-{
-	BatteryChargeState initial = battery_state_service_peek();
-	battery_level = initial.charge_percent;
-	battery_plugged = initial.is_plugged;
-	load_battery_resource();
-	s_pLayerBattery = layer_create(BATTERY_LAYER_RECT);
-	layer_set_update_proc(s_pLayerBattery, &battery_layer_update_callback);
-	layer_add_child(window_layer, s_pLayerBattery);
-}
-
-static void load_time_text_layer(Layer* window_layer)
-{
-	s_pTextLayerTime = text_layer_create(TIME_LAYER_RECT);
-	text_layer_set_text_alignment(s_pTextLayerTime, GTextAlignmentCenter);
-	text_layer_set_text_color(s_pTextLayerTime, GColorBlack);
-	text_layer_set_background_color(s_pTextLayerTime, GColorClear);
-	text_layer_set_font(s_pTextLayerTime, FONT);
-	layer_add_child(window_layer, text_layer_get_layer(s_pTextLayerTime));
-}
-
-static void load_date_text_layer(Layer* window_layer)
-{
-	s_pTextLayerDate = text_layer_create(DATE_TEMPERATURE_RECT);
-	text_layer_set_text_alignment(s_pTextLayerDate, GTextAlignmentCenter);
-	text_layer_set_text_color(s_pTextLayerDate, GColorBlack);
-	text_layer_set_background_color(s_pTextLayerDate, GColorClear);
-	text_layer_set_font(s_pTextLayerDate, FONT);
-	layer_add_child(window_layer, text_layer_get_layer(s_pTextLayerDate));
 }
 
 static void set_container_image(GBitmap** bmp_image, BitmapLayer* bmp_layer, const int resource_id, GPoint origin)
@@ -165,6 +322,7 @@ static void update_boss_layer()
 	// {
 	// 	/// DO KING?
 	// }
+	s_weatherCondition = 305;
 	if (200 <= s_weatherCondition && s_weatherCondition < 300)
 	{
 		set_container_image(&s_pBitmapBoss, s_pLayerBoss, RESOURCE_ID_KRACKO_LIGHTNING, GPoint(64, 24));
@@ -530,7 +688,7 @@ void handle_battery(BatteryChargeState charge)
 {
 	battery_level = charge.charge_percent;
 	battery_plugged = charge.is_plugged;
-	load_battery_resource();
+	update_battery_resource();
 	layer_mark_dirty(s_pLayerBattery);
 }
 
@@ -585,56 +743,45 @@ static void main_window_load(Window* window)
 	Layer* window_layer = window_get_root_layer(window);
 
 	load_background_layer(window_layer);
+	load_kirby_layer(window_layer);
+	load_boss_layer(window_layer);
 	load_HUD_layers(window_layer);
-	load_step_layer(window_layer);
+	load_battery_layer(bitmap_layer_get_layer(s_pLayerHUDKirby));
+	load_step_layer(bitmap_layer_get_layer(s_pLayerHUDBoss));
+	load_ability_name_layer(window_layer);
+	
+#if PBL_DISPLAY_HEIGHT == 228
+	s_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_HELVETICA_CUSTOM_BLACK_26));
+#endif
+	load_time_layer(window_layer);
+	load_date_layer(window_layer);
 	load_weather_layer(window_layer);
-	load_battery_layer(window_layer);
-	load_time_text_layer(window_layer);
-	load_date_text_layer(window_layer);
 }
 
 static void main_window_unload(Window* window)
 {
-	gbitmap_destroy(s_pBitmapBackground);
-	bitmap_layer_destroy(s_pLayerBackground);
+	unload_weather_layer();
+	unload_date_layer();
+	unload_time_layer();
+#if PBL_DISPLAY_HEIGHT == 228
+	fonts_unload_custom_font(s_font);
+#endif
 
-	layer_destroy(s_pLayerSteps);
-
-	text_layer_destroy(s_pTextLayerWeather);
-
-	gbitmap_destroy(s_pBitmapBatteryBar);
-	layer_destroy(s_pLayerBattery);
-
-	text_layer_destroy(s_pTextLayerTime);
-
-	text_layer_destroy(s_pTextLayerDate);
-
-	layer_remove_from_parent(bitmap_layer_get_layer(s_pLayerAbilityName));
-	gbitmap_destroy(s_pBitmapAbilityName);
-	bitmap_layer_destroy(s_pLayerAbilityName);
-
-	layer_remove_from_parent(bitmap_layer_get_layer(s_pLayerKirby));
-	gbitmap_sequence_destroy(s_pBitmapSequenceKirby);
-	gbitmap_destroy(s_pBitmapKirby);
-	bitmap_layer_destroy(s_pLayerKirby);
-
-	layer_remove_from_parent(bitmap_layer_get_layer(s_pLayerBoss));
-	gbitmap_destroy(s_pBitmapBoss);
-	bitmap_layer_destroy(s_pLayerBoss);
+	unload_ability_name_layer();
+	unload_step_layer();
+	unload_battery_layer();
+	unload_HUD_layers();
+	unload_boss_layer();
+	unload_kirby_layer();
+	unload_background_layer();
 }
 
-static void load_default_settings()
+static void load_settings()
 {
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "Loading defaults....");
 	settings.openWeatherMapAPIKey[0] = '\0';
 	settings.city[0] = '\0';
 	settings.scalePreference = CELSIUS;
 	settings.stepsGoal = 5000;
-}
-
-void handle_init(void)
-{
-	load_default_settings();
 
 	if (persist_exists(STORAGE_KEY_ClaySettings) && persist_exists(STORAGE_KEY_ClaySettingsVersion))
 	{
@@ -642,8 +789,6 @@ void handle_init(void)
 		{
 			persist_read_data(STORAGE_KEY_ClaySettings, &settings, sizeof(settings));
 		}
-
-		APP_LOG(APP_LOG_LEVEL_DEBUG, "LOADED CITY %s", settings.city);
 	}
 
 	if (persist_exists(STORAGE_KEY_LastSeenTemperature))
@@ -660,12 +805,13 @@ void handle_init(void)
 	{
 		s_lastWeatherTime = persist_read_int(STORAGE_KEY_LastTimeRecievedWeather);
 	}
+}
+
+void handle_init(void)
+{
+	load_settings();
 
 	s_WindowMain = window_create();
-
-#if PBL_DISPLAY_HEIGHT == 228
-	s_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_HELVETICA_CUSTOM_BLACK_26));
-#endif
 
 	window_set_window_handlers(s_WindowMain, (WindowHandlers) {
 		.load = main_window_load,
@@ -676,20 +822,6 @@ void handle_init(void)
 	struct tm* tick_time = localtime(&now);
 
 	window_stack_push(s_WindowMain, true);
-
-	GRect dummy_frame = { {0, 0}, {0, 0} };
-
-	s_pLayerAbilityName = bitmap_layer_create(dummy_frame);
-	layer_add_child(window_get_root_layer(s_WindowMain), bitmap_layer_get_layer(s_pLayerAbilityName));
-	bitmap_layer_set_compositing_mode(s_pLayerAbilityName, GCompOpSet);
-
-	s_pLayerBoss = bitmap_layer_create(dummy_frame);
-	layer_add_child(window_get_root_layer(s_WindowMain), bitmap_layer_get_layer(s_pLayerBoss));
-	bitmap_layer_set_compositing_mode(s_pLayerBoss, GCompOpSet);
-
-	s_pLayerKirby = bitmap_layer_create(dummy_frame);
-	layer_add_child(window_get_root_layer(s_WindowMain), bitmap_layer_get_layer(s_pLayerKirby));
-	bitmap_layer_set_compositing_mode(s_pLayerKirby, GCompOpSet);
 
 	handle_tick(tick_time, MINUTE_UNIT | HOUR_UNIT);
 
@@ -721,10 +853,7 @@ void handle_init(void)
 
 void handle_deinit(void)
 {
-#if PBL_DISPLAY_HEIGHT == 228
-	fonts_unload_custom_font(s_font);
-#endif
-
+	
 	window_destroy(s_WindowMain);
 	battery_state_service_unsubscribe();
 	accel_tap_service_unsubscribe();
