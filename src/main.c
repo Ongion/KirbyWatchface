@@ -19,6 +19,24 @@ static void load_background_layer(Layer* window_layer)
 	layer_add_child(window_layer, bitmap_layer_get_layer(s_pLayerBackground));
 }
 
+static void load_HUD_layers(Layer* window_layer)
+{
+	s_pBitmapHUDKirby = gbitmap_create_with_resource(RESOURCE_ID_HUD_KIRBY);
+	s_pBitmapHUDBoss = gbitmap_create_with_resource(RESOURCE_ID_HUD_BOSS);
+
+	s_pLayerHUDKirby = bitmap_layer_create(HUD_KIRBY_LAYER_RECT);
+	s_pLayerHUDBoss = bitmap_layer_create(HUD_BOSS_LAYER_RECT);
+
+	bitmap_layer_set_compositing_mode(s_pLayerHUDKirby, GCompOpSet);
+	bitmap_layer_set_compositing_mode(s_pLayerHUDBoss, GCompOpSet);
+
+	bitmap_layer_set_bitmap(s_pLayerHUDKirby, s_pBitmapHUDKirby);
+	bitmap_layer_set_bitmap(s_pLayerHUDBoss, s_pBitmapHUDBoss);
+
+	layer_add_child(window_layer, bitmap_layer_get_layer(s_pLayerHUDKirby));
+	layer_add_child(window_layer, bitmap_layer_get_layer(s_pLayerHUDBoss));
+}
+
 void step_layer_update_callback(Layer* layer, GContext* ctx)
 {
 	uint16_t steps_per_px = settings.stepsGoal / 50;
@@ -147,7 +165,7 @@ static void update_boss_layer()
 	// {
 	// 	/// DO KING?
 	// }
-\	if (200 <= s_weatherCondition && s_weatherCondition < 300)
+	if (200 <= s_weatherCondition && s_weatherCondition < 300)
 	{
 		set_container_image(&s_pBitmapBoss, s_pLayerBoss, RESOURCE_ID_KRACKO_LIGHTNING, GPoint(64, 24));
 	}
@@ -567,6 +585,7 @@ static void main_window_load(Window* window)
 	Layer* window_layer = window_get_root_layer(window);
 
 	load_background_layer(window_layer);
+	load_HUD_layers(window_layer);
 	load_step_layer(window_layer);
 	load_weather_layer(window_layer);
 	load_battery_layer(window_layer);

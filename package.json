@@ -137,6 +137,16 @@
         },
         {
           "type": "bitmap",
+          "name": "HUD_KIRBY",
+          "file": "images/HUD_KIRBY.png"
+        },
+        {
+          "type": "bitmap",
+          "name": "HUD_BOSS",
+          "file": "images/HUD_BOSS.png"
+        },
+        {
+          "type": "bitmap",
           "name": "FIRE",
           "file": "images/FIRE.png"
         },

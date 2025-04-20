@@ -51,6 +51,12 @@ static bool battery_plugged;
 static GBitmap* s_pBitmapBackground;
 static BitmapLayer* s_pLayerBackground;
 
+static GBitmap* s_pBitmapHUDKirby;
+static BitmapLayer* s_pLayerHUDKirby;
+
+static GBitmap* s_pBitmapHUDBoss;
+static BitmapLayer* s_pLayerHUDBoss;
+
 static int s_temperature = -1;
 static int s_weatherCondition = -1;
 static time_t s_lastWeatherTime = 0;
