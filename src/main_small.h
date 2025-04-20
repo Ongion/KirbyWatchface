@@ -77,4 +77,6 @@ static const AbilityAnimation* ABILITY_ANIMATION_SETS[] =
 #define TIME_LAYER_RECT GRect(1, 130, 72, 26)
 #define DATE_TEMPERATURE_RECT GRect(72, 130, 72, 26)
 
+#define KING_ORIGIN GPoint(82, 53)
+
 #define FONT fonts_get_system_font(FONT_KEY_LECO_20_BOLD_NUMBERS)

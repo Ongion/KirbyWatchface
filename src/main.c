@@ -291,7 +291,7 @@ static void weather_ended()
 	if (s_pWeatherTimeoutTimer != NULL)
 	{
 		// APP_LOG(APP_LOG_LEVEL_INFO, "Weather timer is not NULL");
-		set_container_image(&s_pBitmapBoss, s_pLayerBoss, RESOURCE_ID_KING, GPoint(82, 53));
+		set_container_image(&s_pBitmapBoss, s_pLayerBoss, RESOURCE_ID_KING, KING_ORIGIN);
 		s_pWeatherTimeoutTimer = NULL;
 	}
 }

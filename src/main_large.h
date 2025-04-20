@@ -79,6 +79,8 @@ static const AbilityAnimation* ABILITY_ANIMATION_SETS[] =
 
 #define BATTERY_LAYER_RECT GRect(14,7,72,10)
 #define TIME_LAYER_RECT GRect(10, 175, 82, 38)
-#define DATE_TEMPERATURE_RECT GRect(108, 175, 82, 38)
+#define DATE_TEMPERATURE_RECT GRect(109, 175, 82, 38)
+
+#define KING_ORIGIN GPoint(117, 90)
 
 #define FONT s_font
