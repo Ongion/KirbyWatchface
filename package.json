@@ -112,6 +112,11 @@
         },
         {
           "type": "bitmap",
+          "name": "KRACKO_RAIN",
+          "file": "images/KRACKO_RAIN.png"
+        },
+        {
+          "type": "bitmap",
           "name": "KRACKO_LIGHTNING",
           "file": "images/KRACKO_LIGHTNING.png"
         },

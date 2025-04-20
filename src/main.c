@@ -143,13 +143,21 @@ static void set_container_image(GBitmap** bmp_image, BitmapLayer* bmp_layer, con
 
 static void update_boss_layer()
 {
-	if (200 <= s_weatherCondition && s_weatherCondition < 300)
+	// if (((unsigned int)time(NULL) - (unsigned int)s_lastWeatherTime) > 1800)
+	// {
+	// 	/// DO KING?
+	// }
+\	if (200 <= s_weatherCondition && s_weatherCondition < 300)
 	{
 		set_container_image(&s_pBitmapBoss, s_pLayerBoss, RESOURCE_ID_KRACKO_LIGHTNING, GPoint(64, 24));
 	}
-	else if ((300 <= s_weatherCondition && s_weatherCondition < 600) || s_weatherCondition > 800)
+	else if (300 <= s_weatherCondition && s_weatherCondition < 600)
 	{
-		set_container_image(&s_pBitmapBoss, s_pLayerBoss, RESOURCE_ID_KRACKO, GPoint(64, 36));
+		set_container_image(&s_pBitmapBoss, s_pLayerBoss, RESOURCE_ID_KRACKO_RAIN, KRACKO_RAIN_ORIGIN);
+	}
+	else if (s_weatherCondition > 800)
+	{
+		set_container_image(&s_pBitmapBoss, s_pLayerBoss, RESOURCE_ID_KRACKO, KRACKO_ORIGIN);
 	}
 	else if (600 <= s_weatherCondition && s_weatherCondition < 700)
 	{
