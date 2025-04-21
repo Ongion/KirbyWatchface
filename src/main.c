@@ -13,7 +13,9 @@
 static void load_background_layer(Layer* parent_layer)
 {
 	s_pBitmapBackground = gbitmap_create_with_resource(RESOURCE_ID_BACKGROUND);
-	s_pLayerBackground = bitmap_layer_create(layer_get_frame(parent_layer));
+	GRect frame = gbitmap_get_bounds(s_pBitmapBackground);
+	frame.origin = (GPoint){0, layer_get_frame(parent_layer).size.h - frame.size.h};
+	s_pLayerBackground = bitmap_layer_create(frame);
 	bitmap_layer_set_compositing_mode(s_pLayerBackground, GCompOpSet);
 	bitmap_layer_set_bitmap(s_pLayerBackground, s_pBitmapBackground);
 	layer_add_child(parent_layer, bitmap_layer_get_layer(s_pLayerBackground));
@@ -61,12 +63,12 @@ static void unload_HUD_layers()
 		bitmap_layer_destroy(s_pLayerHUDKirby);
 	}
 
-	if (s_pBitmapBoss)
+	if (s_pBitmapHUDBoss)
 	{
 		gbitmap_destroy(s_pBitmapHUDBoss);
 	}
 
-	if (s_pBitmapKirby)
+	if (s_pBitmapHUDKirby)
 	{
 		gbitmap_destroy(s_pBitmapHUDKirby);
 	}
@@ -301,7 +303,10 @@ void update_battery_resource()
 
 static void set_container_image(GBitmap** bmp_image, BitmapLayer* bmp_layer, const int resource_id, GPoint origin)
 {
-	GBitmap* old_image = *bmp_image;
+	if (*bmp_image != NULL)
+	{
+		gbitmap_destroy(*bmp_image);
+	}
 
 	*bmp_image = gbitmap_create_with_resource(resource_id);
 	GRect frame = (GRect){
@@ -309,21 +314,20 @@ static void set_container_image(GBitmap** bmp_image, BitmapLayer* bmp_layer, con
 		.size = gbitmap_get_bounds(*bmp_image).size };
 	bitmap_layer_set_bitmap(bmp_layer, *bmp_image);
 	layer_set_frame(bitmap_layer_get_layer(bmp_layer), frame);
-
-	if (old_image != NULL)
-	{
-		gbitmap_destroy(old_image);
-	}
 }
 
 static void update_boss_layer()
 {
-	// if (((unsigned int)time(NULL) - (unsigned int)s_lastWeatherTime) > 1800)
-	// {
-	// 	/// DO KING?
-	// }
-	s_weatherCondition = 305;
-	if (200 <= s_weatherCondition && s_weatherCondition < 300)
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "BT Connected?: %d", bt_connected);
+	if (!bt_connected)
+	{
+		set_container_image(&s_pBitmapBoss, s_pLayerBoss, RESOURCE_ID_02, ZEROTWO_ORIGIN);
+	}
+	else if (((unsigned int)time(NULL) - (unsigned int)s_lastWeatherTime) > TIME_STALE_WEATHER)
+	{
+		set_container_image(&s_pBitmapBoss, s_pLayerBoss, RESOURCE_ID_KING, KING_ORIGIN);
+	}
+	else if (200 <= s_weatherCondition && s_weatherCondition < 300)
 	{
 		set_container_image(&s_pBitmapBoss, s_pLayerBoss, RESOURCE_ID_KRACKO_LIGHTNING, GPoint(64, 24));
 	}
@@ -443,28 +447,35 @@ static void update_date_time_layers()
 	text_layer_set_text(s_pTextLayerDate, date_text);
 }
 
-static void update_bg_color(struct tm* current_time)
+void update_bg_color()
+{
+	window_set_background_color(s_WindowMain, bt_connected ? s_bgColorTime : GColorRed);
+}
+
+void update_bg_color_time(struct tm* current_time)
 {
 	if (current_time->tm_hour >= 12 && current_time->tm_hour < 17)
 	{
-		window_set_background_color(s_WindowMain, GColorFromRGB(0, 170, 255));
+		s_bgColorTime = GColorFromRGB(0, 170, 255);
 		daytime = true;
 	}
 	else if (current_time->tm_hour >= 5 && current_time->tm_hour < 12)
 	{
-		window_set_background_color(s_WindowMain, GColorFromRGB(255, 0, 128));
+		s_bgColorTime = GColorFromRGB(255, 0, 128);
 		daytime = true;
 	}
 	else if (current_time->tm_hour >= 17 && current_time->tm_hour < 21)
 	{
-		window_set_background_color(s_WindowMain, GColorFromRGB(255, 170, 0));
+		s_bgColorTime = GColorFromRGB(255, 170, 0);
 		daytime = false;
 	}
 	else if (current_time->tm_hour >= 21 || current_time->tm_hour < 5)
 	{
-		window_set_background_color(s_WindowMain, GColorFromRGB(0, 0, 85));
+		s_bgColorTime = GColorFromRGB(0, 0, 85);
 		daytime = false;
 	}
+
+	update_bg_color();
 }
 
 static void weather_ended()
@@ -474,8 +485,7 @@ static void weather_ended()
 
 	if (s_pWeatherTimeoutTimer != NULL)
 	{
-		// APP_LOG(APP_LOG_LEVEL_INFO, "Weather timer is not NULL");
-		set_container_image(&s_pBitmapBoss, s_pLayerBoss, RESOURCE_ID_KING, KING_ORIGIN);
+		update_boss_layer();
 		s_pWeatherTimeoutTimer = NULL;
 	}
 }
@@ -554,7 +564,7 @@ static void inbox_received_callback(DictionaryIterator* iter, void* context)
 		pebbleKitReady = true;
 		APP_LOG(APP_LOG_LEVEL_DEBUG, "It is now %d", time(NULL));
 		APP_LOG(APP_LOG_LEVEL_DEBUG, "last got weather at %d", s_lastWeatherTime);
-		if (((unsigned int)time(NULL) - (unsigned int)s_lastWeatherTime) > 1800)
+		if (((unsigned int)time(NULL) - (unsigned int)s_lastWeatherTime) > TIME_STALE_WEATHER)
 		{
 			// Weather last checked over 30 minutes ago.
 			request_weather_update();
@@ -662,7 +672,7 @@ static void handle_tick(struct tm* tick_time, TimeUnits units_changed)
 
 		set_container_image(&s_pBitmapAbilityName, s_pLayerAbilityName, ABILITIES_NAME_RESOURCE_IDS[abilityIdx], ABILITY_NAME_LAYER_ORIGIN);
 		load_random_ability_animation();
-		update_bg_color(tick_time);
+		update_bg_color_time(tick_time);
 	}
 }
 
@@ -694,20 +704,21 @@ void handle_battery(BatteryChargeState charge)
 
 static void handle_bluetooth(bool connected)
 {
-	if (connected)
+	bt_connected = connected;
+	update_boss_layer();
+	update_bg_color();
+
+	if (!initiate_watchface)
 	{
-		if (!initiate_watchface)
+		if (connected)
 		{
 			vibes_double_pulse();
 		}
-	}
-	else
-	{
-		if (!initiate_watchface)
+		else
 		{
 			vibes_enqueue_custom_pattern((VibePattern) {
 				.durations = (uint32_t[]){ 100, 100, 100, 100, 100 },
-					.num_segments = 5
+				.num_segments = 5
 			});
 		}
 	}
@@ -743,8 +754,8 @@ static void main_window_load(Window* window)
 	Layer* window_layer = window_get_root_layer(window);
 
 	load_background_layer(window_layer);
-	load_kirby_layer(window_layer);
 	load_boss_layer(window_layer);
+	load_kirby_layer(window_layer);
 	load_HUD_layers(window_layer);
 	load_battery_layer(bitmap_layer_get_layer(s_pLayerHUDKirby));
 	load_step_layer(bitmap_layer_get_layer(s_pLayerHUDBoss));
@@ -771,8 +782,8 @@ static void main_window_unload(Window* window)
 	unload_step_layer();
 	unload_battery_layer();
 	unload_HUD_layers();
-	unload_boss_layer();
 	unload_kirby_layer();
+	unload_boss_layer();
 	unload_background_layer();
 }
 
@@ -830,8 +841,8 @@ void handle_init(void)
 	health_service_events_subscribe(handle_health, NULL);
 	battery_state_service_subscribe(&handle_battery);
 
-	handle_bluetooth(bluetooth_connection_service_peek());
-	bluetooth_connection_service_subscribe(&handle_bluetooth);
+	handle_bluetooth(connection_service_peek_pebble_app_connection());
+	connection_service_subscribe((ConnectionHandlers){&handle_bluetooth, NULL});
 
 	accel_tap_service_subscribe(&handle_tap);
 
@@ -839,7 +850,7 @@ void handle_init(void)
 
 	initiate_watchface = false;
 
-	update_bg_color(tick_time);
+	update_bg_color_time(tick_time);
 	update_date_time_layers();
 	update_boss_layer();
 
@@ -857,8 +868,7 @@ void handle_deinit(void)
 	window_destroy(s_WindowMain);
 	battery_state_service_unsubscribe();
 	accel_tap_service_unsubscribe();
-	bluetooth_connection_service_unsubscribe();
-	bluetooth_connection_service_peek();
+	connection_service_unsubscribe();
 	tick_timer_service_unsubscribe();
 	health_service_events_unsubscribe();
 }

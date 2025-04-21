@@ -84,9 +84,8 @@ static const AbilityAnimation* ABILITY_ANIMATION_SETS[] =
 #define DATE_RECT GRect(109, 175, 82, 38)
 #define TEMPERATURE_RECT GRect(108, 175, 82, 38)
 
+#define ZEROTWO_ORIGIN GPoint(50, 35)
 #define KING_ORIGIN GPoint(117, 90)
-
-//CHANGE ME
 #define KRACKO_ORIGIN GPoint(94, 66)
 #define KRACKO_RAIN_ORIGIN GPoint(94, 36)
 

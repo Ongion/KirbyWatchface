@@ -36,6 +36,8 @@ static bool daytime;
 
 static bool pebbleKitReady = false;
 
+static GColor s_bgColorTime;
+
 static TextLayer* s_pTextLayerWeather;
 static TextLayer* s_pTextLayerTime;
 static TextLayer* s_pTextLayerDate;
@@ -47,6 +49,8 @@ static GBitmap* s_pBitmapBatteryBar;
 static Layer* s_pLayerBattery;
 static uint8_t battery_level;
 static bool battery_plugged;
+
+static bool bt_connected;
 
 static GBitmap* s_pBitmapBackground;
 static BitmapLayer* s_pLayerBackground;
@@ -81,5 +85,7 @@ void update_battery_resource();
 void update_weather_layer_text();
 void battery_layer_update_callback(Layer* layer, GContext* ctx);
 void step_layer_update_callback(Layer* layer, GContext* ctx);
+
+#define TIME_STALE_WEATHER 60*30
 
 Window* s_WindowMain;
