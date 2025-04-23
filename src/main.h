@@ -30,11 +30,20 @@ typedef struct AbilityAnimation
 	GPoint origin;
 } AbilityAnimation;
 
+typedef struct BossSet
+{
+	uint32_t bossResourceID;
+	uint32_t bossNameResourceID;
+	GPoint bossOrigin;
+	GPoint nameOrigin;
+} BossSet;
+
 static ClaySettings settings;
 static bool initiate_watchface = true;
 static bool daytime;
 
 static bool pebbleKitReady = false;
+static bool s_animatingIntro = false;
 
 static GColor s_bgColorTime;
 
@@ -73,6 +82,9 @@ static AppTimer* s_pWeatherTimeoutTimer;
 
 static GBitmap* s_pBitmapAbilityName;
 static BitmapLayer* s_pLayerAbilityName;
+
+static GBitmap* s_pBitmapBossName;
+static BitmapLayer* s_pLayerBossName;
 
 static GBitmap* s_pBitmapBoss;
 static BitmapLayer* s_pLayerBoss;

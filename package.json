@@ -68,13 +68,33 @@
         },
         {
           "type": "bitmap",
-          "name": "HEALTH_DISCHARGE",
-          "file": "images/HealthDischarging.png"
+          "name": "BEAM",
+          "file": "images/BEAM.png"
         },
         {
           "type": "bitmap",
-          "name": "HEALTH_CHARGE",
-          "file": "images/HealthCharging.png"
+          "name": "FIRE",
+          "file": "images/FIRE.png"
+        },
+        {
+          "type": "bitmap",
+          "name": "CUTTER",
+          "file": "images/CUTTER.png"
+        },
+        {
+          "type": "bitmap",
+          "name": "HAMMER",
+          "file": "images/HAMMER.png"
+        },
+        {
+          "type": "bitmap",
+          "name": "MIKE",
+          "file": "images/MIKE.png"
+        },
+        {
+          "type": "bitmap",
+          "name": "SLEEP",
+          "file": "images/SLEEP.png"
         },
         {
           "type": "bitmap",
@@ -83,8 +103,13 @@
         },
         {
           "type": "bitmap",
-          "name": "SLEEP",
-          "file": "images/SLEEP.png"
+          "name": "HEALTH_DISCHARGE",
+          "file": "images/HealthDischarging.png"
+        },
+        {
+          "type": "bitmap",
+          "name": "HEALTH_CHARGE",
+          "file": "images/HealthCharging.png"
         },
         {
           "type": "bitmap",
@@ -100,11 +125,6 @@
           "type": "bitmap",
           "name": "MR_FROSTY",
           "file": "images/MR_FROSTY.png"
-        },
-        {
-          "type": "bitmap",
-          "name": "MIKE",
-          "file": "images/MIKE.png"
         },
         {
           "type": "bitmap",
@@ -128,13 +148,38 @@
         },
         {
           "type": "bitmap",
-          "name": "02",
+          "name": "ZEROTWO",
           "file": "images/02.png"
         },
         {
           "type": "bitmap",
-          "name": "HAMMER",
-          "file": "images/HAMMER.png"
+          "name": "BT_DISCONNECTED",
+          "file": "images/BluetoothDisconnected.png"
+        },
+        {
+          "type": "bitmap",
+          "name": "NO_WEATHER",
+          "file": "images/NoWeather.png"
+        },
+        {
+          "type": "bitmap",
+          "name": "KRACKO_NAME",
+          "file": "images/KRACKO_NAME.png"
+        },
+        {
+          "type": "bitmap",
+          "name": "MR_BRIGHT_NAME",
+          "file": "images/MR_BRIGHT_NAME.png"
+        },
+        {
+          "type": "bitmap",
+          "name": "MR_SHINE_NAME",
+          "file": "images/MR_SHINE_NAME.png"
+        },
+        {
+          "type": "bitmap",
+          "name": "MR_FROSTY_NAME",
+          "file": "images/MR_FROSTY_NAME.png"
         },
         {
           "type": "bitmap",
@@ -150,21 +195,6 @@
           "type": "bitmap",
           "name": "HUD_BOSS",
           "file": "images/HUD_BOSS.png"
-        },
-        {
-          "type": "bitmap",
-          "name": "FIRE",
-          "file": "images/FIRE.png"
-        },
-        {
-          "type": "bitmap",
-          "name": "CUTTER",
-          "file": "images/CUTTER.png"
-        },
-        {
-          "type": "bitmap",
-          "name": "BEAM",
-          "file": "images/BEAM.png"
         }
       ]
     },

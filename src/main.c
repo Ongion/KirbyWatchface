@@ -95,6 +95,27 @@ static void unload_ability_name_layer()
 	}
 }
 
+static void load_boss_name_layer(Layer* parent_layer)
+{
+	s_pLayerBossName = bitmap_layer_create(GRectZero);
+	bitmap_layer_set_compositing_mode(s_pLayerBossName, GCompOpSet);
+	layer_add_child(parent_layer, bitmap_layer_get_layer(s_pLayerBossName));
+}
+
+static void unload_boss_name_layer()
+{
+	if (s_pLayerBossName)
+	{
+		layer_remove_from_parent(bitmap_layer_get_layer(s_pLayerBossName));
+		bitmap_layer_destroy(s_pLayerBossName);
+	}
+
+	if (s_pBitmapBossName)
+	{
+		gbitmap_destroy(s_pBitmapBossName);
+	}
+}
+
 static void load_boss_layer(Layer* parent_layer)
 {
 	s_pLayerBoss = bitmap_layer_create(GRectZero);
@@ -316,40 +337,49 @@ static void set_container_image(GBitmap** bmp_image, BitmapLayer* bmp_layer, con
 	layer_set_frame(bitmap_layer_get_layer(bmp_layer), frame);
 }
 
-static void update_boss_layer()
+static void update_boss()
 {
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "BT Connected?: %d", bt_connected);
+	s_weatherCondition = 605;
+	bt_connected = false;
 	if (!bt_connected)
 	{
-		set_container_image(&s_pBitmapBoss, s_pLayerBoss, RESOURCE_ID_02, ZEROTWO_ORIGIN);
+		set_container_image(&s_pBitmapBoss, s_pLayerBoss, RESOURCE_ID_ZEROTWO, ZEROTWO_ORIGIN);
+		set_container_image(&s_pBitmapBossName, s_pLayerBossName, RESOURCE_ID_BT_DISCONNECTED, ZEROTWO_NAME_ORIGIN);
 	}
-	else if (((unsigned int)time(NULL) - (unsigned int)s_lastWeatherTime) > TIME_STALE_WEATHER)
-	{
-		set_container_image(&s_pBitmapBoss, s_pLayerBoss, RESOURCE_ID_KING, KING_ORIGIN);
-	}
+	// else if (((unsigned int)time(NULL) - (unsigned int)s_lastWeatherTime) > TIME_STALE_WEATHER)
+	// {
+	// 	set_container_image(&s_pBitmapBoss, s_pLayerBoss, RESOURCE_ID_KING, KING_ORIGIN);
+	// 	set_container_image(&s_pBitmapBossName, s_pLayerBossName, RESOURCE_ID_NO_WEATHER, KING_NAME_ORIGIN);
+	// }
 	else if (200 <= s_weatherCondition && s_weatherCondition < 300)
 	{
 		set_container_image(&s_pBitmapBoss, s_pLayerBoss, RESOURCE_ID_KRACKO_LIGHTNING, GPoint(64, 24));
+		set_container_image(&s_pBitmapBossName, s_pLayerBossName, RESOURCE_ID_KRACKO_NAME, KRACKO_NAME_ORIGIN);
 	}
 	else if (300 <= s_weatherCondition && s_weatherCondition < 600)
 	{
 		set_container_image(&s_pBitmapBoss, s_pLayerBoss, RESOURCE_ID_KRACKO_RAIN, KRACKO_RAIN_ORIGIN);
+		set_container_image(&s_pBitmapBossName, s_pLayerBossName, RESOURCE_ID_KRACKO_NAME, KRACKO_NAME_ORIGIN);
+	}
+	else if (600 <= s_weatherCondition && s_weatherCondition < 700)
+	{
+		set_container_image(&s_pBitmapBoss, s_pLayerBoss, RESOURCE_ID_MR_FROSTY, MR_FROSTY_ORIGIN);
+		set_container_image(&s_pBitmapBossName, s_pLayerBossName, RESOURCE_ID_MR_FROSTY_NAME, MR_FROSTY_NAME_ORIGIN);
 	}
 	else if (s_weatherCondition > 800)
 	{
 		set_container_image(&s_pBitmapBoss, s_pLayerBoss, RESOURCE_ID_KRACKO, KRACKO_ORIGIN);
-	}
-	else if (600 <= s_weatherCondition && s_weatherCondition < 700)
-	{
-		set_container_image(&s_pBitmapBoss, s_pLayerBoss, RESOURCE_ID_MR_FROSTY, GPoint(96, 69));
+		set_container_image(&s_pBitmapBossName, s_pLayerBossName, RESOURCE_ID_KRACKO_NAME, KRACKO_NAME_ORIGIN);
 	}
 	else if (daytime)
 	{
-		set_container_image(&s_pBitmapBoss, s_pLayerBoss, RESOURCE_ID_MR_BRIGHT, GPoint(94, 56));
+		set_container_image(&s_pBitmapBoss, s_pLayerBoss, RESOURCE_ID_MR_BRIGHT, MR_BRIGHT_ORIGIN);
+		set_container_image(&s_pBitmapBossName, s_pLayerBossName, RESOURCE_ID_MR_BRIGHT_NAME, MR_BRIGHT_NAME_ORIGIN);
 	}
 	else
 	{
-		set_container_image(&s_pBitmapBoss, s_pLayerBoss, RESOURCE_ID_MR_SHINE, GPoint(97, 69));
+		set_container_image(&s_pBitmapBoss, s_pLayerBoss, RESOURCE_ID_MR_SHINE, MR_SHINE_ORIGIN);
+		set_container_image(&s_pBitmapBossName, s_pLayerBossName, RESOURCE_ID_MR_SHINE_NAME, MR_SHINE_NAME_ORIGIN);
 	}
 }
 
@@ -485,7 +515,7 @@ static void weather_ended()
 
 	if (s_pWeatherTimeoutTimer != NULL)
 	{
-		update_boss_layer();
+		update_boss();
 		s_pWeatherTimeoutTimer = NULL;
 	}
 }
@@ -620,7 +650,7 @@ static void inbox_received_callback(DictionaryIterator* iter, void* context)
 		cancel_weather_timeout();
 		s_lastWeatherTime = time(NULL);
 		persist_write_int(STORAGE_KEY_LastTimeRecievedWeather, s_lastWeatherTime);
-		update_boss_layer();
+		update_boss();
 	}
 
 	if (recalc_weather_text)
@@ -705,7 +735,7 @@ void handle_battery(BatteryChargeState charge)
 static void handle_bluetooth(bool connected)
 {
 	bt_connected = connected;
-	update_boss_layer();
+	update_boss();
 	update_bg_color();
 
 	if (!initiate_watchface)
@@ -760,6 +790,7 @@ static void main_window_load(Window* window)
 	load_battery_layer(bitmap_layer_get_layer(s_pLayerHUDKirby));
 	load_step_layer(bitmap_layer_get_layer(s_pLayerHUDBoss));
 	load_ability_name_layer(window_layer);
+	load_boss_name_layer(window_layer);
 	
 #if PBL_DISPLAY_HEIGHT == 228
 	s_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_HELVETICA_CUSTOM_BLACK_26));
@@ -778,6 +809,7 @@ static void main_window_unload(Window* window)
 	fonts_unload_custom_font(s_font);
 #endif
 
+	unload_boss_name_layer();
 	unload_ability_name_layer();
 	unload_step_layer();
 	unload_battery_layer();
@@ -852,7 +884,7 @@ void handle_init(void)
 
 	update_bg_color_time(tick_time);
 	update_date_time_layers();
-	update_boss_layer();
+	update_boss();
 
 	app_message_register_inbox_received(inbox_received_callback);
 	app_message_register_inbox_dropped(inbox_dropped_callback);

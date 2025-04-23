@@ -84,5 +84,15 @@ static const AbilityAnimation* ABILITY_ANIMATION_SETS[] =
 #define KING_ORIGIN GPoint(82, 53)
 #define KRACKO_ORIGIN GPoint(64, 36)
 #define KRACKO_RAIN_ORIGIN GPoint(64, 14)
+#define MR_BRIGHT_ORIGIN GPoint(94, 56)
+#define MR_SHINE_ORIGIN GPoint(97, 69)
+#define MR_FROSTY_ORIGIN GPoint(96, 69)
+
+#define ZEROTWO_NAME_ORIGIN GPoint(86, 26)
+#define KING_NAME_ORIGIN GPoint(89, 26)
+#define KRACKO_NAME_ORIGIN GPoint(89, 26)
+#define MR_BRIGHT_NAME_ORIGIN GPoint(88, 26)
+#define MR_SHINE_NAME_ORIGIN GPoint(90, 26)
+#define MR_FROSTY_NAME_ORIGIN GPoint(86, 26)
 
 #define FONT fonts_get_system_font(FONT_KEY_LECO_20_BOLD_NUMBERS)
