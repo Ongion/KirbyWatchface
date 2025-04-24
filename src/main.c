@@ -339,18 +339,16 @@ static void set_container_image(GBitmap** bmp_image, BitmapLayer* bmp_layer, con
 
 static void update_boss()
 {
-	s_weatherCondition = 605;
-	bt_connected = false;
 	if (!bt_connected)
 	{
 		set_container_image(&s_pBitmapBoss, s_pLayerBoss, RESOURCE_ID_ZEROTWO, ZEROTWO_ORIGIN);
 		set_container_image(&s_pBitmapBossName, s_pLayerBossName, RESOURCE_ID_BT_DISCONNECTED, ZEROTWO_NAME_ORIGIN);
 	}
-	// else if (((unsigned int)time(NULL) - (unsigned int)s_lastWeatherTime) > TIME_STALE_WEATHER)
-	// {
-	// 	set_container_image(&s_pBitmapBoss, s_pLayerBoss, RESOURCE_ID_KING, KING_ORIGIN);
-	// 	set_container_image(&s_pBitmapBossName, s_pLayerBossName, RESOURCE_ID_NO_WEATHER, KING_NAME_ORIGIN);
-	// }
+	else if (((unsigned int)time(NULL) - (unsigned int)s_lastWeatherTime) > TIME_STALE_WEATHER)
+	{
+		set_container_image(&s_pBitmapBoss, s_pLayerBoss, RESOURCE_ID_KING, KING_ORIGIN);
+		set_container_image(&s_pBitmapBossName, s_pLayerBossName, RESOURCE_ID_NO_WEATHER, KING_NAME_ORIGIN);
+	}
 	else if (200 <= s_weatherCondition && s_weatherCondition < 300)
 	{
 		set_container_image(&s_pBitmapBoss, s_pLayerBoss, RESOURCE_ID_KRACKO_LIGHTNING, GPoint(64, 24));
@@ -404,7 +402,14 @@ static void kirby_animation_timer_handler(void* context)
 	}
 }
 
-static void load_random_ability_animation()
+const AbilityAnimation* get_random_ability_animation()
+{
+	unsigned int animationIdx = rand() % NUM_ABILITY_ANIMATIONS[abilityIdx];
+
+	return &(ABILITY_ANIMATION_SETS[abilityIdx][animationIdx]);
+}
+
+static void load_and_play_ability_animation(const AbilityAnimation* pAnimation)
 {
 	// Load an animation sequence for this ability
 
@@ -426,12 +431,9 @@ static void load_random_ability_animation()
 		gbitmap_destroy(s_pBitmapKirby);
 	}
 
-	unsigned int animationIdx = rand() % NUM_ABILITY_ANIMATIONS[abilityIdx];
-
-	AbilityAnimation animation = ABILITY_ANIMATION_SETS[abilityIdx][animationIdx];
 
 	// Create sequence
-	s_pBitmapSequenceKirby = gbitmap_sequence_create_with_resource(animation.resourceID);
+	s_pBitmapSequenceKirby = gbitmap_sequence_create_with_resource(pAnimation->resourceID);
 
 	// Create blank GBitmap using APNG frame size
 	GSize frame_size = gbitmap_sequence_get_bitmap_size(s_pBitmapSequenceKirby);
@@ -439,7 +441,7 @@ static void load_random_ability_animation()
 
 	// Set Frame Location
 	GRect frame = {
-		.origin = animation.origin,
+		.origin = pAnimation->origin,
 		.size = frame_size };
 
 	layer_set_frame(bitmap_layer_get_layer(s_pLayerKirby), frame);
@@ -698,10 +700,13 @@ static void handle_tick(struct tm* tick_time, TimeUnits units_changed)
 	{
 		// Change abilities
 		abilityIdx = (rand() % NUM_ABILITIES);
-		// APP_LOG(APP_LOG_LEVEL_DEBUG, "random character generated [#%d].", powerIdx);
-
 		set_container_image(&s_pBitmapAbilityName, s_pLayerAbilityName, ABILITIES_NAME_RESOURCE_IDS[abilityIdx], ABILITY_NAME_LAYER_ORIGIN);
-		load_random_ability_animation();
+
+#if PBL_DISPLAY_HEIGHT == 228
+		load_and_play_ability_animation(&(INTRO_ANIMATIONS[abilityIdx]));
+#else
+		load_and_play_ability_animation(get_random_ability_animation());
+#endif
 		update_bg_color_time(tick_time);
 	}
 }
@@ -771,7 +776,7 @@ static void handle_tap(AccelAxisType axis, int32_t direction)
 
 	if (!s_pKirbyAnimationTimer)
 	{
-		load_random_ability_animation();
+		load_and_play_ability_animation(get_random_ability_animation());
 	}
 
 	layer_set_hidden(text_layer_get_layer(s_pTextLayerDate), true);

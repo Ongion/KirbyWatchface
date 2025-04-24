@@ -20,9 +20,21 @@
           "characterRegex": "[0-9:/°FC]"
         },
         {
+          "targetPlatforms": ["emery"],
+          "type": "raw",
+          "name": "KIRBY_BEAM_INTRO_ANIM",
+          "file": "images/KIRBY_BEAM_INTRO_ANIM.png"
+        },
+        {
           "type": "raw",
           "name": "KIRBY_BEAM_ANIM",
           "file": "images/KIRBY_BEAM_ANIM.png"
+        },
+        {
+          "targetPlatforms": ["emery"],
+          "type": "raw",
+          "name": "KIRBY_CUTTER_INTRO_ANIM",
+          "file": "images/KIRBY_CUTTER_INTRO_ANIM.png"
         },
         {
           "type": "raw",
@@ -36,9 +48,21 @@
           "file": "images/KIRBY_CUTTER_COMBO_ANIM.png"
         },
         {
+          "targetPlatforms": ["emery"],
+          "type": "raw",
+          "name": "KIRBY_FIRE_INTRO_ANIM",
+          "file": "images/KIRBY_FIRE_INTRO_ANIM.png"
+        },
+        {
           "type": "raw",
           "name": "KIRBY_FIRE_ANIM",
           "file": "images/KIRBY_FIRE_ANIM.png"
+        },
+        {
+          "targetPlatforms": ["emery"],
+          "type": "raw",
+          "name": "KIRBY_HAMMER_INTRO_ANIM",
+          "file": "images/KIRBY_HAMMER_INTRO_ANIM.png"
         },
         {
           "type": "raw",
@@ -52,14 +76,32 @@
           "file": "images/KIRBY_HAMMER_FIRE_ANIM.png"
         },
         {
+          "targetPlatforms": ["emery"],
+          "type": "raw",
+          "name": "KIRBY_MIKE_INTRO_ANIM",
+          "file": "images/KIRBY_MIKE_INTRO_ANIM.png"
+        },
+        {
           "type": "raw",
           "name": "KIRBY_MIKE_ANIM_1",
           "file": "images/KIRBY_MIKE_ANIM_1.png"
         },
         {
+          "targetPlatforms": ["emery"],
+          "type": "raw",
+          "name": "KIRBY_SLEEP_INTRO_ANIM",
+          "file": "images/KIRBY_SLEEP_INTRO_ANIM.png"
+        },
+        {
           "type": "raw",
           "name": "KIRBY_SLEEP_ANIM",
           "file": "images/KIRBY_SLEEP_ANIM.png"
+        },
+        {
+          "targetPlatforms": ["emery"],
+          "type": "raw",
+          "name": "KIRBY_SWORD_INTRO_ANIM",
+          "file": "images/KIRBY_SWORD_INTRO_ANIM.png"
         },
         {
           "type": "raw",

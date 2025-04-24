@@ -43,7 +43,6 @@ static bool initiate_watchface = true;
 static bool daytime;
 
 static bool pebbleKitReady = false;
-static bool s_animatingIntro = false;
 
 static GColor s_bgColorTime;
 
