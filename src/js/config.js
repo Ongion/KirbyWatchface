@@ -35,7 +35,7 @@ module.exports = [
             {
                 "type": "input",
                 "label": "City",
-                "description": "'<City>,<State>,<Country>'. Leave blank for GPS location.",
+                "description": "'&lt;City&gt;, &lt;State&gt;, &lt;Country&gt;'. Leave blank for GPS location.",
                 "messageKey": "City"
             }
         ]
