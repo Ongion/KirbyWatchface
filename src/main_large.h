@@ -38,7 +38,8 @@ static const AbilityAnimation HAMMER_ANIMATIONS[] =
 
 static const AbilityAnimation MIKE_ANIMATIONS[] =
 {
-	{RESOURCE_ID_KIRBY_MIKE_ANIM_1, {20, 110}}
+	{RESOURCE_ID_KIRBY_MIKE_ANIM_1, {20, 110}},
+	{RESOURCE_ID_KIRBY_MIKE_ANIM_2, {18, 110}}
 };
 
 static const AbilityAnimation SLEEP_ANIMATIONS[] =
@@ -57,7 +58,7 @@ static const unsigned int NUM_ABILITY_ANIMATIONS[] =
 	2,  // Cutter
 	1,  // Fire
 	2,  // Hammer
-	1,  // Mike
+	2,  // Mike
 	1,  // Sleep
 	1,  // Sword
 };

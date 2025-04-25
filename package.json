@@ -87,6 +87,11 @@
           "file": "images/KIRBY_MIKE_ANIM_1.png"
         },
         {
+          "type": "raw",
+          "name": "KIRBY_MIKE_ANIM_2",
+          "file": "images/KIRBY_MIKE_ANIM_2.png"
+        },
+        {
           "targetPlatforms": ["emery"],
           "type": "raw",
           "name": "KIRBY_SLEEP_INTRO_ANIM",

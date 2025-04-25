@@ -404,7 +404,7 @@ static void kirby_animation_timer_handler(void* context)
 
 const AbilityAnimation* get_random_ability_animation()
 {
-	unsigned int animationIdx = rand() % NUM_ABILITY_ANIMATIONS[abilityIdx];
+	unsigned int animationIdx = (rand() >> 4) % NUM_ABILITY_ANIMATIONS[abilityIdx];
 
 	return &(ABILITY_ANIMATION_SETS[abilityIdx][animationIdx]);
 }
@@ -699,7 +699,7 @@ static void handle_tick(struct tm* tick_time, TimeUnits units_changed)
 	if ((units_changed & HOUR_UNIT) != 0)
 	{
 		// Change abilities
-		abilityIdx = (rand() % NUM_ABILITIES);
+		abilityIdx = (rand() >> 4) % NUM_ABILITIES;
 		set_container_image(&s_pBitmapAbilityName, s_pLayerAbilityName, ABILITIES_NAME_RESOURCE_IDS[abilityIdx], ABILITY_NAME_LAYER_ORIGIN);
 
 #if PBL_DISPLAY_HEIGHT == 228
