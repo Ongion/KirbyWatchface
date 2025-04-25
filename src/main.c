@@ -190,7 +190,7 @@ static void unload_battery_layer()
 
 static void load_step_layer(Layer* parent_layer)
 {
-	s_pLayerSteps = layer_create(GRect(85, 13, 50, 10));
+	s_pLayerSteps = layer_create(GRect(8, 12, 50, 10));
 	layer_set_update_proc(s_pLayerSteps, &step_layer_update_callback);
 	layer_add_child(parent_layer, s_pLayerSteps);
 }
@@ -266,20 +266,15 @@ static void unload_weather_layer()
 void battery_layer_update_callback(Layer* layer, GContext* ctx)
 {
 	graphics_context_set_compositing_mode(ctx, GCompOpAssign);
-	GColor8 batteryColor = GColorRed;
-	graphics_context_set_stroke_color(ctx, batteryColor);
-	graphics_context_set_fill_color(ctx, batteryColor);
 	graphics_draw_bitmap_in_rect(ctx, s_pBitmapBatteryBar, GRect(0, 0, (battery_level * BATTERY_LAYER_RECT.size.w) / 100, 10));
 }
 
 void step_layer_update_callback(Layer* layer, GContext* ctx)
 {
 	uint16_t steps_per_px = settings.stepsGoal / 50;
-	graphics_context_set_compositing_mode(ctx, GCompOpAssign);
-	GColor8 stepColor = GColorWhite;
-	graphics_context_set_stroke_color(ctx, stepColor);
+	GColor8 stepColor = GColorRed;
 	graphics_context_set_fill_color(ctx, stepColor);
-	graphics_fill_rect(ctx, GRect(50 - (steps / steps_per_px), 0, (steps / steps_per_px), 10), 0, GCornerNone);
+	graphics_fill_rect(ctx, GRect((steps / steps_per_px), 0, 50 - (steps / steps_per_px), 10), 0, GCornerNone);
 }
 
 void update_weather_layer_text()
@@ -625,6 +620,8 @@ static void inbox_received_callback(DictionaryIterator* iter, void* context)
 	if (stepsgoal_t)
 	{
 		settings.stepsGoal = stepsgoal_t->value->uint16;
+		layer_mark_dirty(s_pLayerSteps);
+
 		updated_settings = true;
 	}
 
@@ -716,11 +713,11 @@ static void handle_health(HealthEventType event, void* context)
 	time_t start = time_start_of_today();
 	time_t end = time(NULL);
 	HealthServiceAccessibilityMask mask = health_service_metric_accessible(HealthMetricStepCount, start, end);
-
 	if (mask & HealthServiceAccessibilityMaskAvailable)
 	{
 		// APP_LOG(APP_LOG_LEVEL_INFO, "Step data available!");
 		steps = health_service_sum_today(HealthMetricStepCount);
+		layer_mark_dirty(s_pLayerSteps);
 		// APP_LOG(APP_LOG_LEVEL_INFO, "Steps: %d", steps);
 	}
 	else
