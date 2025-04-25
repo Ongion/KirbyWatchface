@@ -1,14 +1,12 @@
 #include <pebble.h>
 #include "main.h"
+#include "commonTypes.h"
 
-#if PBL_DISPLAY_HEIGHT == 228
-#include "main_large.h"
-#else
-#include "main_small.h"
-#endif
+#include "batteryLayer.h"
+#include "stepsLayer.h"
+#include "viewdefs.h"
 
 // Add animation for steps goal being reached
-// Fix memory fragmentation
 
 static void load_background_layer(Layer* parent_layer)
 {
@@ -163,47 +161,6 @@ static void unload_kirby_layer()
 	}
 }
 
-static void load_battery_layer(Layer* parent_layer)
-{
-	BatteryChargeState initial = battery_state_service_peek();
-	battery_level = initial.charge_percent;
-	battery_plugged = initial.is_plugged;
-	update_battery_resource();
-	s_pLayerBattery = layer_create(BATTERY_LAYER_RECT);
-	layer_set_update_proc(s_pLayerBattery, &battery_layer_update_callback);
-	layer_add_child(parent_layer, s_pLayerBattery);
-}
-
-static void unload_battery_layer()
-{
-	if (s_pLayerBattery)
-	{
-		layer_remove_from_parent(s_pLayerBattery);
-		layer_destroy(s_pLayerBattery);
-	}
-
-	if (s_pBitmapBatteryBar)
-	{
-		gbitmap_destroy(s_pBitmapBatteryBar);
-	}
-}
-
-static void load_step_layer(Layer* parent_layer)
-{
-	s_pLayerSteps = layer_create(GRect(85, 13, 50, 10));
-	layer_set_update_proc(s_pLayerSteps, &step_layer_update_callback);
-	layer_add_child(parent_layer, s_pLayerSteps);
-}
-
-static void unload_step_layer()
-{
-	if (s_pLayerSteps)
-	{
-		layer_remove_from_parent(s_pLayerSteps);
-		layer_destroy(s_pLayerSteps);
-	}
-}
-
 static void load_time_layer(Layer* parent_layer)
 {
 	s_pTextLayerTime = text_layer_create(TIME_LAYER_RECT);
@@ -263,63 +220,22 @@ static void unload_weather_layer()
 	}
 }
 
-void battery_layer_update_callback(Layer* layer, GContext* ctx)
-{
-	graphics_context_set_compositing_mode(ctx, GCompOpAssign);
-	GColor8 batteryColor = GColorRed;
-	graphics_context_set_stroke_color(ctx, batteryColor);
-	graphics_context_set_fill_color(ctx, batteryColor);
-	graphics_draw_bitmap_in_rect(ctx, s_pBitmapBatteryBar, GRect(0, 0, (battery_level * BATTERY_LAYER_RECT.size.w) / 100, 10));
-}
-
-void step_layer_update_callback(Layer* layer, GContext* ctx)
-{
-	uint16_t steps_per_px = settings.stepsGoal / 50;
-	graphics_context_set_compositing_mode(ctx, GCompOpAssign);
-	GColor8 stepColor = GColorWhite;
-	graphics_context_set_stroke_color(ctx, stepColor);
-	graphics_context_set_fill_color(ctx, stepColor);
-	graphics_fill_rect(ctx, GRect(50 - (steps / steps_per_px), 0, (steps / steps_per_px), 10), 0, GCornerNone);
-}
-
 void update_weather_layer_text()
 {
 	static char weather_layer_buffer[10];
 	int finalTemp;
 
-	if (settings.scalePreference == FAHRENHEIT)
+	if (g_settings.scalePreference == FAHRENHEIT)
 	{
 		finalTemp = (s_temperature - 273.15) * 1.8 + 32;
 	}
-	else // (settings.scalePreference == CELSIUS)
+	else // (g_settings.scalePreference == CELSIUS)
 	{
 		finalTemp = s_temperature - 273.15;
 	}
 
-#if PBL_DISPLAY_HEIGHT == 228
-	char scale = settings.scalePreference == FAHRENHEIT ? 'F' : 'C';
-	snprintf(weather_layer_buffer, sizeof(weather_layer_buffer), "%d°%c", finalTemp, scale);
-#else
-	snprintf(weather_layer_buffer, sizeof(weather_layer_buffer), "%d°", finalTemp);
-#endif
+	format_weather_layer_text(weather_layer_buffer, sizeof(weather_layer_buffer), finalTemp, g_settings.scalePreference);
 	text_layer_set_text(s_pTextLayerWeather, weather_layer_buffer);
-}
-
-void update_battery_resource()
-{
-	if (s_pBitmapBatteryBar)
-	{
-		gbitmap_destroy(s_pBitmapBatteryBar);
-	}
-
-	if (battery_plugged)
-	{
-		s_pBitmapBatteryBar = gbitmap_create_with_resource(RESOURCE_ID_HEALTH_CHARGE);
-	}
-	else
-	{
-		s_pBitmapBatteryBar = gbitmap_create_with_resource(RESOURCE_ID_HEALTH_DISCHARGE);
-	}
 }
 
 static void set_container_image(GBitmap** bmp_image, BitmapLayer* bmp_layer, const int resource_id, GPoint origin)
@@ -554,8 +470,8 @@ static void request_weather_update()
 	int value = 1;
 	dict_write_int(iter, MESSAGE_KEY_RequestWeather, &value, sizeof(int), true /*isSigned*/);
 
-	dict_write_cstring(iter, MESSAGE_KEY_OpenWeatherAPIKey, settings.openWeatherMapAPIKey);
-	dict_write_cstring(iter, MESSAGE_KEY_City, settings.city);
+	dict_write_cstring(iter, MESSAGE_KEY_OpenWeatherAPIKey, g_settings.openWeatherMapAPIKey);
+	dict_write_cstring(iter, MESSAGE_KEY_City, g_settings.city);
 	result = app_message_outbox_send();
 
 	if (result != APP_MSG_OK)
@@ -576,7 +492,7 @@ static void inbox_received_callback(DictionaryIterator* iter, void* context)
 	Tuple* openWeatherAPIKey_t = dict_find(iter, MESSAGE_KEY_OpenWeatherAPIKey);
 	if (openWeatherAPIKey_t)
 	{
-		strncpy(settings.openWeatherMapAPIKey, openWeatherAPIKey_t->value->cstring, sizeof(settings.openWeatherMapAPIKey));
+		strncpy(g_settings.openWeatherMapAPIKey, openWeatherAPIKey_t->value->cstring, sizeof(g_settings.openWeatherMapAPIKey));
 		updated_settings = true;
 	}
 
@@ -584,8 +500,8 @@ static void inbox_received_callback(DictionaryIterator* iter, void* context)
 	Tuple* city_t = dict_find(iter, MESSAGE_KEY_City);
 	if (city_t)
 	{
-		strncpy(settings.city, city_t->value->cstring, sizeof(settings.city));
-		APP_LOG(APP_LOG_LEVEL_DEBUG, "GOT CITY %s", settings.city);
+		strncpy(g_settings.city, city_t->value->cstring, sizeof(g_settings.city));
+		APP_LOG(APP_LOG_LEVEL_DEBUG, "GOT CITY %s", g_settings.city);
 		updated_settings = true;
 	}
 
@@ -609,11 +525,11 @@ static void inbox_received_callback(DictionaryIterator* iter, void* context)
 	{
 		if (strcmp(scale_preference_t->value->cstring, "F") == 0)
 		{
-			settings.scalePreference = FAHRENHEIT;
+			g_settings.scalePreference = FAHRENHEIT;
 		}
 		else if (strcmp(scale_preference_t->value->cstring, "C") == 0)
 		{
-			settings.scalePreference = CELSIUS;
+			g_settings.scalePreference = CELSIUS;
 		}
 
 		updated_settings = true;
@@ -624,7 +540,9 @@ static void inbox_received_callback(DictionaryIterator* iter, void* context)
 	Tuple* stepsgoal_t = dict_find(iter, MESSAGE_KEY_StepsGoal);
 	if (stepsgoal_t)
 	{
-		settings.stepsGoal = stepsgoal_t->value->uint16;
+		g_settings.stepsGoal = stepsgoal_t->value->uint16;
+		layer_mark_dirty(g_pLayerSteps);
+
 		updated_settings = true;
 	}
 
@@ -663,7 +581,7 @@ static void inbox_received_callback(DictionaryIterator* iter, void* context)
 	if (updated_settings)
 	{
 		persist_write_int(STORAGE_KEY_ClaySettingsVersion, 1);
-		persist_write_data(STORAGE_KEY_ClaySettings, &settings, sizeof(settings));
+		persist_write_data(STORAGE_KEY_ClaySettings, &g_settings, sizeof(g_settings));
 
 		request_weather_update();
 	}
@@ -701,12 +619,8 @@ static void handle_tick(struct tm* tick_time, TimeUnits units_changed)
 		// Change abilities
 		abilityIdx = (rand() >> 4) % NUM_ABILITIES;
 		set_container_image(&s_pBitmapAbilityName, s_pLayerAbilityName, ABILITIES_NAME_RESOURCE_IDS[abilityIdx], ABILITY_NAME_LAYER_ORIGIN);
-
-#if PBL_DISPLAY_HEIGHT == 228
-		load_and_play_ability_animation(&(INTRO_ANIMATIONS[abilityIdx]));
-#else
-		load_and_play_ability_animation(get_random_ability_animation());
-#endif
+		load_and_play_ability_animation(INITIAL_ANIMATION_GETTER);
+		
 		update_bg_color_time(tick_time);
 	}
 }
@@ -716,11 +630,11 @@ static void handle_health(HealthEventType event, void* context)
 	time_t start = time_start_of_today();
 	time_t end = time(NULL);
 	HealthServiceAccessibilityMask mask = health_service_metric_accessible(HealthMetricStepCount, start, end);
-
 	if (mask & HealthServiceAccessibilityMaskAvailable)
 	{
 		// APP_LOG(APP_LOG_LEVEL_INFO, "Step data available!");
-		steps = health_service_sum_today(HealthMetricStepCount);
+		g_steps = health_service_sum_today(HealthMetricStepCount);
+		layer_mark_dirty(g_pLayerSteps);
 		// APP_LOG(APP_LOG_LEVEL_INFO, "Steps: %d", steps);
 	}
 	else
@@ -731,10 +645,8 @@ static void handle_health(HealthEventType event, void* context)
 
 void handle_battery(BatteryChargeState charge)
 {
-	battery_level = charge.charge_percent;
-	battery_plugged = charge.is_plugged;
-	update_battery_resource();
-	layer_mark_dirty(s_pLayerBattery);
+	update_battery_data(&charge);
+	layer_mark_dirty(g_pLayerBattery);
 }
 
 static void handle_bluetooth(bool connected)
@@ -793,13 +705,11 @@ static void main_window_load(Window* window)
 	load_kirby_layer(window_layer);
 	load_HUD_layers(window_layer);
 	load_battery_layer(bitmap_layer_get_layer(s_pLayerHUDKirby));
-	load_step_layer(bitmap_layer_get_layer(s_pLayerHUDBoss));
+	load_steps_layer(bitmap_layer_get_layer(s_pLayerHUDBoss));
 	load_ability_name_layer(window_layer);
 	load_boss_name_layer(window_layer);
 	
-#if PBL_DISPLAY_HEIGHT == 228
-	s_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_HELVETICA_CUSTOM_BLACK_26));
-#endif
+	load_custom_fonts();
 	load_time_layer(window_layer);
 	load_date_layer(window_layer);
 	load_weather_layer(window_layer);
@@ -810,13 +720,12 @@ static void main_window_unload(Window* window)
 	unload_weather_layer();
 	unload_date_layer();
 	unload_time_layer();
-#if PBL_DISPLAY_HEIGHT == 228
-	fonts_unload_custom_font(s_font);
-#endif
+
+	unload_custom_fonts();
 
 	unload_boss_name_layer();
 	unload_ability_name_layer();
-	unload_step_layer();
+	unload_steps_layer();
 	unload_battery_layer();
 	unload_HUD_layers();
 	unload_kirby_layer();
@@ -826,16 +735,16 @@ static void main_window_unload(Window* window)
 
 static void load_settings()
 {
-	settings.openWeatherMapAPIKey[0] = '\0';
-	settings.city[0] = '\0';
-	settings.scalePreference = CELSIUS;
-	settings.stepsGoal = 5000;
+	g_settings.openWeatherMapAPIKey[0] = '\0';
+	g_settings.city[0] = '\0';
+	g_settings.scalePreference = CELSIUS;
+	g_settings.stepsGoal = 5000;
 
 	if (persist_exists(STORAGE_KEY_ClaySettings) && persist_exists(STORAGE_KEY_ClaySettingsVersion))
 	{
 		if (persist_read_int(STORAGE_KEY_ClaySettingsVersion) == 1)
 		{
-			persist_read_data(STORAGE_KEY_ClaySettings, &settings, sizeof(settings));
+			persist_read_data(STORAGE_KEY_ClaySettings, &g_settings, sizeof(g_settings));
 		}
 	}
 

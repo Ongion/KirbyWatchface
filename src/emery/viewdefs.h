@@ -1,7 +1,8 @@
 #pragma once
 #include <pebble.h>
+#include "commonTypes.h"
 
-static GFont s_font;
+GFont s_font;
 
 static const int ABILITIES_NAME_RESOURCE_IDS[] =
 {
@@ -92,7 +93,6 @@ static const AbilityAnimation INTRO_ANIMATIONS[] =
 
 #define HUD_KIRBY_LAYER_RECT GRect(0, 0, 96, 41)
 #define HUD_BOSS_LAYER_RECT GRect(104, 0, 96, 41)
-#define BATTERY_LAYER_RECT GRect(14,7,72,10)
 #define TIME_LAYER_RECT GRect(10, 175, 82, 38)
 #define DATE_RECT GRect(109, 175, 82, 38)
 #define TEMPERATURE_RECT GRect(108, 175, 82, 38)
@@ -112,4 +112,5 @@ static const AbilityAnimation INTRO_ANIMATIONS[] =
 #define MR_SHINE_NAME_ORIGIN GPoint(127, 25)
 #define MR_FROSTY_NAME_ORIGIN GPoint(115, 25)
 
+#define INITIAL_ANIMATION_GETTER &(INTRO_ANIMATIONS[abilityIdx])
 #define FONT s_font

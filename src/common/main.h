@@ -1,6 +1,7 @@
 #pragma once
 
-#include<pebble.h>
+#include <pebble.h>
+#include "commonTypes.h"
 
 #define STORAGE_KEY_ClaySettingsVersion 1
 #define STORAGE_KEY_ClaySettings 2
@@ -8,37 +9,7 @@
 #define STORAGE_KEY_LastSeenWeatherCondition 4
 #define STORAGE_KEY_LastTimeRecievedWeather 5
 
-typedef enum temperature_scales
-{
-	FAHRENHEIT,
-	CELSIUS
-} TemperatureScale;
-
-typedef struct ClaySettingsV1
-{
-	char openWeatherMapAPIKey[33];
-	char city[86];
-	TemperatureScale scalePreference;
-	uint16_t stepsGoal;
-} ClaySettingsV1;
-
-typedef ClaySettingsV1 ClaySettings;
-
-typedef struct AbilityAnimation
-{
-	uint32_t resourceID;
-	GPoint origin;
-} AbilityAnimation;
-
-typedef struct BossSet
-{
-	uint32_t bossResourceID;
-	uint32_t bossNameResourceID;
-	GPoint bossOrigin;
-	GPoint nameOrigin;
-} BossSet;
-
-static ClaySettings settings;
+ClaySettings g_settings;
 static bool initiate_watchface = true;
 static bool daytime;
 
@@ -49,14 +20,6 @@ static GColor s_bgColorTime;
 static TextLayer* s_pTextLayerWeather;
 static TextLayer* s_pTextLayerTime;
 static TextLayer* s_pTextLayerDate;
-
-static Layer* s_pLayerSteps;
-static int steps;
-
-static GBitmap* s_pBitmapBatteryBar;
-static Layer* s_pLayerBattery;
-static uint8_t battery_level;
-static bool battery_plugged;
 
 static bool bt_connected;
 
@@ -92,10 +55,11 @@ static GBitmap* s_pBitmapKirby;
 static GBitmapSequence* s_pBitmapSequenceKirby;
 static BitmapLayer* s_pLayerKirby;
 
-void update_battery_resource();
+void format_weather_layer_text(char* weather_layer_buffer, size_t sz_weather_layer_buffer, int temperature, TemperatureScale scalePreference);
 void update_weather_layer_text();
-void battery_layer_update_callback(Layer* layer, GContext* ctx);
 void step_layer_update_callback(Layer* layer, GContext* ctx);
+void load_custom_fonts();
+void unload_custom_fonts();
 
 #define TIME_STALE_WEATHER 60*30
 
