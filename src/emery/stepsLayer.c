@@ -7,8 +7,6 @@ static GBitmap* s_pBitmapStepsBar;
 
 void steps_layer_update_callback(Layer* layer, GContext* ctx)
 {
-	g_steps = 3000;
-
 	uint16_t steps_per_px = g_settings.stepsGoal / STEPS_LAYER_MAX_WIDTH;
 	graphics_context_set_compositing_mode(ctx, GCompOpAssign);
 	graphics_draw_bitmap_in_rect(ctx, s_pBitmapStepsBar, GRect((g_steps / steps_per_px), 0, STEPS_LAYER_MAX_WIDTH - (g_steps / steps_per_px), 10));
