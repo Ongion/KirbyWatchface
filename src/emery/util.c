@@ -2,9 +2,6 @@
 #include "commonTypes.h"
 #include "viewdefs.h"
 
-static uint8_t s_batteryLevel;
-static bool s_fBatteryPlugged;
-
 void load_custom_fonts()
 {
 	s_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_HELVETICA_CUSTOM_BLACK_26));

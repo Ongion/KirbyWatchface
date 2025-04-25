@@ -9,7 +9,7 @@
 #define STORAGE_KEY_LastSeenWeatherCondition 4
 #define STORAGE_KEY_LastTimeRecievedWeather 5
 
-static ClaySettings settings;
+ClaySettings g_settings;
 static bool initiate_watchface = true;
 static bool daytime;
 
@@ -20,9 +20,6 @@ static GColor s_bgColorTime;
 static TextLayer* s_pTextLayerWeather;
 static TextLayer* s_pTextLayerTime;
 static TextLayer* s_pTextLayerDate;
-
-static Layer* s_pLayerSteps;
-static int steps;
 
 static bool bt_connected;
 

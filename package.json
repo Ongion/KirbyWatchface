@@ -156,6 +156,12 @@
           "file": "images/HealthCharging.png"
         },
         {
+          "targetPlatforms": ["emery"],
+          "type": "bitmap",
+          "name": "BOSS_HEALTH",
+          "file": "images/BossHealth.png"
+        },
+        {
           "type": "bitmap",
           "name": "MR_SHINE",
           "file": "images/MR_SHINE.png"
