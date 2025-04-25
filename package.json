@@ -17,7 +17,7 @@
           "type": "font",
           "name": "HELVETICA_CUSTOM_BLACK_26",
           "file": "fonts/HelveticaCustomRounded-Black.ttf",
-          "characterRegex": "[0-9:/°FC]"
+          "characterRegex": "[0-9:/°FC-]"
         },
         {
           "targetPlatforms": ["emery"],
@@ -144,11 +144,13 @@
           "file": "images/SWORD.png"
         },
         {
+          "targetPlatforms": ["emery"],
           "type": "bitmap",
           "name": "HEALTH_DISCHARGE",
           "file": "images/HealthDischarging.png"
         },
         {
+          "targetPlatforms": ["emery"],
           "type": "bitmap",
           "name": "HEALTH_CHARGE",
           "file": "images/HealthCharging.png"

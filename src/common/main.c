@@ -1,14 +1,11 @@
 #include <pebble.h>
 #include "main.h"
 
-#if PBL_DISPLAY_HEIGHT == 228
-#include "main_large.h"
-#else
-#include "main_small.h"
-#endif
+#include "batteryLayer.h"
+#include "commonTypes.h"
+#include "viewdefs.h"
 
 // Add animation for steps goal being reached
-// Fix memory fragmentation
 
 static void load_background_layer(Layer* parent_layer)
 {
@@ -163,31 +160,6 @@ static void unload_kirby_layer()
 	}
 }
 
-static void load_battery_layer(Layer* parent_layer)
-{
-	BatteryChargeState initial = battery_state_service_peek();
-	battery_level = initial.charge_percent;
-	battery_plugged = initial.is_plugged;
-	update_battery_resource();
-	s_pLayerBattery = layer_create(BATTERY_LAYER_RECT);
-	layer_set_update_proc(s_pLayerBattery, &battery_layer_update_callback);
-	layer_add_child(parent_layer, s_pLayerBattery);
-}
-
-static void unload_battery_layer()
-{
-	if (s_pLayerBattery)
-	{
-		layer_remove_from_parent(s_pLayerBattery);
-		layer_destroy(s_pLayerBattery);
-	}
-
-	if (s_pBitmapBatteryBar)
-	{
-		gbitmap_destroy(s_pBitmapBatteryBar);
-	}
-}
-
 static void load_step_layer(Layer* parent_layer)
 {
 	s_pLayerSteps = layer_create(GRect(8, 12, 50, 10));
@@ -263,12 +235,6 @@ static void unload_weather_layer()
 	}
 }
 
-void battery_layer_update_callback(Layer* layer, GContext* ctx)
-{
-	graphics_context_set_compositing_mode(ctx, GCompOpAssign);
-	graphics_draw_bitmap_in_rect(ctx, s_pBitmapBatteryBar, GRect(0, 0, (battery_level * BATTERY_LAYER_RECT.size.w) / 100, 10));
-}
-
 void step_layer_update_callback(Layer* layer, GContext* ctx)
 {
 	uint16_t steps_per_px = settings.stepsGoal / 50;
@@ -291,30 +257,8 @@ void update_weather_layer_text()
 		finalTemp = s_temperature - 273.15;
 	}
 
-#if PBL_DISPLAY_HEIGHT == 228
-	char scale = settings.scalePreference == FAHRENHEIT ? 'F' : 'C';
-	snprintf(weather_layer_buffer, sizeof(weather_layer_buffer), "%d°%c", finalTemp, scale);
-#else
-	snprintf(weather_layer_buffer, sizeof(weather_layer_buffer), "%d°", finalTemp);
-#endif
+	format_weather_layer_text(weather_layer_buffer, sizeof(weather_layer_buffer), finalTemp, settings.scalePreference);
 	text_layer_set_text(s_pTextLayerWeather, weather_layer_buffer);
-}
-
-void update_battery_resource()
-{
-	if (s_pBitmapBatteryBar)
-	{
-		gbitmap_destroy(s_pBitmapBatteryBar);
-	}
-
-	if (battery_plugged)
-	{
-		s_pBitmapBatteryBar = gbitmap_create_with_resource(RESOURCE_ID_HEALTH_CHARGE);
-	}
-	else
-	{
-		s_pBitmapBatteryBar = gbitmap_create_with_resource(RESOURCE_ID_HEALTH_DISCHARGE);
-	}
 }
 
 static void set_container_image(GBitmap** bmp_image, BitmapLayer* bmp_layer, const int resource_id, GPoint origin)
@@ -698,12 +642,8 @@ static void handle_tick(struct tm* tick_time, TimeUnits units_changed)
 		// Change abilities
 		abilityIdx = (rand() % NUM_ABILITIES);
 		set_container_image(&s_pBitmapAbilityName, s_pLayerAbilityName, ABILITIES_NAME_RESOURCE_IDS[abilityIdx], ABILITY_NAME_LAYER_ORIGIN);
-
-#if PBL_DISPLAY_HEIGHT == 228
-		load_and_play_ability_animation(&(INTRO_ANIMATIONS[abilityIdx]));
-#else
-		load_and_play_ability_animation(get_random_ability_animation());
-#endif
+		load_and_play_ability_animation(INITIAL_ANIMATION_GETTER);
+		
 		update_bg_color_time(tick_time);
 	}
 }
@@ -728,10 +668,8 @@ static void handle_health(HealthEventType event, void* context)
 
 void handle_battery(BatteryChargeState charge)
 {
-	battery_level = charge.charge_percent;
-	battery_plugged = charge.is_plugged;
-	update_battery_resource();
-	layer_mark_dirty(s_pLayerBattery);
+	update_battery_data(&charge);
+	layer_mark_dirty(g_pLayerBattery);
 }
 
 static void handle_bluetooth(bool connected)
@@ -794,9 +732,7 @@ static void main_window_load(Window* window)
 	load_ability_name_layer(window_layer);
 	load_boss_name_layer(window_layer);
 	
-#if PBL_DISPLAY_HEIGHT == 228
-	s_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_HELVETICA_CUSTOM_BLACK_26));
-#endif
+	load_custom_fonts();
 	load_time_layer(window_layer);
 	load_date_layer(window_layer);
 	load_weather_layer(window_layer);
@@ -807,9 +743,8 @@ static void main_window_unload(Window* window)
 	unload_weather_layer();
 	unload_date_layer();
 	unload_time_layer();
-#if PBL_DISPLAY_HEIGHT == 228
-	fonts_unload_custom_font(s_font);
-#endif
+
+	unload_custom_fonts();
 
 	unload_boss_name_layer();
 	unload_ability_name_layer();
