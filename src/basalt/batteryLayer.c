@@ -4,6 +4,8 @@
 static uint8_t s_batteryLevel;
 static bool s_fBatteryPlugged;
 
+Layer* g_pLayerBattery;
+
 #define BATTERY_LAYER_RECT GRect(8,12,50,10)
 
 void update_battery_data(const BatteryChargeState* pState)

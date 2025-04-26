@@ -5,6 +5,9 @@
 
 static GBitmap* s_pBitmapStepsBar;
 
+Layer* g_pLayerSteps;
+int g_steps;
+
 void steps_layer_update_callback(Layer* layer, GContext* ctx)
 {
 	uint16_t steps_per_px = g_settings.stepsGoal / STEPS_LAYER_MAX_WIDTH;

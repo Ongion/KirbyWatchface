@@ -2,7 +2,7 @@
 #include <pebble.h>
 #include "commonTypes.h"
 
-GFont s_font;
+extern GFont s_font;
 
 static const int ABILITIES_NAME_RESOURCE_IDS[] =
 {

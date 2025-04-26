@@ -5,6 +5,8 @@ static uint8_t s_batteryLevel;
 static bool s_fBatteryPlugged;
 static GBitmap* s_pBitmapBatteryBar;
 
+Layer* g_pLayerBattery;
+
 #define BATTERY_LAYER_RECT GRect(14,7,72,10)
 
 void update_battery_resource(bool fIsPlugged)

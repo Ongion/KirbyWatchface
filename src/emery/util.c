@@ -2,6 +2,8 @@
 #include "commonTypes.h"
 #include "viewdefs.h"
 
+GFont s_font; 
+
 void load_custom_fonts()
 {
 	s_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_HELVETICA_CUSTOM_BLACK_26));
