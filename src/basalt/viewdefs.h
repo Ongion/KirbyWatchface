@@ -85,7 +85,7 @@ static const AbilityAnimation* ABILITY_ANIMATION_SETS[] =
 #define ZEROTWO_ORIGIN GPoint(33, 23)
 #define KING_ORIGIN GPoint(82, 53)
 #define KING_DEFEAT_ORIGIN GPoint(77, 60)
-#define KRACKO_ORIGIN GPoint(64, 36)
+#define KRACKO_ORIGIN GPoint(64, 26)
 #define KRACKO_RAIN_ORIGIN GPoint(64, 14)
 #define MR_BRIGHT_ORIGIN GPoint(94, 56)
 #define MR_SHINE_ORIGIN GPoint(97, 69)

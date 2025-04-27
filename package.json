@@ -190,6 +190,10 @@
           "type": "bitmap",
           "name": "KRACKO",
           "file": "images/KRACKO.png"
+        },        {
+          "type": "bitmap",
+          "name": "KRACKO_DEFEAT",
+          "file": "images/KRACKO_DEFEAT.png"
         },
         {
           "type": "bitmap",
