@@ -279,7 +279,15 @@ static void update_boss()
 	}
 	else if (300 <= s_weatherCondition && s_weatherCondition < 600)
 	{
-		set_container_image(&s_pBitmapBoss, s_pLayerBoss, RESOURCE_ID_KRACKO_RAIN, KRACKO_RAIN_ORIGIN);
+		if (g_fStepGoalMet)
+		{
+			set_container_image(&s_pBitmapBoss, s_pLayerBoss, RESOURCE_ID_KRACKO_RAIN_DEFEAT, KRACKO_ORIGIN);
+		}
+		else
+		{
+			set_container_image(&s_pBitmapBoss, s_pLayerBoss, RESOURCE_ID_KRACKO_RAIN, KRACKO_ORIGIN);
+		}
+
 		set_container_image(&s_pBitmapBossName, s_pLayerBossName, RESOURCE_ID_KRACKO_NAME, KRACKO_NAME_ORIGIN);
 	}
 	else if (600 <= s_weatherCondition && s_weatherCondition < 700)

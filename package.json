@@ -202,6 +202,11 @@
         },
         {
           "type": "bitmap",
+          "name": "KRACKO_RAIN_DEFEAT",
+          "file": "images/KRACKO_RAIN_DEFEAT.png"
+        },
+        {
+          "type": "bitmap",
           "name": "KRACKO_LIGHTNING",
           "file": "images/KRACKO_LIGHTNING.png"
         },
