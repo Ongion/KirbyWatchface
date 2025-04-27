@@ -300,7 +300,15 @@ static void update_boss()
 	}
 	else if (600 <= s_weatherCondition && s_weatherCondition < 700)
 	{
-		set_container_image(&s_pBitmapBoss, s_pLayerBoss, RESOURCE_ID_MR_FROSTY, MR_FROSTY_ORIGIN);
+		if (g_fStepGoalMet)
+		{
+			set_container_image(&s_pBitmapBoss, s_pLayerBoss, RESOURCE_ID_MR_FROSTY_DEFEAT, MR_FROSTY_ORIGIN);
+		}
+		else
+		{
+			set_container_image(&s_pBitmapBoss, s_pLayerBoss, RESOURCE_ID_MR_FROSTY, MR_FROSTY_ORIGIN);
+		}
+
 		set_container_image(&s_pBitmapBossName, s_pLayerBossName, RESOURCE_ID_MR_FROSTY_NAME, MR_FROSTY_NAME_ORIGIN);
 	}
 	else if (s_weatherCondition > 800)
@@ -318,12 +326,28 @@ static void update_boss()
 	}
 	else if (daytime)
 	{
-		set_container_image(&s_pBitmapBoss, s_pLayerBoss, RESOURCE_ID_MR_BRIGHT, MR_BRIGHT_ORIGIN);
+		if (g_fStepGoalMet)
+		{
+			set_container_image(&s_pBitmapBoss, s_pLayerBoss, RESOURCE_ID_MR_BRIGHT_DEFEAT, MR_BRIGHT_DEFEAT_ORIGIN);
+		}
+		else
+		{
+			set_container_image(&s_pBitmapBoss, s_pLayerBoss, RESOURCE_ID_MR_BRIGHT, MR_BRIGHT_ORIGIN);
+		}
+
 		set_container_image(&s_pBitmapBossName, s_pLayerBossName, RESOURCE_ID_MR_BRIGHT_NAME, MR_BRIGHT_NAME_ORIGIN);
 	}
 	else
 	{
-		set_container_image(&s_pBitmapBoss, s_pLayerBoss, RESOURCE_ID_MR_SHINE, MR_SHINE_ORIGIN);
+		if (g_fStepGoalMet)
+		{
+			set_container_image(&s_pBitmapBoss, s_pLayerBoss, RESOURCE_ID_MR_SHINE_DEFEAT, MR_SHINE_DEFEAT_ORIGIN);
+		}
+		else
+		{
+			set_container_image(&s_pBitmapBoss, s_pLayerBoss, RESOURCE_ID_MR_SHINE, MR_SHINE_ORIGIN);
+		}
+
 		set_container_image(&s_pBitmapBossName, s_pLayerBossName, RESOURCE_ID_MR_SHINE_NAME, MR_SHINE_NAME_ORIGIN);
 	}
 }

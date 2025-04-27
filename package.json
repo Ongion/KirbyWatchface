@@ -178,13 +178,28 @@
         },
         {
           "type": "bitmap",
+          "name": "MR_SHINE_DEFEAT",
+          "file": "images/MR_SHINE_DEFEAT.png"
+        },
+        {
+          "type": "bitmap",
           "name": "MR_BRIGHT",
           "file": "images/MR_BRIGHT.png"
         },
         {
           "type": "bitmap",
+          "name": "MR_BRIGHT_DEFEAT",
+          "file": "images/MR_BRIGHT_DEFEAT.png"
+        },
+        {
+          "type": "bitmap",
           "name": "MR_FROSTY",
           "file": "images/MR_FROSTY.png"
+        },
+        {
+          "type": "bitmap",
+          "name": "MR_FROSTY_DEFEAT",
+          "file": "images/MR_FROSTY_DEFEAT.png"
         },
         {
           "type": "bitmap",

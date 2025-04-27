@@ -103,7 +103,9 @@ static const AbilityAnimation INTRO_ANIMATIONS[] =
 #define KING_DEFEAT_ORIGIN GPoint(112, 98)
 #define KRACKO_ORIGIN GPoint(94, 46)
 #define MR_BRIGHT_ORIGIN GPoint(129, 93)
+#define MR_BRIGHT_DEFEAT_ORIGIN GPoint(128, 93)
 #define MR_SHINE_ORIGIN GPoint(132, 105)
+#define MR_SHINE_DEFEAT_ORIGIN GPoint(132, 101)
 #define MR_FROSTY_ORIGIN GPoint(132, 105)
 
 #define ZEROTWO_NAME_ORIGIN GPoint(113, 23)
