@@ -274,7 +274,15 @@ static void update_boss()
 	}
 	else if (200 <= s_weatherCondition && s_weatherCondition < 300)
 	{
-		set_container_image(&s_pBitmapBoss, s_pLayerBoss, RESOURCE_ID_KRACKO_LIGHTNING, GPoint(64, 24));
+		if (g_fStepGoalMet)
+		{
+			set_container_image(&s_pBitmapBoss, s_pLayerBoss, RESOURCE_ID_KRACKO_LIGHTNING_DEFEAT, KRACKO_ORIGIN);
+		}
+		else
+		{
+			set_container_image(&s_pBitmapBoss, s_pLayerBoss, RESOURCE_ID_KRACKO_LIGHTNING, KRACKO_ORIGIN);
+		}
+
 		set_container_image(&s_pBitmapBossName, s_pLayerBossName, RESOURCE_ID_KRACKO_NAME, KRACKO_NAME_ORIGIN);
 	}
 	else if (300 <= s_weatherCondition && s_weatherCondition < 600)
@@ -725,9 +733,6 @@ static void show_date_timer_handler(void* context)
 
 static void handle_tap(AccelAxisType axis, int32_t direction)
 {
-	g_steps = 11000;
-	update_steps();
-
 	// Cancel existing showDate timer
 	if (s_pShowDateTimer)
 	{

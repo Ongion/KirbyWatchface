@@ -212,6 +212,11 @@
         },
         {
           "type": "bitmap",
+          "name": "KRACKO_LIGHTNING_DEFEAT",
+          "file": "images/KRACKO_LIGHTNING_DEFEAT.png"
+        },
+        {
+          "type": "bitmap",
           "name": "KING",
           "file": "images/KING.png"
         },
