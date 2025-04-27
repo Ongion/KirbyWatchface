@@ -60,6 +60,7 @@ void update_weather_layer_text();
 void step_layer_update_callback(Layer* layer, GContext* ctx);
 void load_custom_fonts();
 void unload_custom_fonts();
+void update_steps();
 
 #define TIME_STALE_WEATHER 60*30
 

@@ -5,6 +5,7 @@
 
 Layer* g_pLayerSteps;
 int g_steps;
+bool g_fStepGoalMet;
 
 void steps_layer_update_callback(Layer* layer, GContext* ctx)
 {

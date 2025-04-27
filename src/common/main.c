@@ -262,7 +262,14 @@ static void update_boss()
 	}
 	else if (((unsigned int)time(NULL) - (unsigned int)s_lastWeatherTime) > TIME_STALE_WEATHER)
 	{
-		set_container_image(&s_pBitmapBoss, s_pLayerBoss, RESOURCE_ID_KING, KING_ORIGIN);
+		if (g_fStepGoalMet)
+		{
+			set_container_image(&s_pBitmapBoss, s_pLayerBoss, RESOURCE_ID_KING_DEFEAT, KING_DEFEAT_ORIGIN);
+		}
+		else
+		{
+			set_container_image(&s_pBitmapBoss, s_pLayerBoss, RESOURCE_ID_KING, KING_ORIGIN);
+		}
 		set_container_image(&s_pBitmapBossName, s_pLayerBossName, RESOURCE_ID_NO_WEATHER, KING_NAME_ORIGIN);
 	}
 	else if (200 <= s_weatherCondition && s_weatherCondition < 300)
@@ -623,6 +630,28 @@ static void handle_tick(struct tm* tick_time, TimeUnits units_changed)
 		
 		update_bg_color_time(tick_time);
 	}
+
+	if ((units_changed & DAY_UNIT) != 0)
+	{
+		// Steps will have reset. Make sure we refresh.
+		update_steps();
+	}
+}
+
+void update_steps()
+{
+	layer_mark_dirty(g_pLayerSteps);
+
+	if (!g_fStepGoalMet && g_steps >= g_settings.stepsGoal)
+	{
+		g_fStepGoalMet = true;
+		update_boss();
+	}
+	else if (g_fStepGoalMet && g_steps < g_settings.stepsGoal)
+	{
+		g_fStepGoalMet = false;
+		update_boss();
+	}
 }
 
 static void handle_health(HealthEventType event, void* context)
@@ -634,8 +663,8 @@ static void handle_health(HealthEventType event, void* context)
 	{
 		// APP_LOG(APP_LOG_LEVEL_INFO, "Step data available!");
 		g_steps = health_service_sum_today(HealthMetricStepCount);
-		layer_mark_dirty(g_pLayerSteps);
 		// APP_LOG(APP_LOG_LEVEL_INFO, "Steps: %d", steps);
+		update_steps();
 	}
 	else
 	{
@@ -780,9 +809,9 @@ void handle_init(void)
 
 	window_stack_push(s_WindowMain, true);
 
-	handle_tick(tick_time, MINUTE_UNIT | HOUR_UNIT);
+	handle_tick(tick_time, MINUTE_UNIT | HOUR_UNIT | DAY_UNIT);
 
-	tick_timer_service_subscribe(MINUTE_UNIT | HOUR_UNIT, handle_tick);
+	tick_timer_service_subscribe(MINUTE_UNIT | HOUR_UNIT | DAY_UNIT, handle_tick);
 
 	health_service_events_subscribe(handle_health, NULL);
 	battery_state_service_subscribe(&handle_battery);

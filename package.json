@@ -208,6 +208,11 @@
         },
         {
           "type": "bitmap",
+          "name": "KING_DEFEAT",
+          "file": "images/KING_DEFEAT.png"
+        },
+        {
+          "type": "bitmap",
           "name": "ZEROTWO",
           "file": "images/02.png"
         },
