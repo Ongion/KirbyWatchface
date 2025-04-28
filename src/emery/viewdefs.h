@@ -1,5 +1,6 @@
 #pragma once
 #include <pebble.h>
+#include "animation.h"
 #include "commonTypes.h"
 
 extern GFont s_font;
@@ -85,6 +86,14 @@ static const AbilityAnimation INTRO_ANIMATIONS[] =
 	{RESOURCE_ID_KIRBY_MIKE_INTRO_ANIM, {30, 119}},
 	{RESOURCE_ID_KIRBY_SLEEP_INTRO_ANIM, {20, 111}},
 	{RESOURCE_ID_KIRBY_SWORD_INTRO_ANIM, {20, 95}},
+};
+
+
+const Animation KirbyMike3 = 
+{
+	1, 57, (AnimationFrame[]) {
+		{RESOURCE_ID_MR_SHINE, {21,113}, 33}
+	}
 };
 
 
