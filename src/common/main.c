@@ -420,11 +420,8 @@ static void load_and_play_ability_animation(const AbilityAnimation* pAnimation)
 	kirby_animation_timer_handler(NULL);
 }
 
-static void update_date_time_layers()
+static void update_date_time_layers(const struct tm* tick_time)
 {
-	time_t temp = time(NULL);
-	struct tm* tick_time = localtime(&temp);
-
 	static char time_text[] = "00:00";
 	static char date_text[] = "00/00";
 
@@ -661,7 +658,7 @@ static void handle_tick(struct tm* tick_time, TimeUnits units_changed)
 {
 	if ((units_changed & MINUTE_UNIT) != 0)
 	{
-		update_date_time_layers();
+		update_date_time_layers(tick_time);
 
 		if (tick_time->tm_min % 30 == 0)
 		{
@@ -874,7 +871,7 @@ void handle_init(void)
 	initiate_watchface = false;
 
 	update_bg_color_time(tick_time);
-	update_date_time_layers();
+	update_date_time_layers(tick_time);
 	update_boss();
 
 	app_message_register_inbox_received(inbox_received_callback);
