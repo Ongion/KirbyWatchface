@@ -1,77 +1,15 @@
 #include <pebble.h>
 #include "main.h"
-#include "commonTypes.h"
 
+#include "animations.h"
+#include "commonTypes.h"
 #include "batteryLayer.h"
 #include "stepsLayer.h"
 #include "viewdefs.h"
 
-static const Animation* currentAnimation;
+static const ManualAnimation* currentAnimation;
 static uint16_t nextFrame;
 static uint16_t loopsRemaining;
-
-const Animation KirbyMike3 = 
-{
-	10, 57, (AnimationFrame[]) { //(23, 81)
-		{RESOURCE_ID_FRAME_KIRBY_STAND, {30,123}, 33},
-		{RESOURCE_ID_FRAME_KIRBY_MIKE_3_1, {29,109}, 67},
-		{RESOURCE_ID_FRAME_KIRBY_MIKE_3_2, {29,115}, 33},
-		{RESOURCE_ID_FRAME_KIRBY_MIKE_3_3, {29,113}, 33},
-		{RESOURCE_ID_FRAME_KIRBY_MIKE_3_4, {23,116}, 33},
-		{RESOURCE_ID_FRAME_KIRBY_MIKE_3_5, {23,113}, 67},
-		{RESOURCE_ID_FRAME_KIRBY_MIKE_3_3, {29,113}, 67},
-		{RESOURCE_ID_FRAME_KIRBY_MIKE_3_3, {26,113}, 67},
-		{RESOURCE_ID_FRAME_KIRBY_MIKE_3_6, {29,109}, 33},
-		{RESOURCE_ID_FRAME_KIRBY_MIKE_3_6, {31,105}, 33},
-		{RESOURCE_ID_FRAME_KIRBY_MIKE_3_7, {32, 99}, 33},
-		{RESOURCE_ID_FRAME_KIRBY_MIKE_3_7, {32, 93}, 33},
-		{RESOURCE_ID_FRAME_KIRBY_MIKE_3_7, {32, 89}, 33},
-		{RESOURCE_ID_FRAME_KIRBY_MIKE_3_8, {29, 85}, 33},
-		{RESOURCE_ID_FRAME_KIRBY_MIKE_3_8, {29, 83}, 33},
-		{RESOURCE_ID_FRAME_KIRBY_MIKE_3_9, {26, 81}, 100},
-		{RESOURCE_ID_FRAME_KIRBY_MIKE_3_10, {26, 83}, 33},
-		{RESOURCE_ID_FRAME_KIRBY_MIKE_3_10, {26, 85}, 33},
-		{RESOURCE_ID_FRAME_KIRBY_MIKE_3_11, {26, 85}, 33},
-		{RESOURCE_ID_FRAME_KIRBY_MIKE_3_12, {27, 88}, 33},
-		{RESOURCE_ID_FRAME_KIRBY_MIKE_3_11, {26, 95}, 33},
-		{RESOURCE_ID_FRAME_KIRBY_MIKE_3_12, {27, 100}, 33},
-		{RESOURCE_ID_FRAME_KIRBY_MIKE_3_11, {26, 105}, 33},
-		{RESOURCE_ID_FRAME_KIRBY_MIKE_3_12, {27, 104}, 33},
-		{RESOURCE_ID_FRAME_KIRBY_MIKE_3_11, {26, 105}, 33},
-		{RESOURCE_ID_FRAME_KIRBY_MIKE_3_12, {27, 104}, 33},
-		{RESOURCE_ID_FRAME_KIRBY_MIKE_3_11, {26, 105}, 33},
-		{RESOURCE_ID_FRAME_KIRBY_MIKE_3_12, {27, 104}, 33},
-		{RESOURCE_ID_FRAME_KIRBY_MIKE_3_11, {26, 105}, 33},
-		{RESOURCE_ID_FRAME_KIRBY_MIKE_3_12, {27, 104}, 33},
-		{RESOURCE_ID_FRAME_KIRBY_MIKE_3_11, {26, 105}, 33},
-		{RESOURCE_ID_FRAME_KIRBY_MIKE_3_12, {27, 104}, 33},
-		{RESOURCE_ID_FRAME_KIRBY_MIKE_3_11, {26, 105}, 33},
-		{RESOURCE_ID_FRAME_KIRBY_MIKE_3_12, {27, 104}, 33},
-		{RESOURCE_ID_FRAME_KIRBY_MIKE_3_11, {26, 105}, 33},
-		{RESOURCE_ID_FRAME_KIRBY_MIKE_3_12, {27, 104}, 33},
-		{RESOURCE_ID_FRAME_KIRBY_MIKE_3_11, {26, 105}, 33},
-		{RESOURCE_ID_FRAME_KIRBY_MIKE_3_12, {27, 104}, 33},
-		{RESOURCE_ID_FRAME_KIRBY_MIKE_3_11, {26, 105}, 33},
-		{RESOURCE_ID_FRAME_KIRBY_MIKE_3_12, {27, 104}, 33},
-		{RESOURCE_ID_FRAME_KIRBY_MIKE_3_11, {26, 105}, 33},
-		{RESOURCE_ID_FRAME_KIRBY_MIKE_3_12, {27, 104}, 33},
-		{RESOURCE_ID_FRAME_KIRBY_MIKE_3_11, {26, 105}, 33},
-		{RESOURCE_ID_FRAME_KIRBY_MIKE_3_12, {27, 104}, 33},
-		{RESOURCE_ID_FRAME_KIRBY_MIKE_3_11, {26, 105}, 33},
-		{RESOURCE_ID_FRAME_KIRBY_MIKE_3_12, {27, 104}, 33},
-		{RESOURCE_ID_FRAME_KIRBY_MIKE_3_11, {26, 105}, 33},
-		{RESOURCE_ID_FRAME_KIRBY_MIKE_3_12, {27, 104}, 33},
-		{RESOURCE_ID_FRAME_KIRBY_MIKE_3_11, {26, 105}, 33},
-		{RESOURCE_ID_FRAME_KIRBY_MIKE_3_12, {27, 104}, 33},
-		{RESOURCE_ID_FRAME_KIRBY_MIKE_3_11, {26, 105}, 33},
-		{RESOURCE_ID_FRAME_KIRBY_MIKE_3_12, {27, 104}, 33},
-		{RESOURCE_ID_FRAME_KIRBY_MIKE_3_11, {26, 105}, 33},
-		{RESOURCE_ID_FRAME_KIRBY_MIKE_3_12, {27, 104}, 33},
-		{RESOURCE_ID_FRAME_KIRBY_MIKE_3_4, {23,113}, 33},
-		{RESOURCE_ID_FRAME_KIRBY_MIKE_3_4, {23,114}, 33},
-		{RESOURCE_ID_FRAME_KIRBY_STAND, {30,123}, 33}
-	}
-};
 
 // Add animation for steps goal being reached
 
@@ -419,7 +357,7 @@ static void update_boss()
 	}
 }
 
-static void animation_timer_handler(void* context)
+static void manual_animation_timer_handler(void* context)
 {
 	if (nextFrame == currentAnimation->numFrames && loopsRemaining > 0)
 	{
@@ -442,7 +380,7 @@ static void animation_timer_handler(void* context)
 		bitmap_layer_set_bitmap(s_pLayerKirby, s_pBitmapKirby);
 
 		nextFrame++;
-		s_pKirbyAnimationTimer = app_timer_register(pAnimFrame->delayMs, animation_timer_handler, NULL);
+		s_pKirbyAnimationTimer = app_timer_register(pAnimFrame->delayMs, manual_animation_timer_handler, NULL);
 	}
 	else
 	{
@@ -450,7 +388,7 @@ static void animation_timer_handler(void* context)
 	}
 }
 
-static void kirby_animation_timer_handler(void* context)
+static void apng_animation_timer_handler(void* context)
 {
 	uint32_t next_delay;
 
@@ -462,7 +400,7 @@ static void kirby_animation_timer_handler(void* context)
 		bitmap_layer_set_bitmap(s_pLayerKirby, s_pBitmapKirby);
 
 		// Timer for next frame
-		s_pKirbyAnimationTimer = app_timer_register(next_delay, kirby_animation_timer_handler, NULL);
+		s_pKirbyAnimationTimer = app_timer_register(next_delay, apng_animation_timer_handler, NULL);
 	}
 	else
 	{
@@ -478,7 +416,7 @@ const AbilityAnimation* get_random_ability_animation()
 	return &(ABILITY_ANIMATION_SETS[abilityIdx][animationIdx]);
 }
 
-static void load_and_play_animation(const Animation* pAnimation)
+static void load_and_play_manual_animation(const ManualAnimation* pAnimation)
 {
 	// Cancel any existing animation
 	if (s_pKirbyAnimationTimer)
@@ -486,20 +424,27 @@ static void load_and_play_animation(const Animation* pAnimation)
 		app_timer_cancel(s_pKirbyAnimationTimer);
 		s_pKirbyAnimationTimer = NULL;
 	}
-	
+
+	if (s_pBitmapSequenceKirby)
+	{
+		gbitmap_sequence_destroy(s_pBitmapSequenceKirby);
+		s_pBitmapSequenceKirby = NULL;
+	}
+
 	if (s_pBitmapKirby)
 	{
 		gbitmap_destroy(s_pBitmapKirby);
+		s_pBitmapKirby = NULL;
 	}
 	
 	currentAnimation = pAnimation;
 	nextFrame = 0;
 	loopsRemaining = pAnimation->loops -1;
 
-	animation_timer_handler(NULL);
+	manual_animation_timer_handler(NULL);
 }
 
-static void load_and_play_ability_animation(const AbilityAnimation* pAnimation)
+static void load_and_play_apng_animation(const APNGAnimation* pAnimation)
 {
 	// Load an animation sequence for this ability
 
@@ -536,7 +481,24 @@ static void load_and_play_ability_animation(const AbilityAnimation* pAnimation)
 
 	layer_set_frame(bitmap_layer_get_layer(s_pLayerKirby), frame);
 
-	kirby_animation_timer_handler(NULL);
+	apng_animation_timer_handler(NULL);
+}
+
+static void load_and_play_ability_animation(const AbilityAnimation* pAnimation)
+{
+	switch (pAnimation->type)
+	{
+		case AT_APNG:
+		{
+			load_and_play_apng_animation(&(pAnimation->animation.APNGAnimation));
+			break;
+		}
+		case AT_Manual:
+		{
+			load_and_play_manual_animation(&(pAnimation->animation.manualAnimation));
+			break;
+		}
+	}
 }
 
 static void update_date_time_layers(const struct tm* tick_time)
@@ -790,7 +752,7 @@ static void handle_tick(struct tm* tick_time, TimeUnits units_changed)
 		// Change abilities
 		abilityIdx = (rand() >> 4) % NUM_ABILITIES;
 		set_container_image(&s_pBitmapAbilityName, s_pLayerAbilityName, ABILITIES_NAME_RESOURCE_IDS[abilityIdx], ABILITY_NAME_LAYER_ORIGIN);
-		load_and_play_animation(&KirbyMike3);
+		load_and_play_ability_animation(INITIAL_ANIMATION_GETTER);
 		
 		update_bg_color_time(tick_time);
 	}

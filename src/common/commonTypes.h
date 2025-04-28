@@ -18,12 +18,6 @@ typedef struct ClaySettingsV1
 
 typedef ClaySettingsV1 ClaySettings;
 
-typedef struct AbilityAnimation
-{
-	uint32_t resourceID;
-	GPoint origin;
-} AbilityAnimation;
-
 typedef struct BossSet
 {
 	uint32_t bossResourceID;
@@ -31,3 +25,39 @@ typedef struct BossSet
 	GPoint bossOrigin;
 	GPoint nameOrigin;
 } BossSet;
+
+typedef enum AnimationType
+{
+	AT_Manual,
+	AT_APNG
+} AnimationType;
+
+typedef struct AnimationFrame
+{
+	uint32_t resourceID;
+	GPoint pos;
+	uint16_t delayMs;
+} AnimationFrame;
+
+typedef struct ManualAnimation
+{
+	uint16_t loops;
+	uint16_t numFrames;
+	AnimationFrame* pFrames;
+} ManualAnimation;
+
+typedef struct APNGAnimation
+{
+	uint32_t resourceID;
+	GPoint origin;
+} APNGAnimation;
+
+typedef struct AbilityAnimation
+{
+	AnimationType type;
+	union
+	{
+		const ManualAnimation manualAnimation;
+		const APNGAnimation APNGAnimation;
+	} animation;
+} AbilityAnimation;
