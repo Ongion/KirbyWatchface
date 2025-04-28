@@ -87,9 +87,64 @@
           "file": "images/KIRBY_MIKE_ANIM_1.png"
         },
         {
+          "targetPlatforms": ["basalt"],
           "type": "raw",
           "name": "KIRBY_MIKE_ANIM_2",
           "file": "images/KIRBY_MIKE_ANIM_2.png"
+        },
+        {
+          "targetPlatforms": ["emery"],
+          "type": "bitmap",
+          "name": "FRAME_KIRBY_MIKE_2_1",
+          "file": "images/frames/mike/Anim2/KirbyMike2Frame1.png"
+        },
+        {
+          "targetPlatforms": ["emery"],
+          "type": "bitmap",
+          "name": "FRAME_KIRBY_MIKE_2_2",
+          "file": "images/frames/mike/Anim2/KirbyMike2Frame2.png"
+        },
+        {
+          "targetPlatforms": ["emery"],
+          "type": "bitmap",
+          "name": "FRAME_KIRBY_MIKE_2_3",
+          "file": "images/frames/mike/Anim2/KirbyMike2Frame3.png"
+        },
+        {
+          "targetPlatforms": ["emery"],
+          "type": "bitmap",
+          "name": "FRAME_KIRBY_MIKE_2_4",
+          "file": "images/frames/mike/Anim2/KirbyMike2Frame4.png"
+        },
+        {
+          "targetPlatforms": ["emery"],
+          "type": "bitmap",
+          "name": "FRAME_KIRBY_MIKE_2_5",
+          "file": "images/frames/mike/Anim2/KirbyMike2Frame5.png"
+        },
+        {
+          "targetPlatforms": ["emery"],
+          "type": "bitmap",
+          "name": "FRAME_KIRBY_MIKE_2_6",
+          "file": "images/frames/mike/Anim2/KirbyMike2Frame6.png"
+        },
+        {
+          "targetPlatforms": ["emery"],
+          "type": "bitmap",
+          "name": "FRAME_KIRBY_MIKE_2_7",
+          "file": "images/frames/mike/Anim2/KirbyMike2Frame7.png"
+        },
+        {
+          "targetPlatforms": ["emery"],
+          "type": "bitmap",
+          "name": "FRAME_KIRBY_MIKE_2_8",
+          "file": "images/frames/mike/Anim2/KirbyMike2Frame8.png"
+        },
+        {
+          "targetPlatforms": ["emery"],
+          "type": "bitmap",
+          "name": "FRAME_KIRBY_MIKE_2_9",
+          "file": "images/frames/mike/Anim2/KirbyMike2Frame9.png"
         },
         {
           "targetPlatforms": ["basalt"],
@@ -101,79 +156,79 @@
           "targetPlatforms": ["emery"],
           "type": "bitmap",
           "name": "FRAME_KIRBY_STAND",
-          "file": "images/frames/KirbyStand.png"
+          "file": "images/frames/mike/KirbyStand.png"
         },
         {
           "targetPlatforms": ["emery"],
           "type": "bitmap",
           "name": "FRAME_KIRBY_MIKE_3_1",
-          "file": "images/frames/KirbyMike3Frame1.png"
+          "file": "images/frames/mike/Anim3/KirbyMike3Frame1.png"
         },
         {
           "targetPlatforms": ["emery"],
           "type": "bitmap",
           "name": "FRAME_KIRBY_MIKE_3_2",
-          "file": "images/frames/KirbyMike3Frame2.png"
+          "file": "images/frames/mike/Anim3/KirbyMike3Frame2.png"
         },
         {
           "targetPlatforms": ["emery"],
           "type": "bitmap",
           "name": "FRAME_KIRBY_MIKE_3_3",
-          "file": "images/frames/KirbyMike3Frame3.png"
+          "file": "images/frames/mike/Anim3/KirbyMike3Frame3.png"
         },
         {
           "targetPlatforms": ["emery"],
           "type": "bitmap",
           "name": "FRAME_KIRBY_MIKE_3_4",
-          "file": "images/frames/KirbyMike3Frame4.png"
+          "file": "images/frames/mike/Anim3/KirbyMike3Frame4.png"
         },
         {
           "targetPlatforms": ["emery"],
           "type": "bitmap",
           "name": "FRAME_KIRBY_MIKE_3_5",
-          "file": "images/frames/KirbyMike3Frame5.png"
+          "file": "images/frames/mike/Anim3/KirbyMike3Frame5.png"
         },
         {
           "targetPlatforms": ["emery"],
           "type": "bitmap",
           "name": "FRAME_KIRBY_MIKE_3_6",
-          "file": "images/frames/KirbyMike3Frame6.png"
+          "file": "images/frames/mike/Anim3/KirbyMike3Frame6.png"
         },
         {
           "targetPlatforms": ["emery"],
           "type": "bitmap",
           "name": "FRAME_KIRBY_MIKE_3_7",
-          "file": "images/frames/KirbyMike3Frame7.png"
+          "file": "images/frames/mike/Anim3/KirbyMike3Frame7.png"
         },
         {
           "targetPlatforms": ["emery"],
           "type": "bitmap",
           "name": "FRAME_KIRBY_MIKE_3_8",
-          "file": "images/frames/KirbyMike3Frame8.png"
+          "file": "images/frames/mike/Anim3/KirbyMike3Frame8.png"
         },
         {
           "targetPlatforms": ["emery"],
           "type": "bitmap",
           "name": "FRAME_KIRBY_MIKE_3_9",
-          "file": "images/frames/KirbyMike3Frame9.png"
+          "file": "images/frames/mike/Anim3/KirbyMike3Frame9.png"
         },
         {
           "targetPlatforms": ["emery"],
           "type": "bitmap",
           "name": "FRAME_KIRBY_MIKE_3_10",
-          "file": "images/frames/KirbyMike3Frame10.png"
+          "file": "images/frames/mike/Anim3/KirbyMike3Frame10.png"
         },
         {
           "targetPlatforms": ["emery"],
           "type": "bitmap",
           "name": "FRAME_KIRBY_MIKE_3_11",
-          "file": "images/frames/KirbyMike3Frame11.png"
+          "file": "images/frames/mike/Anim3/KirbyMike3Frame11.png"
         },
         {
           "targetPlatforms": ["emery"],
           "type": "bitmap",
           "name": "FRAME_KIRBY_MIKE_3_12",
-          "file": "images/frames/KirbyMike3Frame12.png"
+          "file": "images/frames/mike/Anim3/KirbyMike3Frame12.png"
         },
         {
           "targetPlatforms": ["emery"],
