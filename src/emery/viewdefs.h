@@ -42,7 +42,6 @@ static const AbilityAnimation MIKE_ANIMATIONS[] =
 {
 	{RESOURCE_ID_KIRBY_MIKE_ANIM_1, {19, 109}},
 	{RESOURCE_ID_KIRBY_MIKE_ANIM_2, {17, 109}},
-	{RESOURCE_ID_KIRBY_MIKE_ANIM_3, {23, 81}}
 };
 
 static const AbilityAnimation SLEEP_ANIMATIONS[] =
@@ -61,7 +60,7 @@ static const unsigned int NUM_ABILITY_ANIMATIONS[] =
 	2,  // Cutter
 	1,  // Fire
 	2,  // Hammer
-	3,  // Mike
+	2,  // Mike
 	1,  // Sleep
 	1,  // Sword
 };
@@ -87,15 +86,6 @@ static const AbilityAnimation INTRO_ANIMATIONS[] =
 	{RESOURCE_ID_KIRBY_SLEEP_INTRO_ANIM, {20, 111}},
 	{RESOURCE_ID_KIRBY_SWORD_INTRO_ANIM, {20, 95}},
 };
-
-
-const Animation KirbyMike3 = 
-{
-	1, 57, (AnimationFrame[]) {
-		{RESOURCE_ID_MR_SHINE, {21,113}, 33}
-	}
-};
-
 
 #define NUM_ABILITIES 7
 

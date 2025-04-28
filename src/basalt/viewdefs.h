@@ -1,5 +1,6 @@
 #pragma once
 #include <pebble.h>
+#include "animation.h"
 #include "commonTypes.h"
 
 static const int ABILITIES_NAME_RESOURCE_IDS[] =
@@ -37,7 +38,6 @@ static const AbilityAnimation MIKE_ANIMATIONS[] =
 {
 	{RESOURCE_ID_KIRBY_MIKE_ANIM_1, {0, 80}},
 	{RESOURCE_ID_KIRBY_MIKE_ANIM_2, {2, 84}},
-	{RESOURCE_ID_KIRBY_MIKE_ANIM_3, {5, 52}}
 };
 
 static const AbilityAnimation SLEEP_ANIMATIONS[] =
@@ -56,7 +56,7 @@ static const unsigned int NUM_ABILITY_ANIMATIONS[] =
 	1,  // Cutter
 	1,  // Fire
 	1,  // Hammer
-	3,  // Mike
+	2,  // Mike
 	1,  // Sleep
 	1,  // Sword
 };

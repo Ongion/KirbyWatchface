@@ -92,9 +92,69 @@
           "file": "images/KIRBY_MIKE_ANIM_2.png"
         },
         {
-          "type": "raw",
-          "name": "KIRBY_MIKE_ANIM_3",
-          "file": "images/KIRBY_MIKE_ANIM_3.png"
+          "type": "bitmap",
+          "name": "FRAME_KIRBY_STAND",
+          "file": "images/frames/KirbyStand.png"
+        },
+        {
+          "type": "bitmap",
+          "name": "FRAME_KIRBY_MIKE_3_1",
+          "file": "images/frames/KirbyMike3Frame1.png"
+        },
+        {
+          "type": "bitmap",
+          "name": "FRAME_KIRBY_MIKE_3_2",
+          "file": "images/frames/KirbyMike3Frame2.png"
+        },
+        {
+          "type": "bitmap",
+          "name": "FRAME_KIRBY_MIKE_3_3",
+          "file": "images/frames/KirbyMike3Frame3.png"
+        },
+        {
+          "type": "bitmap",
+          "name": "FRAME_KIRBY_MIKE_3_4",
+          "file": "images/frames/KirbyMike3Frame4.png"
+        },
+        {
+          "type": "bitmap",
+          "name": "FRAME_KIRBY_MIKE_3_5",
+          "file": "images/frames/KirbyMike3Frame5.png"
+        },
+        {
+          "type": "bitmap",
+          "name": "FRAME_KIRBY_MIKE_3_6",
+          "file": "images/frames/KirbyMike3Frame6.png"
+        },
+        {
+          "type": "bitmap",
+          "name": "FRAME_KIRBY_MIKE_3_7",
+          "file": "images/frames/KirbyMike3Frame7.png"
+        },
+        {
+          "type": "bitmap",
+          "name": "FRAME_KIRBY_MIKE_3_8",
+          "file": "images/frames/KirbyMike3Frame8.png"
+        },
+        {
+          "type": "bitmap",
+          "name": "FRAME_KIRBY_MIKE_3_9",
+          "file": "images/frames/KirbyMike3Frame9.png"
+        },
+        {
+          "type": "bitmap",
+          "name": "FRAME_KIRBY_MIKE_3_10",
+          "file": "images/frames/KirbyMike3Frame10.png"
+        },
+        {
+          "type": "bitmap",
+          "name": "FRAME_KIRBY_MIKE_3_11",
+          "file": "images/frames/KirbyMike3Frame11.png"
+        },
+        {
+          "type": "bitmap",
+          "name": "FRAME_KIRBY_MIKE_3_12",
+          "file": "images/frames/KirbyMike3Frame12.png"
         },
         {
           "targetPlatforms": ["emery"],
