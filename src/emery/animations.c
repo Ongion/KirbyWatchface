@@ -28,7 +28,7 @@ const AbilityAnimation MIKE_ANIMATIONS[] =
 	{.type = AT_Manual, .animation.manualAnimation =
 		{
 			.loops = 1,
-			.numFrames = 31,
+			.numFrames = 30,
 			.pFrames = (AnimationFrame[])
 			{
 				{RESOURCE_ID_FRAME_KIRBY_STAND, {30, 123}, 33},
@@ -60,7 +60,7 @@ const AbilityAnimation MIKE_ANIMATIONS[] =
 				{RESOURCE_ID_FRAME_KIRBY_MIKE_2_7, {28, 115}, 33},
 				{RESOURCE_ID_FRAME_KIRBY_MIKE_2_8, {27, 116}, 33},
 				{RESOURCE_ID_FRAME_KIRBY_MIKE_2_9, {30, 118}, 67},
-				{RESOURCE_ID_FRAME_KIRBY_STAND, {17, 109}, 33}
+				{RESOURCE_ID_FRAME_KIRBY_STAND, {30, 123}, 33}
 			}
 		}
 	},
