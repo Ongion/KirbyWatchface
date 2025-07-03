@@ -3,7 +3,9 @@
 
 #include "animations.h"
 #include "commonTypes.h"
+
 #include "batteryLayer.h"
+#include "glancing_api.h"
 #include "stepsLayer.h"
 #include "viewdefs.h"
 
@@ -501,6 +503,14 @@ static void load_and_play_ability_animation(const AbilityAnimation* pAnimation)
 	}
 }
 
+static void glancing_handler(GlancingData *data)
+{
+	if (data->state == GLANCING_ACTIVE && !s_pKirbyAnimationTimer)
+	{
+		load_and_play_ability_animation(get_random_ability_animation());
+	}
+}
+
 static void update_date_time_layers(const struct tm* tick_time)
 {
 	static char time_text[] = "00:00";
@@ -900,10 +910,14 @@ static void main_window_load(Window* window)
 	load_time_layer(window_layer);
 	load_date_layer(window_layer);
 	load_weather_layer(window_layer);
+
+	glancing_service_subscribe(1000, false, false, glancing_handler);
 }
 
 static void main_window_unload(Window* window)
 {
+	glancing_service_unsubscribe();
+
 	unload_weather_layer();
 	unload_date_layer();
 	unload_time_layer();
