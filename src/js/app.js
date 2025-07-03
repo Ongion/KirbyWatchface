@@ -35,6 +35,8 @@ function getWeatherWithLatLong(lat, long)
       // // Temperature in Kelvin requires adjustment
       var temperature = Math.round(json.main.temp);
       var condition = json.weather[0].id;
+      var sunrise = json.sys.sunrise;
+      var sunset = json.sys.sunset;
       
       console.log("Temperature is " + temperature);
       console.log(condition);
@@ -42,7 +44,9 @@ function getWeatherWithLatLong(lat, long)
       // Assemble dictionary using our keys
       var dictionary = {
         "Temperature": temperature,
-        "WeatherCondition": condition
+        "WeatherCondition": condition,
+        "Sunrise": sunrise,
+        "Sunset": sunset
       };
 
       // Send to Pebble
