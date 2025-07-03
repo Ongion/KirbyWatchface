@@ -643,8 +643,8 @@ static void inbox_received_callback(DictionaryIterator* iter, void* context)
 	if (pebblekit_ready_t)
 	{
 		pebbleKitReady = true;
-		APP_LOG(APP_LOG_LEVEL_DEBUG, "It is now %d", time(NULL));
-		APP_LOG(APP_LOG_LEVEL_DEBUG, "last got weather at %d", s_lastWeatherTime);
+		// APP_LOG(APP_LOG_LEVEL_DEBUG, "It is now %d", time(NULL));
+		// APP_LOG(APP_LOG_LEVEL_DEBUG, "last got weather at %d", s_lastWeatherTime);
 		if (((unsigned int)time(NULL) - (unsigned int)s_lastWeatherTime) > TIME_STALE_WEATHER)
 		{
 			// Weather last checked over 30 minutes ago.
