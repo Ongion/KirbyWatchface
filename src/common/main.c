@@ -917,6 +917,16 @@ static void load_settings()
 	{
 		s_lastWeatherTime = persist_read_int(STORAGE_KEY_LastTimeRecievedWeather);
 	}
+
+	if (persist_exists(STORAGE_KEY_LastSeenSunriseHour))
+	{
+		s_sunriseHour = persist_read_int(STORAGE_KEY_LastSeenSunriseHour);
+	}
+
+	if (persist_exists(STORAGE_KEY_LastSeenSunsetHour))
+	{
+		s_sunsetHour = persist_read_int(STORAGE_KEY_LastSeenSunsetHour);
+	}
 }
 
 void handle_init(void)
