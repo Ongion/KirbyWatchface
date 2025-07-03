@@ -436,7 +436,9 @@
       "ScalePreference",
       "RequestWeather",
       "OpenWeatherAPIKey",
-      "City"
+      "City",
+      "Sunrise",
+      "Sunset"
     ],
     "enableMultiJS": true,
     "displayName": "Kirby",
