@@ -535,23 +535,28 @@ void update_bg_color()
 
 void update_bg_color_time(struct tm* current_time)
 {
-	if (current_time->tm_hour >= 12 && current_time->tm_hour < 17)
+	if (s_sunriseHour-1 <= current_time->tm_hour && current_time->tm_hour < s_sunriseHour+2)
 	{
+		// Sunrise
 		s_bgColorTime = GColorFromRGB(0, 170, 255);
-		daytime = true;
+
+		daytime = s_sunriseHour <= current_time->tm_hour;
 	}
-	else if (current_time->tm_hour >= 5 && current_time->tm_hour < 12)
+	else if (s_sunriseHour+2 <= current_time->tm_hour && current_time->tm_hour < s_sunsetHour-1)
 	{
+		// Daytime
 		s_bgColorTime = GColorFromRGB(255, 0, 128);
 		daytime = true;
 	}
-	else if (current_time->tm_hour >= 17 && current_time->tm_hour < 21)
+	else if (s_sunsetHour-1 <= current_time->tm_hour && current_time->tm_hour < s_sunsetHour+2)
 	{
+		// Sunset
 		s_bgColorTime = GColorFromRGB(255, 170, 0);
-		daytime = false;
+		daytime = current_time->tm_hour < s_sunsetHour;
 	}
-	else if (current_time->tm_hour >= 21 || current_time->tm_hour < 5)
+	else //if (s_sunsetHour+2 <= current_time->tm_hour || current_time->tm_hour < s_sunriseHour-1)
 	{
+		// Night
 		s_bgColorTime = GColorFromRGB(0, 0, 85);
 		daytime = false;
 	}
