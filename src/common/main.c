@@ -612,7 +612,7 @@ static void request_weather_update()
 		APP_LOG(APP_LOG_LEVEL_ERROR, "Error sending the outbox: %d", (int)result);
 	}
 
-	s_pWeatherTimeoutTimer = app_timer_register(10000, weather_ended, NULL);
+	s_pWeatherTimeoutTimer = app_timer_register(60000, weather_ended, NULL);
 }
 
 static void inbox_received_callback(DictionaryIterator* iter, void* context)
@@ -645,9 +645,9 @@ static void inbox_received_callback(DictionaryIterator* iter, void* context)
 		pebbleKitReady = true;
 		// APP_LOG(APP_LOG_LEVEL_DEBUG, "It is now %d", time(NULL));
 		// APP_LOG(APP_LOG_LEVEL_DEBUG, "last got weather at %d", s_lastWeatherTime);
-		if (((unsigned int)time(NULL) - (unsigned int)s_lastWeatherTime) > TIME_STALE_WEATHER)
+		if (((unsigned int)time(NULL) - (unsigned int)s_lastWeatherTime) > TIME_REFRESH_WEATHER)
 		{
-			// Weather last checked over 30 minutes ago.
+			// Weather last checked over 20 minutes ago.
 			request_weather_update();
 		}
 	}
@@ -741,7 +741,7 @@ static void handle_tick(struct tm* tick_time, TimeUnits units_changed)
 	{
 		update_date_time_layers(tick_time);
 
-		if (tick_time->tm_min % 30 == 0)
+		if (tick_time->tm_min % WEATHER_REFRESH_RATE_MIN == 0)
 		{
 			request_weather_update();
 		}

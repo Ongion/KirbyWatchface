@@ -62,6 +62,8 @@ void load_custom_fonts();
 void unload_custom_fonts();
 void update_steps();
 
-#define TIME_STALE_WEATHER 60*30
+#define WEATHER_REFRESH_RATE_MIN 20
+#define TIME_STALE_WEATHER 60*(WEATHER_REFRESH_RATE_MIN+1)
+#define TIME_REFRESH_WEATHER 60*WEATHER_REFRESH_RATE_MIN
 
 Window* s_WindowMain;
