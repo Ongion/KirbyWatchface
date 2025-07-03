@@ -698,6 +698,24 @@ static void inbox_received_callback(DictionaryIterator* iter, void* context)
 		got_weather = true;
 	}
 
+	// Sunrise
+	Tuple* sunrise_t = dict_find(iter, MESSAGE_KEY_Sunrise);
+	if (sunrise_t)
+	{
+		struct tm* sunrise_time = localtime(sunrise_t->value->int32);
+		s_sunriseHour = sunrise_time->tm_hour;
+		persist_write_int(STORAGE_KEY_LastSeenSunriseHour, s_sunriseHour);
+	}
+
+	// Sunset
+	Tuple* sunset_t = dict_find(iter, MESSAGE_KEY_Sunset);
+	if (sunset_t)
+	{
+		struct tm* sunset_time = localtime(sunset_t->value->int32);
+		s_sunsetHour = sunset_time->tm_hour;
+		persist_write_int(STORAGE_KEY_LastSeenSunsetHour, s_sunsetHour);
+	}
+
 	if (got_weather)
 	{
 		cancel_weather_timeout();
