@@ -535,17 +535,20 @@ void update_bg_color()
 
 void update_bg_color_time(struct tm* current_time)
 {
+	APP_LOG(APP_LOG_LEVEL_INFO, "Sunrise hour: %d", s_sunriseHour);
+	APP_LOG(APP_LOG_LEVEL_INFO, "Sunset hour: %d", s_sunsetHour);
+	APP_LOG(APP_LOG_LEVEL_INFO, "Current hour: %d", current_time->tm_hour);
+
 	if (s_sunriseHour-1 <= current_time->tm_hour && current_time->tm_hour < s_sunriseHour+2)
 	{
 		// Sunrise
-		s_bgColorTime = GColorFromRGB(0, 170, 255);
-
+		s_bgColorTime = GColorFromRGB(255, 0, 128);
 		daytime = s_sunriseHour <= current_time->tm_hour;
 	}
 	else if (s_sunriseHour+2 <= current_time->tm_hour && current_time->tm_hour < s_sunsetHour-1)
 	{
 		// Daytime
-		s_bgColorTime = GColorFromRGB(255, 0, 128);
+		s_bgColorTime = GColorFromRGB(0, 170, 255);
 		daytime = true;
 	}
 	else if (s_sunsetHour-1 <= current_time->tm_hour && current_time->tm_hour < s_sunsetHour+2)
@@ -707,18 +710,24 @@ static void inbox_received_callback(DictionaryIterator* iter, void* context)
 	Tuple* sunrise_t = dict_find(iter, MESSAGE_KEY_Sunrise);
 	if (sunrise_t)
 	{
-		struct tm* sunrise_time = localtime(&sunrise_t->value->int32);
-		s_sunriseHour = sunrise_time->tm_hour;
-		persist_write_int(STORAGE_KEY_LastSeenSunriseHour, s_sunriseHour);
+		if (sunrise_t->value->int32 != 0)
+		{
+			struct tm* sunrise_time = localtime(&sunrise_t->value->int32);
+			s_sunriseHour = sunrise_time->tm_hour;
+			persist_write_int(STORAGE_KEY_LastSeenSunriseHour, s_sunriseHour);
+		}
 	}
 
 	// Sunset
 	Tuple* sunset_t = dict_find(iter, MESSAGE_KEY_Sunset);
 	if (sunset_t)
 	{
-		struct tm* sunset_time = localtime(&sunset_t->value->int32);
-		s_sunsetHour = sunset_time->tm_hour;
-		persist_write_int(STORAGE_KEY_LastSeenSunsetHour, s_sunsetHour);
+		if (sunset_t->value->int32 != 0)
+		{
+			struct tm* sunset_time = localtime(&sunset_t->value->int32);
+			s_sunsetHour = sunset_time->tm_hour;
+			persist_write_int(STORAGE_KEY_LastSeenSunsetHour, s_sunsetHour);
+		}
 	}
 
 	if (got_weather)
