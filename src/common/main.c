@@ -911,7 +911,7 @@ static void main_window_load(Window* window)
 	load_date_layer(window_layer);
 	load_weather_layer(window_layer);
 
-	glancing_service_subscribe(1000, false, false, glancing_handler);
+	glancing_service_subscribe(0, false, false, glancing_handler);
 }
 
 static void main_window_unload(Window* window)

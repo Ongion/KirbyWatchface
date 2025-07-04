@@ -33,11 +33,18 @@ glancing_zone active_zone = {
 };
 
 // arm hanging downward, select button pointing toward ground
-glancing_zone inactive_zone_downward = {
-  .x_segment = { 800, 1000},
-  .y_segment = { -500, 500},
-  .z_segment = { -800, 800}
+glancing_zone inactive_zone_downward_left = {
+  .x_segment = {  800,  1000},
+  .y_segment = { -500 , 500},
+  .z_segment = { -800 , 800}
 };
+
+glancing_zone inactive_zone_downward_right = {
+  .x_segment = { -1000, -800},
+  .y_segment = { -500 , 500},
+  .z_segment = { -800 , 800}
+};
+
 
 // arm horizontal, screen facing away from user, essentially wrist was rotated away from user
 glancing_zone inactive_zone_away = {
@@ -59,7 +66,7 @@ static const int32_t LIGHT_FADE_TIME_MS = 500;
 
 // window of time from inactive zone to active to trigger glance
 // stored in seconds for the time being
-static const uint32_t DOWNWARD_WINDOW = 1;
+static const uint32_t DOWNWARD_WINDOW_MS = 1500;
 static const uint32_t AWAY_WINDOW = 1;
 static const uint32_t ROLL_WINDOW_MS = 500;
 
@@ -107,7 +114,14 @@ static void prv_accel_handler(AccelData *data, uint32_t num_samples) {
   for (uint32_t i = 0; i < num_samples; i++) {
     if(WITHIN_ZONE(active_zone, data[i].x, data[i].y, data[i].z)) {
       active_count++;
+      // APP_LOG(APP_LOG_LEVEL_DEBUG, "%s, %d of %d", unglanced ? "unglanced" : "glanced", active_count, num_samples);
       time_ms(&s_last_active.sec, &s_last_active.ms);
+
+      // if (active_count == num_samples)
+      // {
+        // APP_LOG(APP_LOG_LEVEL_DEBUG, "Current: %u", current_time.sec * 1000 + current_time.ms);
+        // APP_LOG(APP_LOG_LEVEL_DEBUG, "Window : %u", s_glanced_window.sec * 1000 + s_glanced_window.ms);
+      // }
       // state must be unglanced before active can be triggered again
       // and all samples must be in the active zone to trigger active
       if (unglanced && active_count == num_samples && 
@@ -127,31 +141,33 @@ static void prv_accel_handler(AccelData *data, uint32_t num_samples) {
         }
         return;
       }
-    } else if (WITHIN_ZONE(inactive_zone_downward, data[i].x, data[i].y, data[i].z)) {
+    } else if (WITHIN_ZONE(inactive_zone_downward_left, data[i].x, data[i].y, data[i].z) ||
+               WITHIN_ZONE(inactive_zone_downward_right, data[i].x, data[i].y, data[i].z)) {
+      // APP_LOG(APP_LOG_LEVEL_DEBUG, "Downward");
       unglanced = true;
       time_ms(&s_glanced_window.sec, &s_glanced_window.ms);
-      s_glanced_window.sec += DOWNWARD_WINDOW;
+      s_glanced_window.sec += DOWNWARD_WINDOW_MS / 1000;
+      s_glanced_window.ms += DOWNWARD_WINDOW_MS % 1000;
       prv_update_state(GLANCING_INACTIVE);
       // Disable timeout if unnecessary
       if (glancing_timeout_handle) {
         app_timer_cancel(glancing_timeout_handle);
+        glancing_timeout_handle = NULL;
       }
       // If even 1 sample was in inactive zone, we trigger unglanced
       // and inactive and return
       return;
     } else if (WITHIN_ZONE(inactive_zone_away, data[i].x, data[i].y, data[i].z)) {
+	  // APP_LOG(APP_LOG_LEVEL_DEBUG, "Away");
       unglanced = true;
       prv_update_state(GLANCING_INACTIVE);
       // Disable timeout if unnecessary
       if (glancing_timeout_handle) {
         app_timer_cancel(glancing_timeout_handle);
+        glancing_timeout_handle = NULL;
       }
-      // only restart unglanced timer if they were in the active range just before this
-      if (((int64_t)current_time.sec * 1000 + current_time.ms < 
-          (int64_t)s_last_active.sec * 1000 + s_last_active.ms + ROLL_WINDOW_MS)) {
-        time_ms(&s_glanced_window.sec, &s_glanced_window.ms);
-        s_glanced_window.sec += AWAY_WINDOW;
-      }
+      time_ms(&s_glanced_window.sec, &s_glanced_window.ms);
+      s_glanced_window.sec += AWAY_WINDOW;
       // If even 1 sample was in inactive zone, we trigger unglanced
       // and inactive and return
       return;
@@ -164,6 +180,7 @@ static void prv_accel_handler(AccelData *data, uint32_t num_samples) {
     // Disable timeout if unnecessary
     if (glancing_timeout_handle) {
       app_timer_cancel(glancing_timeout_handle);
+      glancing_timeout_handle = NULL;
     }
   }
 }
@@ -189,7 +206,7 @@ void glancing_service_subscribe(int timeout_ms, bool control_backlight,
   // Setup motion accel handler with low sample rate
   // 10 hz with buffer for 5 samples for 0.5 second update rate
   accel_data_service_subscribe(5, prv_accel_handler);
-  accel_service_set_sampling_rate(ACCEL_SAMPLING_25HZ);
+  accel_service_set_sampling_rate(ACCEL_SAMPLING_10HZ);
   
   prv_legacy_flick_backlight = legacy_flick_backlight;
   prv_control_backlight = control_backlight;
