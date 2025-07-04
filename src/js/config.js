@@ -59,6 +59,22 @@ module.exports = [
         ]
     },
     {
+        "type": "section",
+        "items": [
+            {
+                "type": "heading",
+                "defaultValue": "Options"
+            },
+            {
+                "type": "toggle",
+                "messageKey": "AnimateOnGlance",
+                "label": "Animate On Glance",
+                "description": "Animate when the watch is turned towards the user's face. May use more battery.",
+                "defaultValue": false
+            }
+        ]
+    },
+    {
         "type": "submit",
         "defaultValue": "Save"
     }

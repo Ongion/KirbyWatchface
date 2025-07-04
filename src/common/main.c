@@ -633,6 +633,23 @@ static void request_weather_update()
 	s_pWeatherTimeoutTimer = app_timer_register(60000, weather_ended, NULL);
 }
 
+static void update_animate_on_glance(bool fAnimateOnGlance)
+{
+	if (g_settings.animateOnGlance != fAnimateOnGlance)
+	{
+		g_settings.animateOnGlance = fAnimateOnGlance;
+
+		if (fAnimateOnGlance)
+		{
+			glancing_service_subscribe(0, false, false, glancing_handler);
+		}
+		else
+		{
+			glancing_service_unsubscribe();
+		}
+	}
+}
+
 static void inbox_received_callback(DictionaryIterator* iter, void* context)
 {
 	bool updated_settings = false;
@@ -738,6 +755,14 @@ static void inbox_received_callback(DictionaryIterator* iter, void* context)
 			s_sunsetHour = sunset_time->tm_hour;
 			persist_write_int(STORAGE_KEY_LastSeenSunsetHour, s_sunsetHour);
 		}
+	}
+
+	// AnimateOnGlance
+	Tuple* animateOnGlance_t = dict_find(iter, MESSAGE_KEY_AnimateOnGlance);
+	if (animateOnGlance_t)
+	{
+		update_animate_on_glance(animateOnGlance_t->value->int32 == 1);
+		updated_settings = true;
 	}
 
 	if (got_weather)
@@ -910,13 +935,14 @@ static void main_window_load(Window* window)
 	load_time_layer(window_layer);
 	load_date_layer(window_layer);
 	load_weather_layer(window_layer);
-
-	glancing_service_subscribe(0, false, false, glancing_handler);
 }
 
 static void main_window_unload(Window* window)
 {
-	glancing_service_unsubscribe();
+	if (g_settings.animateOnGlance)
+	{
+		glancing_service_unsubscribe();
+	}
 
 	unload_weather_layer();
 	unload_date_layer();
@@ -946,6 +972,10 @@ static void load_settings()
 		if (persist_read_int(STORAGE_KEY_ClaySettingsVersion) == 1)
 		{
 			persist_read_data(STORAGE_KEY_ClaySettings, &g_settings, sizeof(g_settings));
+			if (g_settings.animateOnGlance)
+			{
+				glancing_service_subscribe(0, false, false, glancing_handler);
+			}
 		}
 	}
 

@@ -438,7 +438,8 @@
       "OpenWeatherAPIKey",
       "City",
       "Sunrise",
-      "Sunset"
+      "Sunset",
+      "AnimateOnGlance"
     ],
     "enableMultiJS": true,
     "displayName": "Kirby",

@@ -14,6 +14,7 @@ typedef struct ClaySettingsV1
 	char city[86];
 	TemperatureScale scalePreference;
 	uint16_t stepsGoal;
+	bool animateOnGlance;
 } ClaySettingsV1;
 
 typedef ClaySettingsV1 ClaySettings;
