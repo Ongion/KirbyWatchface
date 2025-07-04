@@ -1,5 +1,3 @@
-# KirbyGT
+# Kirby Watchface
 
-This project is open source, please give credit to Game Time if using code for your own watchfaces or watch applications.
-
-Thank you and Enjoy.
+This project was adapted from a [project by Game Time](https://github.com/WinterWinter/KirbyGT/), and expanded with new features and animations. It's compatible with all rectangular color-screened Pebbles, as well as the Core Time 2.
