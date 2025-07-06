@@ -16,10 +16,10 @@ var xhrRequest = function (url, type, callback) {
 };
 
 function locationSuccess(pos) {
-  getWeatherWithLatLong(pos.coords.latitude, pos.coords.longitude);
+  getWeatherOpenWeatherAPIWithLatLong(pos.coords.latitude, pos.coords.longitude);
 }
 
-function getWeatherWithLatLong(lat, long)
+function getWeatherOpenWeatherAPIWithLatLong(lat, long)
 {
   var url = "http://api.openweathermap.org/data/2.5/weather?lat=" + lat + "&lon=" + long + '&appid=' + api_key;
 
@@ -62,7 +62,7 @@ function getWeatherWithLatLong(lat, long)
   );  
 }
 
-function getWeatherWithCity()
+function getWeatherOpenWeatherAPIWithCity()
 {
   console.log("Getting weather by city")
   var url = "http://api.openweathermap.org/geo/1.0/direct?q="+city+"&limit=1&appid="+api_key;
@@ -72,17 +72,17 @@ function getWeatherWithCity()
       // responseText contains a JSON object with location info
       var json = JSON.parse(text);
 
-      getWeatherWithLatLong(json[0].lat, json[0].lon);
+      getWeatherOpenWeatherAPIWithLatLong(json[0].lat, json[0].lon);
     }
   );
 }
 
 function locationError(err) {
   console.log("Error requesting location!");
-  getWeatherWithCity()
+  getWeatherOpenWeatherAPIWithCity()
 }
 
-function getWeather() {
+function getWeatherOpenWeatherAPI() {
   if (city === "") {
   navigator.geolocation.getCurrentPosition(
     locationSuccess,
@@ -90,7 +90,7 @@ function getWeather() {
     {timeout: 15000, maximumAge: 60000}
   );
   }else{
-    getWeatherWithCity();
+    getWeatherOpenWeatherAPIWithCity();
   }
 }
 
@@ -117,7 +117,7 @@ Pebble.addEventListener('appmessage',
       api_key = dict['OpenWeatherAPIKey'];
       city = dict['City']
 
-      console.log("Requesting Weather!");
-      getWeather();
+      console.log("Requesting Weather from OpenWeatherAPI!");
+      getWeatherOpenWeatherAPI();
     }
   });
