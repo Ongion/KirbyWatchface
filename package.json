@@ -435,6 +435,7 @@
       "WeatherCondition",
       "ScalePreference",
       "RequestWeather",
+      "WeatherSource",
       "OpenWeatherAPIKey",
       "City",
       "Sunrise",

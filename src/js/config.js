@@ -11,10 +11,33 @@ module.exports = [
                 "defaultValue": "Weather"
             },
             {
+                "type": "select",
+                "messageKey": "WeatherSource",
+                "defaultValue": "openWeather",
+                "label": "Weather Source",
+                "description": "OpenWeatherMap requires a (free) API key.<br>US NWS only works in the USA.",
+                "options" : [
+                    {
+                        "label": "OpenWeatherMap",
+                        "value": "openWeather"
+                    },
+                    {
+                        "label": "US NWS",
+                        "value": "weathergov"
+                    }
+                ]
+            },
+            {
                 "type": "input",
                 "label": "API Key",
                 "description": "An API key is required to featch OpenWeatherMap data. These can be freely obtained from OpenWeatherMap.org.",
                 "messageKey": "OpenWeatherAPIKey"
+            },
+            {
+                "type": "input",
+                "label": "City",
+                "description": "'&lt;City&gt;, &lt;State&gt;, &lt;Country&gt;'. Leave blank for GPS location.",
+                "messageKey": "City"
             },
             {
                 "type": "radiogroup",
@@ -31,12 +54,6 @@ module.exports = [
                         "value": "F"
                     },
                 ]
-            },
-            {
-                "type": "input",
-                "label": "City",
-                "description": "'&lt;City&gt;, &lt;State&gt;, &lt;Country&gt;'. Leave blank for GPS location.",
-                "messageKey": "City"
             }
         ]
     },
