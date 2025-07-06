@@ -4,8 +4,8 @@
 
 typedef enum weather_source
 {
-	OPENWEATHER,
-	USNWS
+	OPENWEATHER = 0,
+	USNWS = 1
 } WeatherSource;
 
 typedef enum temperature_scales

@@ -620,9 +620,14 @@ static void request_weather_update()
 
 	int value = 1;
 	dict_write_int(iter, MESSAGE_KEY_RequestWeather, &value, sizeof(int), true /*isSigned*/);
+	dict_write_int(iter, MESSAGE_KEY_WeatherSource, &g_settings.weatherSource, sizeof(WeatherSource), true /*isSigned*/);
 
-	dict_write_cstring(iter, MESSAGE_KEY_OpenWeatherAPIKey, g_settings.openWeatherMapAPIKey);
-	dict_write_cstring(iter, MESSAGE_KEY_City, g_settings.city);
+	if (g_settings.weatherSource == OPENWEATHER)
+	{
+		dict_write_cstring(iter, MESSAGE_KEY_OpenWeatherAPIKey, g_settings.openWeatherMapAPIKey);
+		dict_write_cstring(iter, MESSAGE_KEY_City, g_settings.city);
+	}
+
 	result = app_message_outbox_send();
 
 	if (result != APP_MSG_OK)
@@ -660,12 +665,17 @@ static void inbox_received_callback(DictionaryIterator* iter, void* context)
 	Tuple* weatherSource_t = dict_find(iter, MESSAGE_KEY_WeatherSource);
 	if (weatherSource_t)
 	{
-		if (strncmp(weatherSource_t->value->cstring, "weathergov", 10))
+		APP_LOG(APP_LOG_LEVEL_DEBUG, weatherSource_t->value->cstring);
+		if (strncmp(weatherSource_t->value->cstring, "weathergov", 11) == 0)
 		{
+			APP_LOG(APP_LOG_LEVEL_DEBUG, "USNWS");
+
 			g_settings.weatherSource = USNWS;
 		}
-		else if (strncmp(weatherSource_t->value->cstring, "openWeather", 11))
+		else if (strncmp(weatherSource_t->value->cstring, "openWeather", 12) == 0)
 		{
+			APP_LOG(APP_LOG_LEVEL_DEBUG, "OPENWEATHER");
+
 			g_settings.weatherSource = OPENWEATHER;
 		}
 
@@ -1002,6 +1012,7 @@ static void load_settings()
 		else if (persist_read_int(STORAGE_KEY_ClaySettingsVersion == 2))
 		{
 			persist_read_data(STORAGE_KEY_ClaySettings, &g_settings, sizeof(g_settings));
+			APP_LOG(APP_LOG_LEVEL_DEBUG, "ScalePreference: %d", g_settings.scalePreference);
 		}
 
 		if (g_settings.animateOnGlance)
