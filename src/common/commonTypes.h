@@ -2,6 +2,12 @@
 
 #include <pebble.h>
 
+typedef enum weather_source
+{
+	OPENWEATHER,
+	USNWS
+} WeatherSource;
+
 typedef enum temperature_scales
 {
 	FAHRENHEIT,
@@ -17,7 +23,18 @@ typedef struct ClaySettingsV1
 	bool animateOnGlance;
 } ClaySettingsV1;
 
-typedef ClaySettingsV1 ClaySettings;
+typedef struct ClaySettingsV2
+{
+	WeatherSource weatherSource;
+	char openWeatherMapAPIKey[33];
+	char city[86];
+	TemperatureScale scalePreference;
+	uint16_t stepsGoal;
+	bool animateOnGlance;
+} ClaySettingsV2;
+
+
+typedef ClaySettingsV2 ClaySettings;
 
 typedef struct BossSet
 {

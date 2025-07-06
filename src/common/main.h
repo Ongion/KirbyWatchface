@@ -40,8 +40,6 @@ static time_t s_lastWeatherTime = 0;
 static int s_sunriseHour = 5;
 static int s_sunsetHour = 19;
 
-static bool s_fAnimateOnGlance = false;
-
 static unsigned int abilityIdx = 0;
 
 static AppTimer* s_pKirbyAnimationTimer;

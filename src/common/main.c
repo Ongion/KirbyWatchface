@@ -656,6 +656,22 @@ static void inbox_received_callback(DictionaryIterator* iter, void* context)
 	bool recalc_weather_text = false;
 	bool got_weather = false;
 
+	// WeatherSource
+	Tuple* weatherSource_t = dict_find(iter, MESSAGE_KEY_WeatherSource);
+	if (weatherSource_t)
+	{
+		if (strncmp(weatherSource_t->value->cstring, "weathergov", 10))
+		{
+			g_settings.weatherSource = USNWS;
+		}
+		else if (strncmp(weatherSource_t->value->cstring, "openWeather", 11))
+		{
+			g_settings.weatherSource = OPENWEATHER;
+		}
+
+		updated_settings = true;
+	}
+
 	// OpenWeatherAPIKey
 	Tuple* openWeatherAPIKey_t = dict_find(iter, MESSAGE_KEY_OpenWeatherAPIKey);
 	if (openWeatherAPIKey_t)
@@ -669,7 +685,6 @@ static void inbox_received_callback(DictionaryIterator* iter, void* context)
 	if (city_t)
 	{
 		strncpy(g_settings.city, city_t->value->cstring, sizeof(g_settings.city));
-		APP_LOG(APP_LOG_LEVEL_DEBUG, "GOT CITY %s", g_settings.city);
 		updated_settings = true;
 	}
 
@@ -691,11 +706,11 @@ static void inbox_received_callback(DictionaryIterator* iter, void* context)
 	Tuple* scale_preference_t = dict_find(iter, MESSAGE_KEY_ScalePreference);
 	if (scale_preference_t)
 	{
-		if (strcmp(scale_preference_t->value->cstring, "F") == 0)
+		if (strncmp(scale_preference_t->value->cstring, "F", 1) == 0)
 		{
 			g_settings.scalePreference = FAHRENHEIT;
 		}
-		else if (strcmp(scale_preference_t->value->cstring, "C") == 0)
+		else if (strncmp(scale_preference_t->value->cstring, "C", 1) == 0)
 		{
 			g_settings.scalePreference = CELSIUS;
 		}
@@ -780,7 +795,7 @@ static void inbox_received_callback(DictionaryIterator* iter, void* context)
 
 	if (updated_settings)
 	{
-		persist_write_int(STORAGE_KEY_ClaySettingsVersion, 1);
+		persist_write_int(STORAGE_KEY_ClaySettingsVersion, 2);
 		persist_write_data(STORAGE_KEY_ClaySettings, &g_settings, sizeof(g_settings));
 
 		request_weather_update();
@@ -962,20 +977,36 @@ static void main_window_unload(Window* window)
 
 static void load_settings()
 {
+	g_settings.weatherSource = OPENWEATHER;
 	g_settings.openWeatherMapAPIKey[0] = '\0';
 	g_settings.city[0] = '\0';
 	g_settings.scalePreference = CELSIUS;
 	g_settings.stepsGoal = 5000;
+	g_settings.animateOnGlance = false;
 
 	if (persist_exists(STORAGE_KEY_ClaySettings) && persist_exists(STORAGE_KEY_ClaySettingsVersion))
 	{
 		if (persist_read_int(STORAGE_KEY_ClaySettingsVersion) == 1)
 		{
+			ClaySettingsV1 settingsV1;
+			persist_read_data(STORAGE_KEY_ClaySettings, &settingsV1, sizeof(settingsV1));
+			strncpy(g_settings.openWeatherMapAPIKey, settingsV1.openWeatherMapAPIKey, sizeof(g_settings.openWeatherMapAPIKey));
+			strncpy(g_settings.city, settingsV1.city, sizeof(g_settings.city));
+			g_settings.scalePreference = settingsV1.scalePreference;
+			g_settings.stepsGoal = settingsV1.stepsGoal;
+			g_settings.animateOnGlance = settingsV1.animateOnGlance;
+
+			persist_write_int(STORAGE_KEY_ClaySettingsVersion, 2);
+			persist_write_data(STORAGE_KEY_ClaySettings, &g_settings, sizeof(g_settings));
+		}
+		else if (persist_read_int(STORAGE_KEY_ClaySettingsVersion == 2))
+		{
 			persist_read_data(STORAGE_KEY_ClaySettings, &g_settings, sizeof(g_settings));
-			if (g_settings.animateOnGlance)
-			{
-				glancing_service_subscribe(0, false, false, glancing_handler);
-			}
+		}
+
+		if (g_settings.animateOnGlance)
+		{
+			glancing_service_subscribe(0, false, false, glancing_handler);
 		}
 	}
 
