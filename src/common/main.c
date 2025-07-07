@@ -545,10 +545,6 @@ void update_bg_color()
 
 void update_bg_color_time(struct tm* current_time)
 {
-	APP_LOG(APP_LOG_LEVEL_INFO, "Sunrise hour: %d", s_sunriseHour);
-	APP_LOG(APP_LOG_LEVEL_INFO, "Sunset hour: %d", s_sunsetHour);
-	APP_LOG(APP_LOG_LEVEL_INFO, "Current hour: %d", current_time->tm_hour);
-
 	if (s_sunriseHour-1 <= current_time->tm_hour && current_time->tm_hour < s_sunriseHour+2)
 	{
 		// Sunrise
@@ -665,17 +661,12 @@ static void inbox_received_callback(DictionaryIterator* iter, void* context)
 	Tuple* weatherSource_t = dict_find(iter, MESSAGE_KEY_WeatherSource);
 	if (weatherSource_t)
 	{
-		APP_LOG(APP_LOG_LEVEL_DEBUG, weatherSource_t->value->cstring);
 		if (strncmp(weatherSource_t->value->cstring, "weathergov", 11) == 0)
 		{
-			APP_LOG(APP_LOG_LEVEL_DEBUG, "USNWS");
-
 			g_settings.weatherSource = USNWS;
 		}
 		else if (strncmp(weatherSource_t->value->cstring, "openWeather", 12) == 0)
 		{
-			APP_LOG(APP_LOG_LEVEL_DEBUG, "OPENWEATHER");
-
 			g_settings.weatherSource = OPENWEATHER;
 		}
 
@@ -1009,10 +1000,9 @@ static void load_settings()
 			persist_write_int(STORAGE_KEY_ClaySettingsVersion, 2);
 			persist_write_data(STORAGE_KEY_ClaySettings, &g_settings, sizeof(g_settings));
 		}
-		else if (persist_read_int(STORAGE_KEY_ClaySettingsVersion == 2))
+		else if (persist_read_int(STORAGE_KEY_ClaySettingsVersion) == 2)
 		{
 			persist_read_data(STORAGE_KEY_ClaySettings, &g_settings, sizeof(g_settings));
-			APP_LOG(APP_LOG_LEVEL_DEBUG, "ScalePreference: %d", g_settings.scalePreference);
 		}
 
 		if (g_settings.animateOnGlance)
