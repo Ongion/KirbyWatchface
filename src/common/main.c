@@ -227,6 +227,11 @@ static void unload_weather_layer()
 	}
 }
 
+static int round100(int n)
+{
+	return ((n+50)/100) * 100;
+}
+
 void update_weather_layer_text()
 {
 	static char weather_layer_buffer[10];
@@ -235,11 +240,11 @@ void update_weather_layer_text()
 	// s_temperature is in K*100
 	if (g_settings.scalePreference == FAHRENHEIT)
 	{
-		finalTemp = ((s_temperature - 27315) * 9 + 16000)/500 ;
+		finalTemp = round100((s_temperature - 27315) * 1.8) / 100 + 32 ;
 	}
 	else // (g_settings.scalePreference == CELSIUS)
 	{
-		finalTemp = (s_temperature - 27315)/100;
+		finalTemp = round100(s_temperature - 27315) / 100;
 	}
 
 	format_weather_layer_text(weather_layer_buffer, sizeof(weather_layer_buffer), finalTemp, g_settings.scalePreference);
