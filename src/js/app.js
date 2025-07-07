@@ -34,13 +34,13 @@ function getWeatherOpenWeatherAPIWithLatLong(lat, long)
       var city_called = json.name;
       console.log("City in response is " + city_called);
 
-      // // Temperature in Kelvin requires adjustment
-      var temperature = Math.round(json.main.temp);
+      // Return temperature in Kelvin * 100 (for increased rounding precision)
+      var temperature = Math.round(json.main.temp * 100);
       var condition = json.weather[0].id;
       var sunrise = json.sys.sunrise;
       var sunset = json.sys.sunset;
       
-      console.log("Temperature is " + temperature);
+      console.log("Temperature is " + temperature/100);
       console.log(condition);
       console.log("Sunrise: " + sunrise);
       console.log("Sunset: " + sunset);
@@ -168,14 +168,14 @@ function usNWSLocationSuccess(pos){
           var snowfallMM = findCurrentValue(gridpointsJSON.properties.snowfallAmount.values);
           var thunderPct = findCurrentValue(gridpointsJSON.properties.probabilityOfThunder.values);
 
-          // // Temperature in Kelvin requires adjustment
-          var temperature = Math.round(temperatureC + 273.15);
+          // Return temperature in Kelvin * 100 (for increased rounding precision)
+          var temperature = Math.round((temperatureC + 273.15) * 100);
           var condition = getWeatherCondition(skyCoverPct, precipPct, snowfallMM, thunderPct)
           var times = SunCalc.getTimes(new Date(), pos.coords.latitude, pos.coords.longitude)
           var sunrise = Math.round(times.sunrise.getTime()/1000);
           var sunset = Math.round(times.sunset.getTime()/1000);
 
-          console.log("Temperature is " + temperature);
+          console.log("Temperature is " + temperature/100);
           console.log(condition);
           console.log("Sunrise: " + sunrise);
           console.log("Sunset: " + sunset);
