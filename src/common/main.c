@@ -232,13 +232,14 @@ void update_weather_layer_text()
 	static char weather_layer_buffer[10];
 	int finalTemp;
 
+	// s_temperature is in K*100
 	if (g_settings.scalePreference == FAHRENHEIT)
 	{
-		finalTemp = (s_temperature - 273.15) * 1.8 + 32;
+		finalTemp = ((s_temperature - 27315) * 9 + 16000)/500 ;
 	}
 	else // (g_settings.scalePreference == CELSIUS)
 	{
-		finalTemp = s_temperature - 273.15;
+		finalTemp = (s_temperature - 27315)/100;
 	}
 
 	format_weather_layer_text(weather_layer_buffer, sizeof(weather_layer_buffer), finalTemp, g_settings.scalePreference);
