@@ -1,6 +1,6 @@
 {
   "version": "2.0.0",
-  "author": "Ongion, Game Time",
+  "author": "Ongion",
   "private": true,
   "dependencies": {
     "pebble-clay": "^1.0.4"
