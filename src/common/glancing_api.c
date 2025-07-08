@@ -28,7 +28,7 @@ typedef struct glancing_zone {
 // watch tilted towards user, screen pointed toward user
 glancing_zone active_zone = {
   .x_segment = { -500, 500},
-  .y_segment = { -900, 200},
+  .y_segment = { -900, -200},
   .z_segment = { -1100, 0}
 };
 
@@ -61,14 +61,17 @@ static int prv_timeout_ms = 0;
 static AppTimer *glancing_timeout_handle = NULL;
 static bool prv_control_backlight = false;
 static bool prv_legacy_flick_backlight = false;
+static uint32_t glancing_timeout_counter = 0;
+static uint32_t active_samples_count = 0;
 // the time duration of the fade out
 static const int32_t LIGHT_FADE_TIME_MS = 500;
 
 // window of time from inactive zone to active to trigger glance
-// stored in seconds for the time being
-static const uint32_t DOWNWARD_WINDOW_MS = 1500;
-static const uint32_t AWAY_WINDOW = 1;
-static const uint32_t ROLL_WINDOW_MS = 500;
+// stored in samples
+static const uint32_t DOWNWARD_WINDOW_SAMPLES = 15;
+static const uint32_t AWAY_WINDOW_SAMPLES = 10;
+
+static const uint32_t active_samples_threshold = 5;
 
 typedef struct time_ms_t {
   time_t sec;
@@ -107,26 +110,13 @@ static void prv_light_timer(void *data) {
 
 static void prv_accel_handler(AccelData *data, uint32_t num_samples) {
   static bool unglanced = true;
-  uint32_t active_count = 0;
-  time_ms_t current_time;
-  time_ms(&current_time.sec, &current_time.ms);
 
-  for (uint32_t i = 0; i < num_samples; i++) {
+  for (uint32_t i = 0; i < num_samples; ++i) {
     if(WITHIN_ZONE(active_zone, data[i].x, data[i].y, data[i].z)) {
-      active_count++;
-      // APP_LOG(APP_LOG_LEVEL_DEBUG, "%s, %d of %d", unglanced ? "unglanced" : "glanced", active_count, num_samples);
-      time_ms(&s_last_active.sec, &s_last_active.ms);
-
-      // if (active_count == num_samples)
-      // {
-        // APP_LOG(APP_LOG_LEVEL_DEBUG, "Current: %u", current_time.sec * 1000 + current_time.ms);
-        // APP_LOG(APP_LOG_LEVEL_DEBUG, "Window : %u", s_glanced_window.sec * 1000 + s_glanced_window.ms);
-      // }
+      ++active_samples_count;
       // state must be unglanced before active can be triggered again
       // and all samples must be in the active zone to trigger active
-      if (unglanced && active_count == num_samples && 
-          ((int64_t)current_time.sec * 1000 + current_time.ms < 
-           (int64_t)s_glanced_window.sec * 1000 + s_glanced_window.ms)) {
+      if (unglanced && active_samples_count >= active_samples_threshold && glancing_timeout_counter > 0) {
 #ifdef DEBUG
         vibes_double_pulse();
 #endif
@@ -139,48 +129,36 @@ static void prv_accel_handler(AccelData *data, uint32_t num_samples) {
         if (prv_control_backlight) {
           prv_light_timer(NULL);
         }
-        return;
       }
+
+      --glancing_timeout_counter;
     } else if (WITHIN_ZONE(inactive_zone_downward_left, data[i].x, data[i].y, data[i].z) ||
                WITHIN_ZONE(inactive_zone_downward_right, data[i].x, data[i].y, data[i].z)) {
       // APP_LOG(APP_LOG_LEVEL_DEBUG, "Downward");
       unglanced = true;
-      time_ms(&s_glanced_window.sec, &s_glanced_window.ms);
-      s_glanced_window.sec += DOWNWARD_WINDOW_MS / 1000;
-      s_glanced_window.ms += DOWNWARD_WINDOW_MS % 1000;
+      active_samples_count = 0;
+      glancing_timeout_counter = DOWNWARD_WINDOW_SAMPLES;
       prv_update_state(GLANCING_INACTIVE);
       // Disable timeout if unnecessary
       if (glancing_timeout_handle) {
         app_timer_cancel(glancing_timeout_handle);
         glancing_timeout_handle = NULL;
       }
-      // If even 1 sample was in inactive zone, we trigger unglanced
-      // and inactive and return
-      return;
     } else if (WITHIN_ZONE(inactive_zone_away, data[i].x, data[i].y, data[i].z)) {
-	  // APP_LOG(APP_LOG_LEVEL_DEBUG, "Away");
+      // APP_LOG(APP_LOG_LEVEL_DEBUG, "Away");
       unglanced = true;
+      active_samples_count = 0;
+      glancing_timeout_counter = AWAY_WINDOW_SAMPLES;
       prv_update_state(GLANCING_INACTIVE);
       // Disable timeout if unnecessary
       if (glancing_timeout_handle) {
         app_timer_cancel(glancing_timeout_handle);
         glancing_timeout_handle = NULL;
       }
-      time_ms(&s_glanced_window.sec, &s_glanced_window.ms);
-      s_glanced_window.sec += AWAY_WINDOW;
-      // If even 1 sample was in inactive zone, we trigger unglanced
-      // and inactive and return
-      return;
-    }
-  }
-
-  if (!active_count) {
-    // never hit active or inactive zones (ie. Dead zone): just kill it, but not unglanced
-    prv_update_state(GLANCING_INACTIVE);
-    // Disable timeout if unnecessary
-    if (glancing_timeout_handle) {
-      app_timer_cancel(glancing_timeout_handle);
-      glancing_timeout_handle = NULL;
+    } else {
+      // APP_LOG(APP_LOG_LEVEL_DEBUG, "Dead zone");
+      active_samples_count = 0;
+      --glancing_timeout_counter;
     }
   }
 }

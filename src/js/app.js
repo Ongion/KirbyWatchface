@@ -90,7 +90,7 @@ function getWeatherOpenWeatherAPI() {
   navigator.geolocation.getCurrentPosition(
     openWeatherAPILocationSuccess,
     openWeatherAPILocationError,
-    {timeout: 15000, maximumAge: 60000}
+    {timeout: 30000, maximumAge: 300000}
   );
   }else{
     getWeatherOpenWeatherAPIWithCity();
@@ -210,7 +210,7 @@ function getWeatherUSNWS() {
   navigator.geolocation.getCurrentPosition(
     usNWSLocationSuccess,
     usNWSLocationError,
-    {timeout: 15000, maximumAge: 60000}
+    {timeout: 30000, maximumAge: 300000}
   );
 }
 
