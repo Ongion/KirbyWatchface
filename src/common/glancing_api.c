@@ -2,7 +2,7 @@
 #include "glancing_api.h"
 
 // Enable debugging of glancing, currently just vibrate on glancing
-// #define DEBUG
+#define DEBUG
 
 #ifndef WITHIN
 #define WITHIN(n, min, max) ((n) >= (min) && (n) <= (max))
@@ -68,8 +68,8 @@ static const int32_t LIGHT_FADE_TIME_MS = 500;
 
 // window of time from inactive zone to active to trigger glance
 // stored in samples
-static const uint32_t DOWNWARD_WINDOW_SAMPLES = 15;
-static const uint32_t AWAY_WINDOW_SAMPLES = 10;
+static const uint32_t DOWNWARD_WINDOW_SAMPLES = 11;
+static const uint32_t AWAY_WINDOW_SAMPLES = 9;
 
 static const uint32_t active_samples_threshold = 5;
 
@@ -98,7 +98,7 @@ static void glance_timeout(void* data) {
 
 // Light interactive timer to save power by not turning on light in ambient sunlight
 static void prv_light_timer(void *data) {
-  if (prv_is_glancing()) { 
+  if (prv_is_glancing()) {
     app_timer_register(LIGHT_FADE_TIME_MS, prv_light_timer, data);
     light_enable_interaction();
   } else {
@@ -130,14 +130,12 @@ static void prv_accel_handler(AccelData *data, uint32_t num_samples) {
           prv_light_timer(NULL);
         }
       }
-
-      --glancing_timeout_counter;
     } else if (WITHIN_ZONE(inactive_zone_downward_left, data[i].x, data[i].y, data[i].z) ||
                WITHIN_ZONE(inactive_zone_downward_right, data[i].x, data[i].y, data[i].z)) {
       // APP_LOG(APP_LOG_LEVEL_DEBUG, "Downward");
       unglanced = true;
       active_samples_count = 0;
-      glancing_timeout_counter = DOWNWARD_WINDOW_SAMPLES;
+      glancing_timeout_counter = DOWNWARD_WINDOW_SAMPLES + 1;
       prv_update_state(GLANCING_INACTIVE);
       // Disable timeout if unnecessary
       if (glancing_timeout_handle) {
@@ -148,7 +146,7 @@ static void prv_accel_handler(AccelData *data, uint32_t num_samples) {
       // APP_LOG(APP_LOG_LEVEL_DEBUG, "Away");
       unglanced = true;
       active_samples_count = 0;
-      glancing_timeout_counter = AWAY_WINDOW_SAMPLES;
+      glancing_timeout_counter = AWAY_WINDOW_SAMPLES + 1;
       prv_update_state(GLANCING_INACTIVE);
       // Disable timeout if unnecessary
       if (glancing_timeout_handle) {
@@ -158,6 +156,10 @@ static void prv_accel_handler(AccelData *data, uint32_t num_samples) {
     } else {
       // APP_LOG(APP_LOG_LEVEL_DEBUG, "Dead zone");
       active_samples_count = 0;
+    }
+
+    if (glancing_timeout_counter > 0)
+    {
       --glancing_timeout_counter;
     }
   }
@@ -176,7 +178,7 @@ static void prv_tap_handler(AccelAxisType axis, int32_t direction) {
   }
 }
 
-void glancing_service_subscribe(int timeout_ms, bool control_backlight, 
+void glancing_service_subscribe(int timeout_ms, bool control_backlight,
                                 bool legacy_flick_backlight, GlancingDataHandler handler) {
   prv_handler = handler;
   prv_timeout_ms = (timeout_ms > 0) ? timeout_ms : 0;
@@ -185,7 +187,7 @@ void glancing_service_subscribe(int timeout_ms, bool control_backlight,
   // 10 hz with buffer for 5 samples for 0.5 second update rate
   accel_data_service_subscribe(5, prv_accel_handler);
   accel_service_set_sampling_rate(ACCEL_SAMPLING_10HZ);
-  
+
   prv_legacy_flick_backlight = legacy_flick_backlight;
   prv_control_backlight = control_backlight;
 
