@@ -112,9 +112,15 @@ function findCurrentValue(values)
   }
 }
 
-function getWeatherCondition(skyCoverPct, precipPct, snowfallMM, thunderPct)
+function getWeatherCondition(skyCoverPct, precipPct, precipMM, snowfallMM, thunderPct)
 {
-  if (precipPct > 50)
+  if (thunderPct >= 50)
+  {
+    // Thunderstorm
+    return 200;
+  }
+
+  if ((precipPct/100) * precipMM >= 2)
   {
     if (snowfallMM > 0)
     {
@@ -122,24 +128,12 @@ function getWeatherCondition(skyCoverPct, precipPct, snowfallMM, thunderPct)
       return 600;
     }
 
-    if (thunderPct > 50)
-    {
-      // Thunderstorm
-      return 200;
-    }
-    
     // Raining
     return 300;
   }
 
-  if (skyCoverPct > 50)
+  if (skyCoverPct >= 50)
   {
-    if (thunderPct > 50)
-    {
-      // Thunderstorm
-      return 200;
-    };
-
     // Cloudy
     return 803;
   }
@@ -165,12 +159,13 @@ function usNWSLocationSuccess(pos){
           var temperatureC = findCurrentValue(gridpointsJSON.properties.temperature.values);
           var skyCoverPct = findCurrentValue(gridpointsJSON.properties.skyCover.values);
           var precipPct = findCurrentValue(gridpointsJSON.properties.probabilityOfPrecipitation.values);
+          var precipMM = findCurrentValue(gridpointsJSON.properties.quantitativePrecipitation.values);
           var snowfallMM = findCurrentValue(gridpointsJSON.properties.snowfallAmount.values);
           var thunderPct = findCurrentValue(gridpointsJSON.properties.probabilityOfThunder.values);
 
           // Return temperature in Kelvin * 100 (for increased rounding precision)
           var temperature = Math.round((temperatureC + 273.15) * 100);
-          var condition = getWeatherCondition(skyCoverPct, precipPct, snowfallMM, thunderPct)
+          var condition = getWeatherCondition(skyCoverPct, precipPct, precipMM, snowfallMM, thunderPct)
           var times = SunCalc.getTimes(new Date(), pos.coords.latitude, pos.coords.longitude)
           var sunrise = Math.round(times.sunrise.getTime()/1000);
           var sunset = Math.round(times.sunset.getTime()/1000);
