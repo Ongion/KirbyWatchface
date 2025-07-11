@@ -28,8 +28,8 @@ typedef struct glancing_zone {
 // watch tilted towards user, screen pointed toward user
 glancing_zone active_zone = {
   .x_segment = { -500, 500},
-  .y_segment = { -900, -200},
-  .z_segment = { -1100, 0}
+  .y_segment = { -1100, -200},
+  .z_segment = { -1100, 350}
 };
 
 // arm hanging downward, select button pointing toward ground
@@ -49,7 +49,7 @@ glancing_zone inactive_zone_downward_right = {
 // arm horizontal, screen facing away from user, essentially wrist was rotated away from user
 glancing_zone inactive_zone_away = {
   .x_segment = { -600, 600},
-  .y_segment = { 850, 1200},
+  .y_segment = { 700, 1200},
   .z_segment = { -500, 500}
 };
 
@@ -68,8 +68,8 @@ static const int32_t LIGHT_FADE_TIME_MS = 500;
 
 // window of time from inactive zone to active to trigger glance
 // stored in samples
-static const uint32_t DOWNWARD_WINDOW_SAMPLES = 11;
-static const uint32_t AWAY_WINDOW_SAMPLES = 9;
+static const uint32_t DOWNWARD_WINDOW_SAMPLES = 14;
+static const uint32_t AWAY_WINDOW_SAMPLES = 12;
 
 static const uint32_t active_samples_threshold = 5;
 
@@ -112,14 +112,19 @@ static void prv_accel_handler(AccelData *data, uint32_t num_samples) {
   static bool unglanced = true;
 
   for (uint32_t i = 0; i < num_samples; ++i) {
+    // APP_LOG(APP_LOG_LEVEL_DEBUG, "Timeout: %d", glancing_timeout_counter);
     if(WITHIN_ZONE(active_zone, data[i].x, data[i].y, data[i].z)) {
       ++active_samples_count;
+      // APP_LOG(APP_LOG_LEVEL_DEBUG, "Active: %d", active_samples_count);
+
       // state must be unglanced before active can be triggered again
       // and all samples must be in the active zone to trigger active
       if (unglanced && active_samples_count >= active_samples_threshold && glancing_timeout_counter > 0) {
 #ifdef DEBUG
         vibes_double_pulse();
 #endif
+        // APP_LOG(APP_LOG_LEVEL_DEBUG, "Glancing!");
+
         unglanced = false;
         prv_update_state(GLANCING_ACTIVE);
         // timeout for glancing
