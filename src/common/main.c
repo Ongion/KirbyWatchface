@@ -878,7 +878,7 @@ static void handle_health(HealthEventType event, void* context)
 	{
 		// APP_LOG(APP_LOG_LEVEL_INFO, "Step data available!");
 		g_steps = health_service_sum_today(HealthMetricStepCount);
-		// APP_LOG(APP_LOG_LEVEL_INFO, "Steps: %d", steps);
+		// APP_LOG(APP_LOG_LEVEL_INFO, "Steps: %d", g_steps);
 		update_steps();
 	}
 	else
@@ -924,20 +924,23 @@ static void show_date_timer_handler(void* context)
 
 static void handle_tap(AccelAxisType axis, int32_t direction)
 {
-	// Cancel existing showDate timer
-	if (s_pShowDateTimer)
+	if (axis == ACCEL_AXIS_X)
 	{
-		app_timer_cancel(s_pShowDateTimer);
-	}
+		// Cancel existing showDate timer
+		if (s_pShowDateTimer)
+		{
+			app_timer_cancel(s_pShowDateTimer);
+		}
 
-	if (!s_pKirbyAnimationTimer)
-	{
-		load_and_play_ability_animation(get_random_ability_animation());
-	}
+		if (!s_pKirbyAnimationTimer)
+		{
+			load_and_play_ability_animation(get_random_ability_animation());
+		}
 
-	layer_set_hidden(text_layer_get_layer(s_pTextLayerDate), true);
-	layer_set_hidden(text_layer_get_layer(s_pTextLayerWeather), false);
-	s_pShowDateTimer = app_timer_register(2000, show_date_timer_handler, NULL);
+		layer_set_hidden(text_layer_get_layer(s_pTextLayerDate), true);
+		layer_set_hidden(text_layer_get_layer(s_pTextLayerWeather), false);
+		s_pShowDateTimer = app_timer_register(2000, show_date_timer_handler, NULL);
+	}
 }
 
 static void main_window_load(Window* window)
