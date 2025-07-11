@@ -924,7 +924,7 @@ static void show_date_timer_handler(void* context)
 
 static void handle_tap(AccelAxisType axis, int32_t direction)
 {
-	if (axis == ACCEL_AXIS_X)
+	if (axis == ACCEL_AXIS_Y)
 	{
 		// Cancel existing showDate timer
 		if (s_pShowDateTimer)
@@ -937,6 +937,7 @@ static void handle_tap(AccelAxisType axis, int32_t direction)
 			load_and_play_ability_animation(get_random_ability_animation());
 		}
 
+		light_enable_interaction();
 		layer_set_hidden(text_layer_get_layer(s_pTextLayerDate), true);
 		layer_set_hidden(text_layer_get_layer(s_pTextLayerWeather), false);
 		s_pShowDateTimer = app_timer_register(2000, show_date_timer_handler, NULL);
