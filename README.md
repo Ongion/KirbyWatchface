@@ -6,7 +6,7 @@ It's designed to work on all rectangular color-screened Pebbles, as well as the 
 
 ![Screenshot of watchface as displayed on Pebble Time](img/example_basalt.png) ![Screenshot of watchface as displayed on Core Time 2. Notably higher resolution than Pebble Time's version.](img/example_emery.png)
 
-Kirby has several different abilities, and a different one is chosen every hour (or whenever you launch the watchface). When you tap the side of the watch the backlight turns on, the current temperature is shown, and Kirby animates.
+Kirby has several different abilities, and a different one is chosen every hour (or whenever you launch the watchface). When you tap the bottom of the watch / flick your wrist the backlight turns on, the current temperature is shown, and Kirby animates.
 
 ![Kirby is swinging his hammer. The temperature is 85°F.](img/example_tap.png)
 
