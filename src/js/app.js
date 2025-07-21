@@ -97,6 +97,13 @@ function getWeatherOpenWeatherAPI() {
   }
 }
 
+function lerpByTimestamps(start, end, startTime, endTime, currentTime)
+{
+  var amount = (currentTime - startTime)/(endTime - startTime);
+
+  return start + (end - start) * amount;
+}
+
 function findCurrentValue(values)
 {
   var now = new Date();
@@ -108,7 +115,12 @@ function findCurrentValue(values)
       continue;
     }
 
-    return values[i-1].value;
+    var startValue = values[i-1].value;
+    var endValue = values[i].value;
+    var startTime = Date.parse(values[i-1].validTime.split("/")[0]);
+    var endTime = Date.parse(values[i].validTime.split("/")[0]);
+
+    return lerpByTimestamps(startValue, endValue, startTime, endTime, now);
   }
 }
 
