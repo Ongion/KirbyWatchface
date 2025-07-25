@@ -187,13 +187,33 @@ static void unload_time_layer()
 	}
 }
 
+
+static void load_day_of_week_layer(Layer* parent_layer)
+{
+	s_pTextLayerDayOfWeek = text_layer_create(GRect(79, 124, 60, 20));
+	text_layer_set_text_alignment(s_pTextLayerDayOfWeek, GTextAlignmentCenter);
+	text_layer_set_text_color(s_pTextLayerDayOfWeek, GColorBlack);
+	text_layer_set_background_color(s_pTextLayerDayOfWeek, GColorClear);
+	text_layer_set_font(s_pTextLayerDayOfWeek, fonts_get_system_font(FONT_KEY_GOTHIC_18_BOLD));
+	layer_add_child(parent_layer, text_layer_get_layer(s_pTextLayerDayOfWeek));
+}
+
+static void unload_day_of_week_layer()
+{
+	if (s_pTextLayerDayOfWeek)
+	{
+		layer_remove_from_parent(text_layer_get_layer(s_pTextLayerDayOfWeek));
+		text_layer_destroy(s_pTextLayerDayOfWeek);
+	}
+}
+
 static void load_date_layer(Layer* parent_layer)
 {
 	s_pTextLayerDate = text_layer_create(DATE_RECT);
 	text_layer_set_text_alignment(s_pTextLayerDate, GTextAlignmentCenter);
 	text_layer_set_text_color(s_pTextLayerDate, GColorBlack);
 	text_layer_set_background_color(s_pTextLayerDate, GColorClear);
-	text_layer_set_font(s_pTextLayerDate, FONT);
+	text_layer_set_font(s_pTextLayerDate, fonts_get_system_font(FONT_KEY_GOTHIC_18_BOLD));
 	layer_add_child(parent_layer, text_layer_get_layer(s_pTextLayerDate));
 }
 
@@ -521,6 +541,7 @@ static void update_date_time_layers(const struct tm* tick_time)
 {
 	static char time_text[] = "00:00";
 	static char date_text[] = "00/00";
+	static char day_of_week_text[] = "XXXXXXXXX";
 
 	char* date_format;
 
@@ -536,12 +557,15 @@ static void update_date_time_layers(const struct tm* tick_time)
 	}
 
 	strftime(date_text, sizeof(date_text), date_format, tick_time);
+	strftime(day_of_week_text, sizeof(day_of_week_text), "%a", tick_time);
 	if (time_text[0] == '0')
 	{
 		memmove(time_text, &time_text[1], sizeof(time_text) - 1);
 	}
+
 	text_layer_set_text(s_pTextLayerTime, time_text);
 	text_layer_set_text(s_pTextLayerDate, date_text);
+	text_layer_set_text(s_pTextLayerDayOfWeek, day_of_week_text);
 }
 
 void update_bg_color()
@@ -960,6 +984,7 @@ static void main_window_load(Window* window)
 	load_custom_fonts();
 	load_time_layer(window_layer);
 	load_date_layer(window_layer);
+	load_day_of_week_layer(window_layer);
 	load_weather_layer(window_layer);
 }
 
@@ -971,6 +996,7 @@ static void main_window_unload(Window* window)
 	}
 
 	unload_weather_layer();
+	unload_day_of_week_layer();
 	unload_date_layer();
 	unload_time_layer();
 

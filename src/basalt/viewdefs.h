@@ -20,7 +20,7 @@ static const int ABILITIES_NAME_RESOURCE_IDS[] =
 #define HUD_KIRBY_LAYER_RECT GRect(1, 1, 66, 25)
 #define HUD_BOSS_LAYER_RECT GRect(77, 1, 66, 25)
 #define TIME_LAYER_RECT GRect(9, 130, 56, 24)
-#define DATE_RECT GRect(79, 130, 60, 24)
+#define DATE_RECT GRect(79, 137, 60, 20)
 #define TEMPERATURE_RECT GRect(79, 130, 60, 24)
 
 #define ZEROTWO_ORIGIN GPoint(33, 23)
