@@ -942,6 +942,7 @@ static void handle_bluetooth(bool connected)
 static void show_date_timer_handler(void* context)
 {
 	layer_set_hidden(text_layer_get_layer(s_pTextLayerDate), false);
+	layer_set_hidden(text_layer_get_layer(s_pTextLayerDayOfWeek), false);
 	layer_set_hidden(text_layer_get_layer(s_pTextLayerWeather), true);
 	s_pShowDateTimer = NULL;
 }
@@ -963,6 +964,7 @@ static void handle_tap(AccelAxisType axis, int32_t direction)
 
 		light_enable_interaction();
 		layer_set_hidden(text_layer_get_layer(s_pTextLayerDate), true);
+		layer_set_hidden(text_layer_get_layer(s_pTextLayerDayOfWeek), true);
 		layer_set_hidden(text_layer_get_layer(s_pTextLayerWeather), false);
 		s_pShowDateTimer = app_timer_register(2000, show_date_timer_handler, NULL);
 	}
