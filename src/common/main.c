@@ -536,11 +536,16 @@ static void update_date_time_layers(const struct tm* tick_time)
 	}
 
 	strftime(date_text, sizeof(date_text), date_format, tick_time);
+	
 	if (time_text[0] == '0')
 	{
-		memmove(time_text, &time_text[1], sizeof(time_text) - 1);
+		text_layer_set_text(s_pTextLayerTime, &time_text[1]);
 	}
-	text_layer_set_text(s_pTextLayerTime, time_text);
+	else
+	{
+		text_layer_set_text(s_pTextLayerTime, time_text);
+	}
+
 	text_layer_set_text(s_pTextLayerDate, date_text);
 }
 
