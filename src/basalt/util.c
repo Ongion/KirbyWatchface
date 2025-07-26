@@ -1,3 +1,4 @@
+#include <pebble.h>
 #include "commonTypes.h"
 #include "viewdefs.h"
 
@@ -13,8 +14,9 @@ void unload_custom_fonts()
 	fonts_unload_custom_font(s_fontDate);
 }
 
-void format_weather_layer_text(char* weather_layer_buffer, size_t sz_weather_layer_buffer, int temperature, TemperatureScale unusedScalePreference)
+void format_weather_layer_text(char* weather_layer_buffer, size_t sz_weather_layer_buffer, int x100temperature, TemperatureScale scalePreference)
 {
-	(void)unusedScalePreference;	// Parameter not used on basalt
-	snprintf(weather_layer_buffer, sz_weather_layer_buffer, "%d°", temperature);
+	int x10temperature = -((x100temperature + 5)/10);
+	char scale = scalePreference == FAHRENHEIT ? 'F' : 'C';
+	snprintf(weather_layer_buffer, sz_weather_layer_buffer, "%d.%d°%c", x10temperature/10, abs(x10temperature) % 10, scale);
 }

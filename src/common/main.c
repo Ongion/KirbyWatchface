@@ -232,7 +232,7 @@ static void load_weather_layer(Layer* parent_layer)
 	s_pTextLayerWeather = text_layer_create(TEMPERATURE_RECT);
 	text_layer_set_background_color(s_pTextLayerWeather, GColorClear);
 	text_layer_set_text_color(s_pTextLayerWeather, GColorBlack);
-	text_layer_set_font(s_pTextLayerWeather, FONT_TIME);
+	text_layer_set_font(s_pTextLayerWeather, FONT_DATE);
 	text_layer_set_text_alignment(s_pTextLayerWeather, GTextAlignmentCenter);
 	update_weather_layer_text();
 	layer_add_child(parent_layer, text_layer_get_layer(s_pTextLayerWeather));
@@ -256,19 +256,19 @@ static int round100(int n)
 void update_weather_layer_text()
 {
 	static char weather_layer_buffer[10];
-	int finalTemp;
+	int x100finalTemp;
 
 	// s_temperature is in K*100
 	if (g_settings.scalePreference == FAHRENHEIT)
 	{
-		finalTemp = round100((s_temperature - 27315) * 1.8) / 100 + 32 ;
+		x100finalTemp = ((s_temperature - 27315) * 1.8) + 3200 ;
 	}
 	else // (g_settings.scalePreference == CELSIUS)
 	{
-		finalTemp = round100(s_temperature - 27315) / 100;
+		x100finalTemp = (s_temperature - 27315);
 	}
 
-	format_weather_layer_text(weather_layer_buffer, sizeof(weather_layer_buffer), finalTemp, g_settings.scalePreference);
+	format_weather_layer_text(weather_layer_buffer, sizeof(weather_layer_buffer), x100finalTemp, g_settings.scalePreference);
 	text_layer_set_text(s_pTextLayerWeather, weather_layer_buffer);
 }
 
