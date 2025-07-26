@@ -552,7 +552,7 @@ static void update_date_time_layers(const struct tm* tick_time)
 {
 	static char time_text[] = "00:00";
 	static char date_text[] = "00/00";
-	static char day_of_week_text[] = "XXXXXXXXX";
+	static char day_of_week_text[] = "XXX";
 
 	char* date_format;
 
