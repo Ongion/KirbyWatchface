@@ -22,6 +22,7 @@ static GColor s_bgColorTime;
 static TextLayer* s_pTextLayerWeather;
 static TextLayer* s_pTextLayerTime;
 static TextLayer* s_pTextLayerDate;
+static TextLayer* s_pTextLayerDayOfWeek;
 
 static bool bt_connected;
 

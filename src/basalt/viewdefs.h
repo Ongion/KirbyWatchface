@@ -2,6 +2,8 @@
 #include <pebble.h>
 #include "commonTypes.h"
 
+extern GFont s_fontDate;
+
 static const int ABILITIES_NAME_RESOURCE_IDS[] =
 {
 	RESOURCE_ID_BEAM,
@@ -20,7 +22,8 @@ static const int ABILITIES_NAME_RESOURCE_IDS[] =
 #define HUD_KIRBY_LAYER_RECT GRect(1, 1, 66, 25)
 #define HUD_BOSS_LAYER_RECT GRect(77, 1, 66, 25)
 #define TIME_LAYER_RECT GRect(9, 130, 56, 24)
-#define DATE_RECT GRect(79, 130, 60, 24)
+#define DATE_RECT GRect(79, 139, 60, 20)
+#define DAY_OF_WEEK_RECT GRect(79, 126, 60, 20)
 #define TEMPERATURE_RECT GRect(79, 130, 60, 24)
 
 #define ZEROTWO_ORIGIN GPoint(33, 23)
@@ -41,4 +44,6 @@ static const int ABILITIES_NAME_RESOURCE_IDS[] =
 #define MR_FROSTY_NAME_ORIGIN GPoint(86, 26)
 
 #define INITIAL_ANIMATION_GETTER get_random_ability_animation()
-#define FONT fonts_get_system_font(FONT_KEY_LECO_20_BOLD_NUMBERS)
+#define FONT_TIME fonts_get_system_font(FONT_KEY_LECO_20_BOLD_NUMBERS)
+#define FONT_DATE s_fontDate
+#define FONT_DAY_OF_WEEK s_fontDate

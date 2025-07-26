@@ -22,8 +22,22 @@
           "targetPlatforms": ["emery"],
           "type": "font",
           "name": "HELVETICA_CUSTOM_BLACK_26",
-          "file": "fonts/HelveticaCustomRounded-Black.ttf",
-          "characterRegex": "[0-9:/°FC-]"
+          "file": "fonts/HelveticaCustomRounded-Black-26.ttf",
+          "characterRegex": "[0-9:CF°.]"
+        },
+        {
+          "targetPlatforms": ["emery"],
+          "type": "font",
+          "name": "HELVETICA_CUSTOM_BLACK_20",
+          "file": "fonts/HelveticaCustomRounded-Black-20.ttf",
+          "characterRegex": "[0-9/ADEFHIMNORSTUW]"
+        },
+        {
+          "targetPlatforms": ["basalt"],
+          "type": "font",
+          "name": "LECO_REGULAR_16",
+          "file": "fonts/LECO1976-Regular-16.ttf",
+          "characterRegex": "[0-9/ADEFHIMNORSTUW]"
         },
         {
           "targetPlatforms": ["emery"],
