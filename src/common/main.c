@@ -589,27 +589,28 @@ void update_bg_color()
 	window_set_background_color(s_WindowMain, bt_connected ? s_bgColorTime : GColorRed);
 }
 
-void update_bg_color_time(struct tm* current_time)
+void update_bg_color_time()
 {
-	if (s_sunriseHour-1 <= current_time->tm_hour && current_time->tm_hour < s_sunriseHour+2)
+	time_t current_time = time(NULL);
+	if (s_sunriseTime-ONE_HOUR <= current_time && current_time < s_sunriseTime+TWO_HOURS)
 	{
 		// Sunrise
 		s_bgColorTime = GColorFromRGB(255, 0, 128);
-		daytime = s_sunriseHour <= current_time->tm_hour;
+		daytime = s_sunriseTime <= current_time;
 	}
-	else if (s_sunriseHour+2 <= current_time->tm_hour && current_time->tm_hour < s_sunsetHour-2)
+	else if (s_sunriseTime+TWO_HOURS <= current_time && current_time < s_sunsetTime-TWO_HOURS)
 	{
 		// Daytime
 		s_bgColorTime = GColorFromRGB(0, 170, 255);
 		daytime = true;
 	}
-	else if (s_sunsetHour-2 <= current_time->tm_hour && current_time->tm_hour < s_sunsetHour+1)
+	else if (s_sunsetTime-TWO_HOURS <= current_time && current_time < s_sunsetTime+ONE_HOUR)
 	{
 		// Sunset
 		s_bgColorTime = GColorFromRGB(255, 170, 0);
-		daytime = current_time->tm_hour < s_sunsetHour;
+		daytime = current_time < s_sunsetTime;
 	}
-	else //if (s_sunsetHour+1 <= current_time->tm_hour || current_time->tm_hour < s_sunriseHour-1)
+	else //if (s_sunsetTime+ONE_HOUR <= current_time->tm_hour || current_time->tm_hour < s_sunriseTime-ONE_HOUR)
 	{
 		// Night
 		s_bgColorTime = GColorFromRGB(0, 0, 85);
@@ -801,9 +802,8 @@ static void inbox_received_callback(DictionaryIterator* iter, void* context)
 	{
 		if (sunrise_t->value->int32 != 0)
 		{
-			struct tm* sunrise_time = localtime(&sunrise_t->value->int32);
-			s_sunriseHour = sunrise_time->tm_hour;
-			persist_write_int(STORAGE_KEY_LastSeenSunriseHour, s_sunriseHour);
+			s_sunriseTime = sunrise_t->value->int32;
+			persist_write_int(STORAGE_KEY_LastSeenSunriseTime, s_sunriseTime);
 		}
 	}
 
@@ -813,9 +813,8 @@ static void inbox_received_callback(DictionaryIterator* iter, void* context)
 	{
 		if (sunset_t->value->int32 != 0)
 		{
-			struct tm* sunset_time = localtime(&sunset_t->value->int32);
-			s_sunsetHour = sunset_time->tm_hour;
-			persist_write_int(STORAGE_KEY_LastSeenSunsetHour, s_sunsetHour);
+			s_sunsetTime = sunset_t->value->int32;
+			persist_write_int(STORAGE_KEY_LastSeenSunsetTime, s_sunsetTime);
 		}
 	}
 
@@ -874,6 +873,8 @@ static void handle_tick(struct tm* tick_time, TimeUnits units_changed)
 		{
 			request_weather_update();
 		}
+
+		update_bg_color_time(tick_time);
 	}
 
 	if ((units_changed & HOUR_UNIT) != 0)
@@ -882,8 +883,6 @@ static void handle_tick(struct tm* tick_time, TimeUnits units_changed)
 		abilityIdx = (rand() >> 4) % NUM_ABILITIES;
 		set_container_image(&s_pBitmapAbilityName, s_pLayerAbilityName, ABILITIES_NAME_RESOURCE_IDS[abilityIdx], ABILITY_NAME_LAYER_ORIGIN);
 		load_and_play_ability_animation(INITIAL_ANIMATION_GETTER);
-		
-		update_bg_color_time(tick_time);
 	}
 
 	if ((units_changed & DAY_UNIT) != 0)
@@ -1080,14 +1079,14 @@ static void load_settings()
 		s_lastWeatherTime = persist_read_int(STORAGE_KEY_LastTimeRecievedWeather);
 	}
 
-	if (persist_exists(STORAGE_KEY_LastSeenSunriseHour))
+	if (persist_exists(STORAGE_KEY_LastSeenSunriseTime))
 	{
-		s_sunriseHour = persist_read_int(STORAGE_KEY_LastSeenSunriseHour);
+		s_sunriseTime = persist_read_int(STORAGE_KEY_LastSeenSunriseTime);
 	}
 
-	if (persist_exists(STORAGE_KEY_LastSeenSunsetHour))
+	if (persist_exists(STORAGE_KEY_LastSeenSunsetTime))
 	{
-		s_sunsetHour = persist_read_int(STORAGE_KEY_LastSeenSunsetHour);
+		s_sunsetTime = persist_read_int(STORAGE_KEY_LastSeenSunsetTime);
 	}
 }
 
@@ -1123,7 +1122,7 @@ void handle_init(void)
 
 	initiate_watchface = false;
 
-	update_bg_color_time(tick_time);
+	update_bg_color_time();
 	update_date_time_layers(tick_time);
 	update_boss();
 

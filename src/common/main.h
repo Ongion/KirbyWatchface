@@ -8,8 +8,11 @@
 #define STORAGE_KEY_LastSeenTemperature 3
 #define STORAGE_KEY_LastSeenWeatherCondition 4
 #define STORAGE_KEY_LastTimeRecievedWeather 5
-#define STORAGE_KEY_LastSeenSunriseHour 6
-#define STORAGE_KEY_LastSeenSunsetHour 7
+#define STORAGE_KEY_LastSeenSunriseTime 6
+#define STORAGE_KEY_LastSeenSunsetTime 7
+
+#define ONE_HOUR (1*SECONDS_PER_HOUR)
+#define TWO_HOURS (2*SECONDS_PER_HOUR)
 
 ClaySettings g_settings;
 static bool initiate_watchface = true;
@@ -38,8 +41,8 @@ static BitmapLayer* s_pLayerHUDBoss;
 static int s_temperature = 255;
 static int s_weatherCondition = -1;
 static time_t s_lastWeatherTime = 0;
-static int s_sunriseHour = 5;
-static int s_sunsetHour = 19;
+static int s_sunriseTime = 5;
+static int s_sunsetTime = 19;
 
 static unsigned int abilityIdx = 0;
 
