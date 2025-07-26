@@ -43,7 +43,7 @@ module.exports = [
                 "type": "radiogroup",
                 "label": "Temperature Scale",
                 "messageKey": "ScalePreference",
-                "defaultValue": "C",
+                "defaultValue": "F",
                 "options": [
                     {
                         "label": "Celcius",
@@ -87,6 +87,13 @@ module.exports = [
                 "messageKey": "AnimateOnGlance",
                 "label": "Animate On Glance",
                 "description": "Animate when the watch is turned towards the user's face. May use more battery.",
+                "defaultValue": false
+            },
+            {
+                "type": "toggle",
+                "messageKey": "TenthsDigitTemperature",
+                "label": "Show Tenths Digit",
+                "description": "Show tenths digit when showing temperature",
                 "defaultValue": false
             }
         ]

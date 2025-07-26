@@ -23,20 +23,29 @@
           "type": "font",
           "name": "HELVETICA_CUSTOM_BLACK_26",
           "file": "fonts/HelveticaCustomRounded-Black-26.ttf",
-          "characterRegex": "[-0-9:CF°.]"
+          "characterRegex": "[-0-9:CF°]"
         },
         {
           "targetPlatforms": ["emery"],
           "type": "font",
           "name": "HELVETICA_CUSTOM_BLACK_20",
           "file": "fonts/HelveticaCustomRounded-Black-20.ttf",
-          "characterRegex": "[0-9/ADEFHIMNORSTUW]"
+          "characterRegex": "[-0-9/ACDEFHIMNORSTUW°.]"
+        },
+        {
+          "targetPlatforms": ["basalt"],
+          "type": "font",
+          "name": "LECO_REGULAR_20",
+          "file": "fonts/LECO1976-Regular-20.ttf",
+          "characterRegex": "[-0-9:FC°]"
+
         },
         {
           "targetPlatforms": ["basalt"],
           "type": "font",
           "name": "LECO_REGULAR_16",
-          "file": "fonts/LECO1976-Regular-16.ttf"
+          "file": "fonts/LECO1976-Regular-16.ttf",
+          "characterRegex": "[-0-9/ACDEFHIMNORSTUW°.]"
         },
         {
           "targetPlatforms": ["emery"],
@@ -459,7 +468,8 @@
       "City",
       "Sunrise",
       "Sunset",
-      "AnimateOnGlance"
+      "AnimateOnGlance",
+      "TenthsDigitTemperature"
     ],
     "enableMultiJS": true,
     "displayName": "Kirby",

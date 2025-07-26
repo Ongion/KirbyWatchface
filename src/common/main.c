@@ -175,7 +175,7 @@ static void load_time_layer(Layer* parent_layer)
 	text_layer_set_text_alignment(s_pTextLayerTime, GTextAlignmentCenter);
 	text_layer_set_text_color(s_pTextLayerTime, GColorBlack);
 	text_layer_set_background_color(s_pTextLayerTime, GColorClear);
-	text_layer_set_font(s_pTextLayerTime, FONT_TIME);
+	text_layer_set_font(s_pTextLayerTime, s_fontBig);
 	layer_add_child(parent_layer, text_layer_get_layer(s_pTextLayerTime));
 }
 
@@ -195,7 +195,7 @@ static void load_day_of_week_layer(Layer* parent_layer)
 	text_layer_set_text_alignment(s_pTextLayerDayOfWeek, GTextAlignmentCenter);
 	text_layer_set_text_color(s_pTextLayerDayOfWeek, GColorBlack);
 	text_layer_set_background_color(s_pTextLayerDayOfWeek, GColorClear);
-	text_layer_set_font(s_pTextLayerDayOfWeek, FONT_DAY_OF_WEEK);
+	text_layer_set_font(s_pTextLayerDayOfWeek, s_fontSmall);
 	layer_add_child(parent_layer, text_layer_get_layer(s_pTextLayerDayOfWeek));
 }
 
@@ -214,7 +214,7 @@ static void load_date_layer(Layer* parent_layer)
 	text_layer_set_text_alignment(s_pTextLayerDate, GTextAlignmentCenter);
 	text_layer_set_text_color(s_pTextLayerDate, GColorBlack);
 	text_layer_set_background_color(s_pTextLayerDate, GColorClear);
-	text_layer_set_font(s_pTextLayerDate, FONT_DATE);
+	text_layer_set_font(s_pTextLayerDate, s_fontSmall);
 	layer_add_child(parent_layer, text_layer_get_layer(s_pTextLayerDate));
 }
 
@@ -229,10 +229,10 @@ static void unload_date_layer()
 
 static void load_weather_layer(Layer* parent_layer)
 {
-	s_pTextLayerWeather = text_layer_create(TEMPERATURE_RECT);
+	s_pTextLayerWeather = text_layer_create(g_settings.showTenthsDigit ? TEMPERATURE_RECT_SMALL : TEMPERATURE_RECT_BIG);
 	text_layer_set_background_color(s_pTextLayerWeather, GColorClear);
 	text_layer_set_text_color(s_pTextLayerWeather, GColorBlack);
-	text_layer_set_font(s_pTextLayerWeather, FONT_DATE);
+	text_layer_set_font(s_pTextLayerWeather, g_settings.showTenthsDigit ? s_fontSmall : s_fontBig);
 	text_layer_set_text_alignment(s_pTextLayerWeather, GTextAlignmentCenter);
 	update_weather_layer_text();
 	layer_add_child(parent_layer, text_layer_get_layer(s_pTextLayerWeather));
@@ -248,9 +248,20 @@ static void unload_weather_layer()
 	}
 }
 
-static int round100(int n)
+void format_weather_layer_text(char* weather_layer_buffer, size_t sz_weather_layer_buffer, int x100temperature, TemperatureScale scalePreference, bool showTenthsDigit)
 {
-	return ((n+50)/100) * 100;
+	char scale = scalePreference == FAHRENHEIT ? 'F' : 'C';
+
+	if (showTenthsDigit)
+	{
+		int x10temperature = ((x100temperature + 5)/10);
+		snprintf(weather_layer_buffer, sz_weather_layer_buffer, "%d.%d°%c", x10temperature/10, abs(x10temperature) % 10, scale);
+	}
+	else
+	{
+		int temperature = (x100temperature+50)/100;
+		snprintf(weather_layer_buffer, sz_weather_layer_buffer, "%d°%c", temperature, scale);
+	}
 }
 
 void update_weather_layer_text()
@@ -268,7 +279,7 @@ void update_weather_layer_text()
 		x100finalTemp = (s_temperature - 27315);
 	}
 
-	format_weather_layer_text(weather_layer_buffer, sizeof(weather_layer_buffer), x100finalTemp, g_settings.scalePreference);
+	format_weather_layer_text(weather_layer_buffer, sizeof(weather_layer_buffer), x100finalTemp, g_settings.scalePreference, g_settings.showTenthsDigit);
 	text_layer_set_text(s_pTextLayerWeather, weather_layer_buffer);
 }
 
@@ -698,6 +709,20 @@ static void update_animate_on_glance(bool fAnimateOnGlance)
 	}
 }
 
+static void update_show_tenths_digit()
+{
+	if (g_settings.showTenthsDigit)
+	{
+		layer_set_frame(text_layer_get_layer(s_pTextLayerWeather), TEMPERATURE_RECT_SMALL);
+		text_layer_set_font(s_pTextLayerWeather, s_fontSmall);
+	}
+	else
+	{
+		layer_set_frame(text_layer_get_layer(s_pTextLayerWeather), TEMPERATURE_RECT_BIG);
+		text_layer_set_font(s_pTextLayerWeather, s_fontBig);
+	}
+}
+
 static void inbox_received_callback(DictionaryIterator* iter, void* context)
 {
 	bool updated_settings = false;
@@ -735,6 +760,16 @@ static void inbox_received_callback(DictionaryIterator* iter, void* context)
 		strncpy(g_settings.city, city_t->value->cstring, sizeof(g_settings.city));
 		updated_settings = true;
 	}
+
+	// TenthsDigit
+	Tuple* tenthsDigit_t = dict_find(iter, MESSAGE_KEY_TenthsDigitTemperature);
+	if (tenthsDigit_t)
+	{
+		g_settings.showTenthsDigit = tenthsDigit_t->value->int32 == 1;
+		update_show_tenths_digit();
+		updated_settings = true;
+	}
+	
 
 	// PebbleKitReady
 	Tuple* pebblekit_ready_t = dict_find(iter, MESSAGE_KEY_PebbleKitReady);
@@ -1034,9 +1069,10 @@ static void load_settings()
 	g_settings.weatherSource = OPENWEATHER;
 	g_settings.openWeatherMapAPIKey[0] = '\0';
 	g_settings.city[0] = '\0';
-	g_settings.scalePreference = CELSIUS;
+	g_settings.scalePreference = FAHRENHEIT;
 	g_settings.stepsGoal = 5000;
 	g_settings.animateOnGlance = false;
+	g_settings.showTenthsDigit = false;
 
 	if (persist_exists(STORAGE_KEY_ClaySettings) && persist_exists(STORAGE_KEY_ClaySettingsVersion))
 	{

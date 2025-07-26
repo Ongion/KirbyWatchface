@@ -63,7 +63,10 @@ static GBitmap* s_pBitmapKirby;
 static GBitmapSequence* s_pBitmapSequenceKirby;
 static BitmapLayer* s_pLayerKirby;
 
-void format_weather_layer_text(char* weather_layer_buffer, size_t sz_weather_layer_buffer, int temperature, TemperatureScale scalePreference);
+extern GFont s_fontBig;
+extern GFont s_fontSmall;
+
+void format_weather_layer_text(char* weather_layer_buffer, size_t sz_weather_layer_buffer, int temperature, TemperatureScale scalePreference, bool showTenthsDigit);
 void update_weather_layer_text();
 void step_layer_update_callback(Layer* layer, GContext* ctx);
 void load_custom_fonts();

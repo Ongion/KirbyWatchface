@@ -31,6 +31,7 @@ typedef struct ClaySettingsV2
 	TemperatureScale scalePreference;
 	uint16_t stepsGoal;
 	bool animateOnGlance;
+	bool showTenthsDigit;
 } ClaySettingsV2;
 
 
