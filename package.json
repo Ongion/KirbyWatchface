@@ -26,11 +26,11 @@
           "characterRegex": "[-0-9:CF°]"
         },
         {
-          "targetPlatforms": ["emery"],
+          "targetPlatforms": ["basalt", "emery"],
           "type": "font",
           "name": "HELVETICA_CUSTOM_BLACK_20",
           "file": "fonts/HelveticaCustomRounded-Black-20.ttf",
-          "characterRegex": "[-0-9/ACDEFHIMNORSTUW°.]"
+          "characterRegex": "[-0-9:/ACDEFHIMNORSTUW°.]"
         },
         {
           "targetPlatforms": ["basalt"],
