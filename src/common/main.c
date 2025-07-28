@@ -756,6 +756,7 @@ static void inbox_received_callback(DictionaryIterator* iter, void* context)
 	bool updated_settings = false;
 	bool recalc_weather_text = false;
 	bool got_weather = false;
+	bool updated_sunrise_sunset = false;
 
 	// WeatherSource
 	Tuple* weatherSource_t = dict_find(iter, MESSAGE_KEY_WeatherSource);
@@ -867,6 +868,8 @@ static void inbox_received_callback(DictionaryIterator* iter, void* context)
 		{
 			s_sunriseTime = sunrise_t->value->int32;
 			persist_write_int(STORAGE_KEY_LastSeenSunriseTime, s_sunriseTime);
+
+			updated_sunrise_sunset = true;
 		}
 	}
 
@@ -878,6 +881,8 @@ static void inbox_received_callback(DictionaryIterator* iter, void* context)
 		{
 			s_sunsetTime = sunset_t->value->int32;
 			persist_write_int(STORAGE_KEY_LastSeenSunsetTime, s_sunsetTime);
+
+			updated_sunrise_sunset = true;
 		}
 	}
 
@@ -908,6 +913,11 @@ static void inbox_received_callback(DictionaryIterator* iter, void* context)
 		persist_write_data(STORAGE_KEY_ClaySettings, &g_settings, sizeof(g_settings));
 
 		request_weather_update();
+	}
+
+	if (updated_sunrise_sunset)
+	{
+		update_bg_color_time();
 	}
 }
 
