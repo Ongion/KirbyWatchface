@@ -255,7 +255,9 @@ void format_weather_layer_text(char* weather_layer_buffer, size_t sz_weather_lay
 	if (showTenthsDigit)
 	{
 		int x10temperature = ((x100temperature + 5)/10);
-		snprintf(weather_layer_buffer, sz_weather_layer_buffer, "%d.%d°%c", x10temperature/10, abs(x10temperature) % 10, scale);
+		int temperature = x10temperature / 10;
+		int tenthsDigit = abs(x10temperature) % 10;
+		snprintf(weather_layer_buffer, sz_weather_layer_buffer, "%d.%d°%c", temperature, tenthsDigit, scale);
 	}
 	else
 	{
