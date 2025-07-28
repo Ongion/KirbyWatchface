@@ -21,7 +21,7 @@ static const int ABILITIES_NAME_RESOURCE_IDS[] =
 #define HUD_BOSS_LAYER_RECT GRect(77, 1, 66, 25)
 #define TIME_LAYER_RECT GRect(7, 130, 58, 24)
 #define DATE_RECT GRect(79, 139, 60, 20)
-#define DAY_OF_WEEK_RECT GRect(79, 126, 58, 20)
+#define DAY_OF_WEEK_RECT GRect(79, 127, 58, 20)
 #define TEMPERATURE_RECT_BIG GRect(79, 130, 58, 24)
 #define TEMPERATURE_RECT_SMALL GRect(79, 133, 58, 24)
 
@@ -43,6 +43,3 @@ static const int ABILITIES_NAME_RESOURCE_IDS[] =
 #define MR_FROSTY_NAME_ORIGIN GPoint(86, 26)
 
 #define INITIAL_ANIMATION_GETTER get_random_ability_animation()
-#define FONT_TIME fonts_get_system_font(FONT_KEY_LECO_20_BOLD_NUMBERS)
-#define FONT_DATE s_fontDate
-#define FONT_DAY_OF_WEEK s_fontDate

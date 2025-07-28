@@ -35,16 +35,8 @@
         {
           "targetPlatforms": ["basalt"],
           "type": "font",
-          "name": "LECO_REGULAR_20",
-          "file": "fonts/LECO1976-Regular-20.ttf",
-          "characterRegex": "[-0-9:FC°]"
-
-        },
-        {
-          "targetPlatforms": ["basalt"],
-          "type": "font",
-          "name": "LECO_REGULAR_16",
-          "file": "fonts/LECO1976-Regular-16.ttf",
+          "name": "HELVETICA_CUSTOM_BLACK_15",
+          "file": "fonts/HelveticaCustomRounded-Black-15.ttf",
           "characterRegex": "[-0-9/ACDEFHIMNORSTUW°.]"
         },
         {

@@ -43,6 +43,3 @@ static const int ABILITIES_NAME_RESOURCE_IDS[] =
 #define MR_FROSTY_NAME_ORIGIN GPoint(115, 25)
 
 #define INITIAL_ANIMATION_GETTER &(INTRO_ANIMATIONS[abilityIdx])
-#define FONT_TIME s_fontBig
-#define FONT_DATE s_fontDate
-#define FONT_DAY_OF_WEEK s_fontDate
