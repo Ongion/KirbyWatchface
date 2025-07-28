@@ -29,15 +29,13 @@
           "targetPlatforms": ["basalt", "emery"],
           "type": "font",
           "name": "HELVETICA_CUSTOM_BLACK_20",
-          "file": "fonts/HelveticaCustomRounded-Black-20.ttf",
-          "characterRegex": "[-0-9:/ACDEFHIMNORSTUW°.]"
+          "file": "fonts/HelveticaCustomRounded-Black-20.ttf"
         },
         {
           "targetPlatforms": ["basalt"],
           "type": "font",
           "name": "HELVETICA_CUSTOM_BLACK_15",
-          "file": "fonts/HelveticaCustomRounded-Black-15.ttf",
-          "characterRegex": "[-0-9/ACDEFHIMNORSTUW°.]"
+          "file": "fonts/HelveticaCustomRounded-Black-15.ttf"
         },
         {
           "targetPlatforms": ["emery"],

@@ -252,16 +252,42 @@ void format_weather_layer_text(char* weather_layer_buffer, size_t sz_weather_lay
 {
 	char scale = scalePreference == FAHRENHEIT ? 'F' : 'C';
 
+	int sign = x100temperature >= 0 ? 1 : -1;
+
 	if (showTenthsDigit)
 	{
-		int x10temperature = ((x100temperature + 5)/10);
+		int x10temperature = ((x100temperature + (5*sign))/10);
 		int temperature = x10temperature / 10;
 		int tenthsDigit = abs(x10temperature) % 10;
-		snprintf(weather_layer_buffer, sz_weather_layer_buffer, "%d.%d°%c", temperature, tenthsDigit, scale);
+
+		if (abs(temperature) % 10 == 7)
+		{
+			// Workaround lack of kerning / ligature support in Pebble.
+			// Instead of showing "7.", use our custom Private-Use-Area character.
+			if (abs(temperature) / 10 == 0)
+			{
+				if (temperature < 0)
+				{
+					snprintf(weather_layer_buffer, sz_weather_layer_buffer, "-\uE000%d°%c", tenthsDigit, scale);
+				}
+				else
+				{
+					snprintf(weather_layer_buffer, sz_weather_layer_buffer, "\uE000%d°%c", tenthsDigit, scale);
+				}
+			}
+			else
+			{
+				snprintf(weather_layer_buffer, sz_weather_layer_buffer, "%d\uE000%d°%c", temperature/10, tenthsDigit, scale);
+			}
+		}
+		else
+		{
+			snprintf(weather_layer_buffer, sz_weather_layer_buffer, "%d.%d°%c", temperature, tenthsDigit, scale);
+		}
 	}
 	else
 	{
-		int temperature = (x100temperature+50)/100;
+		int temperature = (x100temperature + (50*sign))/100;
 		snprintf(weather_layer_buffer, sz_weather_layer_buffer, "%d°%c", temperature, scale);
 	}
 }
