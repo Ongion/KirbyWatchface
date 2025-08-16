@@ -6,7 +6,7 @@ static bool s_fBatteryPlugged;
 
 Layer* g_pLayerBattery;
 
-#define BATTERY_LAYER_RECT GRect(8,12,50,10)
+#define BATTERY_LAYER_RECT GRect(0,0,90,180)
 
 void update_battery_data(const BatteryChargeState* pState)
 {
@@ -23,8 +23,12 @@ void update_battery_data(const BatteryChargeState* pState)
 void battery_layer_update_callback(Layer* layer, GContext* ctx)
 {
 	GColor8 batteryColor = s_fBatteryPlugged ? GColorGreen : GColorRed;
-	graphics_context_set_fill_color(ctx, batteryColor);
-	graphics_fill_rect(ctx, GRect(0, 0, (s_batteryLevel * BATTERY_LAYER_RECT.size.w) / 100, 10), 0 /*cornerRadius*/, GCornerNone);;
+	graphics_context_set_stroke_color(ctx, batteryColor);
+	graphics_context_set_stroke_width(ctx, 7);
+
+	int32_t wedgeAngle =  s_batteryLevel * 9 * TRIG_MAX_ANGLE / (10 * 360);
+	int32_t wedgeMiddle = TRIG_MAX_ANGLE * 3/4;
+	graphics_draw_arc(ctx, GRect(1,1,178,178), GOvalScaleModeFillCircle, wedgeMiddle-wedgeAngle, wedgeMiddle+wedgeAngle);
 }
 
 void load_battery_layer(Layer* parent_layer)

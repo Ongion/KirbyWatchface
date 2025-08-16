@@ -17,7 +17,7 @@ static const int ABILITIES_NAME_RESOURCE_IDS[] =
 
 #define ABILITY_NAME_LAYER_ORIGIN GPoint(32, 26)
 
-#define HUD_KIRBY_LAYER_RECT GRect(19, 1, 66, 25)
+#define HUD_KIRBY_LAYER_RECT GRect(0, 0, 90, 180)
 #define HUD_BOSS_LAYER_RECT GRect(95, 1, 66, 25)
 #define TIME_LAYER_RECT GRect(25, 130, 58, 24)
 #define DATE_RECT GRect(97, 139, 60, 20)
