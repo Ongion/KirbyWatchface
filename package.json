@@ -26,13 +26,13 @@
           "characterRegex": "[-0-9:CF°]"
         },
         {
-          "targetPlatforms": ["basalt", "emery"],
+          "targetPlatforms": ["basalt", "chalk", "emery"],
           "type": "font",
           "name": "HELVETICA_CUSTOM_BLACK_20",
           "file": "fonts/HelveticaCustomRounded-Black-20.ttf"
         },
         {
-          "targetPlatforms": ["basalt"],
+          "targetPlatforms": ["basalt", "chalk"],
           "type": "font",
           "name": "HELVETICA_CUSTOM_BLACK_15",
           "file": "fonts/HelveticaCustomRounded-Black-15.ttf"
@@ -44,9 +44,16 @@
           "file": "images/KIRBY_BEAM_INTRO_ANIM.png"
         },
         {
+          "targetPlatforms": ["basalt", "chalk"],
           "type": "raw",
           "name": "KIRBY_BEAM_ANIM",
-          "file": "images/KIRBY_BEAM_ANIM.png"
+          "file": "images/KIRBY_BEAM_ANIM_SMALL.png"
+        },
+        {
+          "targetPlatforms": ["emery"],
+          "type": "raw",
+          "name": "KIRBY_BEAM_ANIM",
+          "file": "images/KIRBY_BEAM_ANIM_BIG.png"
         },
         {
           "targetPlatforms": ["emery"],
@@ -55,9 +62,16 @@
           "file": "images/KIRBY_CUTTER_INTRO_ANIM.png"
         },
         {
+          "targetPlatforms": ["basalt", "chalk"],
           "type": "raw",
           "name": "KIRBY_CUTTER_THROW_ANIM",
-          "file": "images/KIRBY_CUTTER_THROW_ANIM.png"
+          "file": "images/KIRBY_CUTTER_THROW_ANIM_SMALL.png"
+        },
+        {
+          "targetPlatforms": ["emery"],
+          "type": "raw",
+          "name": "KIRBY_CUTTER_THROW_ANIM",
+          "file": "images/KIRBY_CUTTER_THROW_ANIM_BIG.png"
         },
         {
           "targetPlatforms": ["emery"],
@@ -72,9 +86,16 @@
           "file": "images/KIRBY_FIRE_INTRO_ANIM.png"
         },
         {
+          "targetPlatforms": ["basalt", "chalk"],
           "type": "raw",
           "name": "KIRBY_FIRE_ANIM",
-          "file": "images/KIRBY_FIRE_ANIM.png"
+          "file": "images/KIRBY_FIRE_ANIM_SMALL.png"
+        },
+        {
+          "targetPlatforms": ["emery"],
+          "type": "raw",
+          "name": "KIRBY_FIRE_ANIM",
+          "file": "images/KIRBY_FIRE_ANIM_BIG.png"
         },
         {
           "targetPlatforms": ["emery"],
@@ -83,9 +104,16 @@
           "file": "images/KIRBY_HAMMER_INTRO_ANIM.png"
         },
         {
+          "targetPlatforms": ["basalt", "chalk"],
           "type": "raw",
           "name": "KIRBY_HAMMER_POUND_ANIM",
-          "file": "images/KIRBY_HAMMER_POUND_ANIM.png"
+          "file": "images/KIRBY_HAMMER_POUND_ANIM_SMALL.png"
+        },
+        {
+          "targetPlatforms": ["emery"],
+          "type": "raw",
+          "name": "KIRBY_HAMMER_POUND_ANIM",
+          "file": "images/KIRBY_HAMMER_POUND_ANIM_BIG.png"
         },
         {
           "targetPlatforms": ["emery"],
@@ -100,12 +128,19 @@
           "file": "images/KIRBY_MIKE_INTRO_ANIM.png"
         },
         {
+          "targetPlatforms": ["basalt", "chalk"],
           "type": "raw",
           "name": "KIRBY_MIKE_ANIM_1",
-          "file": "images/KIRBY_MIKE_ANIM_1.png"
+          "file": "images/KIRBY_MIKE_ANIM_1_SMALL.png"
         },
         {
-          "targetPlatforms": ["basalt"],
+          "targetPlatforms": ["emery"],
+          "type": "raw",
+          "name": "KIRBY_MIKE_ANIM_1",
+          "file": "images/KIRBY_MIKE_ANIM_1_BIG.png"
+        },
+        {
+          "targetPlatforms": ["basalt", "chalk"],
           "type": "raw",
           "name": "KIRBY_MIKE_ANIM_2",
           "file": "images/KIRBY_MIKE_ANIM_2.png"
@@ -165,7 +200,7 @@
           "file": "images/frames/mike/Anim2/KirbyMike2Frame9.png"
         },
         {
-          "targetPlatforms": ["basalt"],
+          "targetPlatforms": ["basalt", "chalk"],
           "type": "raw",
           "name": "KIRBY_MIKE_ANIM_3",
           "file": "images/KIRBY_MIKE_ANIM_3.png"
@@ -255,9 +290,16 @@
           "file": "images/KIRBY_SLEEP_INTRO_ANIM.png"
         },
         {
+          "targetPlatforms": ["basalt", "chalk"],
           "type": "raw",
           "name": "KIRBY_SLEEP_ANIM",
-          "file": "images/KIRBY_SLEEP_ANIM.png"
+          "file": "images/KIRBY_SLEEP_ANIM_SMALL.png"
+        },
+        {
+          "targetPlatforms": ["emery"],
+          "type": "raw",
+          "name": "KIRBY_SLEEP_ANIM",
+          "file": "images/KIRBY_SLEEP_ANIM_BIG.png"
         },
         {
           "targetPlatforms": ["emery"],
@@ -266,44 +308,100 @@
           "file": "images/KIRBY_SWORD_INTRO_ANIM.png"
         },
         {
+          "targetPlatforms": ["basalt", "chalk"],
           "type": "raw",
           "name": "KIRBY_SWORD_ANIM",
-          "file": "images/KIRBY_SWORD_ANIM.png"
+          "file": "images/KIRBY_SWORD_ANIM_SMALL.png"
         },
         {
+          "targetPlatforms": ["emery"],
+          "type": "raw",
+          "name": "KIRBY_SWORD_ANIM",
+          "file": "images/KIRBY_SWORD_ANIM_BIG.png"
+        },
+        {
+          "targetPlatforms": ["basalt", "chalk"],
           "type": "bitmap",
           "name": "BEAM",
-          "file": "images/BEAM.png"
+          "file": "images/BEAM_SMALL.png"
         },
         {
+          "targetPlatforms": ["basalt", "chalk"],
           "type": "bitmap",
           "name": "FIRE",
-          "file": "images/FIRE.png"
+          "file": "images/FIRE_SMALL.png"
         },
         {
+          "targetPlatforms": ["basalt", "chalk"],
           "type": "bitmap",
           "name": "CUTTER",
-          "file": "images/CUTTER.png"
+          "file": "images/CUTTER_SMALL.png"
         },
         {
+          "targetPlatforms": ["basalt", "chalk"],
           "type": "bitmap",
           "name": "HAMMER",
-          "file": "images/HAMMER.png"
+          "file": "images/HAMMER_SMALL.png"
         },
         {
+          "targetPlatforms": ["basalt", "chalk"],
           "type": "bitmap",
           "name": "MIKE",
-          "file": "images/MIKE.png"
+          "file": "images/MIKE_SMALL.png"
         },
         {
+          "targetPlatforms": ["basalt", "chalk"],
           "type": "bitmap",
           "name": "SLEEP",
-          "file": "images/SLEEP.png"
+          "file": "images/SLEEP_SMALL.png"
         },
         {
+          "targetPlatforms": ["basalt", "chalk"],
           "type": "bitmap",
           "name": "SWORD",
-          "file": "images/SWORD.png"
+          "file": "images/SWORD_SMALL.png"
+        },
+        {
+          "targetPlatforms": ["emery"],
+          "type": "bitmap",
+          "name": "BEAM",
+          "file": "images/BEAM_BIG.png"
+        },
+        {
+          "targetPlatforms": ["emery"],
+          "type": "bitmap",
+          "name": "FIRE",
+          "file": "images/FIRE_BIG.png"
+        },
+        {
+          "targetPlatforms": ["emery"],
+          "type": "bitmap",
+          "name": "CUTTER",
+          "file": "images/CUTTER_BIG.png"
+        },
+        {
+          "targetPlatforms": ["emery"],
+          "type": "bitmap",
+          "name": "HAMMER",
+          "file": "images/HAMMER_BIG.png"
+        },
+        {
+          "targetPlatforms": ["emery"],
+          "type": "bitmap",
+          "name": "MIKE",
+          "file": "images/MIKE_BIG.png"
+        },
+        {
+          "targetPlatforms": ["emery"],
+          "type": "bitmap",
+          "name": "SLEEP",
+          "file": "images/SLEEP_BIG.png"
+        },
+        {
+          "targetPlatforms": ["emery"],
+          "type": "bitmap",
+          "name": "SWORD",
+          "file": "images/SWORD_BIG.png"
         },
         {
           "targetPlatforms": ["emery"],
@@ -354,93 +452,220 @@
           "file": "images/MR_FROSTY_DEFEAT.png"
         },
         {
+          "targetPlatforms": ["basalt", "chalk"],
           "type": "bitmap",
           "name": "KRACKO",
-          "file": "images/KRACKO.png"
-        },        {
+          "file": "images/KRACKO_SMALL.png"
+        },
+        {
+          "targetPlatforms": ["basalt", "chalk"],
           "type": "bitmap",
           "name": "KRACKO_DEFEAT",
-          "file": "images/KRACKO_DEFEAT.png"
+          "file": "images/KRACKO_DEFEAT_SMALL.png"
         },
         {
+          "targetPlatforms": ["basalt", "chalk"],
           "type": "bitmap",
           "name": "KRACKO_RAIN",
-          "file": "images/KRACKO_RAIN.png"
+          "file": "images/KRACKO_RAIN_SMALL.png"
         },
         {
+          "targetPlatforms": ["basalt", "chalk"],
           "type": "bitmap",
           "name": "KRACKO_RAIN_DEFEAT",
-          "file": "images/KRACKO_RAIN_DEFEAT.png"
+          "file": "images/KRACKO_RAIN_DEFEAT_SMALL.png"
         },
         {
+          "targetPlatforms": ["basalt", "chalk"],
           "type": "bitmap",
           "name": "KRACKO_LIGHTNING",
-          "file": "images/KRACKO_LIGHTNING.png"
+          "file": "images/KRACKO_LIGHTNING_SMALL.png"
         },
         {
+          "targetPlatforms": ["basalt", "chalk"],
           "type": "bitmap",
           "name": "KRACKO_LIGHTNING_DEFEAT",
-          "file": "images/KRACKO_LIGHTNING_DEFEAT.png"
+          "file": "images/KRACKO_LIGHTNING_DEFEAT_SMALL.png"
         },
         {
+          "targetPlatforms": ["emery"],
+          "type": "bitmap",
+          "name": "KRACKO",
+          "file": "images/KRACKO_BIG.png"
+        },
+        {
+          "targetPlatforms": ["emery"],
+          "type": "bitmap",
+          "name": "KRACKO_DEFEAT",
+          "file": "images/KRACKO_DEFEAT_BIG.png"
+        },
+        {
+          "targetPlatforms": ["emery"],
+          "type": "bitmap",
+          "name": "KRACKO_RAIN",
+          "file": "images/KRACKO_RAIN_BIG.png"
+        },
+        {
+          "targetPlatforms": ["emery"],
+          "type": "bitmap",
+          "name": "KRACKO_RAIN_DEFEAT",
+          "file": "images/KRACKO_RAIN_DEFEAT_BIG.png"
+        },
+        {
+          "targetPlatforms": ["emery"],
+          "type": "bitmap",
+          "name": "KRACKO_LIGHTNING",
+          "file": "images/KRACKO_LIGHTNING_BIG.png"
+        },
+        {
+          "targetPlatforms": ["emery"],
+          "type": "bitmap",
+          "name": "KRACKO_LIGHTNING_DEFEAT",
+          "file": "images/KRACKO_LIGHTNING_DEFEAT_BIG.png"
+        },
+        {
+          "targetPlatforms": ["basalt", "chalk"],
           "type": "bitmap",
           "name": "KING",
-          "file": "images/KING.png"
+          "file": "images/KING_SMALL.png"
         },
         {
+          "targetPlatforms": ["basalt", "chalk"],
           "type": "bitmap",
           "name": "KING_DEFEAT",
-          "file": "images/KING_DEFEAT.png"
+          "file": "images/KING_DEFEAT_SMALL.png"
         },
         {
+          "targetPlatforms": ["emery"],
+          "type": "bitmap",
+          "name": "KING",
+          "file": "images/KING_BIG.png"
+        },
+        {
+          "targetPlatforms": ["emery"],
+          "type": "bitmap",
+          "name": "KING_DEFEAT",
+          "file": "images/KING_DEFEAT_BIG.png"
+        },
+        {
+          "targetPlatforms": ["basalt", "chalk"],
           "type": "bitmap",
           "name": "ZEROTWO",
-          "file": "images/02.png"
+          "file": "images/02_SMALL.png"
         },
         {
+          "targetPlatforms": ["emery"],
+          "type": "bitmap",
+          "name": "ZEROTWO",
+          "file": "images/02_BIG.png"
+        },
+        {
+          "targetPlatforms": ["basalt", "chalk"],
           "type": "bitmap",
           "name": "BT_DISCONNECTED",
-          "file": "images/BluetoothDisconnected.png"
+          "file": "images/BluetoothDisconnected_SMALL.png"
         },
         {
+          "targetPlatforms": ["basalt", "chalk"],
           "type": "bitmap",
           "name": "NO_WEATHER",
-          "file": "images/NoWeather.png"
+          "file": "images/NoWeather_SMALL.png"
         },
         {
+          "targetPlatforms": ["emery"],
+          "type": "bitmap",
+          "name": "BT_DISCONNECTED",
+          "file": "images/BluetoothDisconnected_BIG.png"
+        },
+        {
+          "targetPlatforms": ["emery"],
+          "type": "bitmap",
+          "name": "NO_WEATHER",
+          "file": "images/NoWeather_BIG.png"
+        },
+        {
+          "targetPlatforms": ["basalt", "chalk"],
           "type": "bitmap",
           "name": "KRACKO_NAME",
-          "file": "images/KRACKO_NAME.png"
+          "file": "images/KRACKO_NAME_BIG.png"
         },
         {
+          "targetPlatforms": ["emery"],
+          "type": "bitmap",
+          "name": "KRACKO_NAME",
+          "file": "images/KRACKO_NAME_SMALL.png"
+        },
+        {
+          "targetPlatforms": ["basalt", "chalk"],
           "type": "bitmap",
           "name": "MR_BRIGHT_NAME",
-          "file": "images/MR_BRIGHT_NAME.png"
+          "file": "images/MR_BRIGHT_NAME_SMALL.png"
         },
         {
+          "targetPlatforms": ["basalt", "chalk"],
           "type": "bitmap",
           "name": "MR_SHINE_NAME",
-          "file": "images/MR_SHINE_NAME.png"
+          "file": "images/MR_SHINE_NAME_SMALL.png"
         },
         {
+          "targetPlatforms": ["basalt", "chalk"],
           "type": "bitmap",
           "name": "MR_FROSTY_NAME",
-          "file": "images/MR_FROSTY_NAME.png"
+          "file": "images/MR_FROSTY_NAME_SMALL.png"
         },
         {
+          "targetPlatforms": ["basalt", "chalk"],
           "type": "bitmap",
           "name": "BACKGROUND",
-          "file": "images/BACKGROUND.png"
+          "file": "images/BACKGROUND_SMALL.png"
         },
         {
+          "targetPlatforms": ["basalt", "chalk"],
           "type": "bitmap",
           "name": "HUD_KIRBY",
-          "file": "images/HUD_KIRBY.png"
+          "file": "images/HUD_KIRBY_SMALL.png"
         },
         {
+          "targetPlatforms": ["basalt", "chalk"],
           "type": "bitmap",
           "name": "HUD_BOSS",
-          "file": "images/HUD_BOSS.png"
+          "file": "images/HUD_BOSS_SMALL.png"
+        },
+        {
+          "targetPlatforms": ["emery"],
+          "type": "bitmap",
+          "name": "MR_BRIGHT_NAME",
+          "file": "images/MR_BRIGHT_NAME_BIG.png"
+        },
+        {
+          "targetPlatforms": ["emery"],
+          "type": "bitmap",
+          "name": "MR_SHINE_NAME",
+          "file": "images/MR_SHINE_NAME_BIG.png"
+        },
+        {
+          "targetPlatforms": ["emery"],
+          "type": "bitmap",
+          "name": "MR_FROSTY_NAME",
+          "file": "images/MR_FROSTY_NAME_BIG.png"
+        },
+        {
+          "targetPlatforms": ["emery"],
+          "type": "bitmap",
+          "name": "BACKGROUND",
+          "file": "images/BACKGROUND_BIG.png"
+        },
+        {
+          "targetPlatforms": ["emery"],
+          "type": "bitmap",
+          "name": "HUD_KIRBY",
+          "file": "images/HUD_KIRBY_BIG.png"
+        },
+        {
+          "targetPlatforms": ["emery"],
+          "type": "bitmap",
+          "name": "HUD_BOSS",
+          "file": "images/HUD_BOSS_BIG.png"
         }
       ]
     },
@@ -470,6 +695,7 @@
     },
     "targetPlatforms": [
       "basalt",
+      "chalk",
       "emery"
     ],
     "capabilities": [
