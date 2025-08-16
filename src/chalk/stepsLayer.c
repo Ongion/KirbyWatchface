@@ -8,7 +8,7 @@ bool g_fStepGoalMet;
 void steps_layer_update_callback(Layer* layer, GContext* ctx)
 {
 	int stepsPct = (g_settings.stepsGoal - g_steps) * 100 / g_settings.stepsGoal;
-	graphics_context_set_stroke_color(ctx, GColorRed);
+	graphics_context_set_stroke_color(ctx, GColorDarkCandyAppleRed);
 	graphics_context_set_stroke_width(ctx, 7);
 
 	int32_t wedgeAngle =  stepsPct * 9 * TRIG_MAX_ANGLE / (10 * 360);

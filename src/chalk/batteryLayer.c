@@ -22,7 +22,7 @@ void update_battery_data(const BatteryChargeState* pState)
 
 void battery_layer_update_callback(Layer* layer, GContext* ctx)
 {
-	GColor8 batteryColor = s_fBatteryPlugged ? GColorGreen : GColorRed;
+	GColor8 batteryColor = s_fBatteryPlugged ? GColorGreen : GColorDarkCandyAppleRed;
 	graphics_context_set_stroke_color(ctx, batteryColor);
 	graphics_context_set_stroke_width(ctx, 7);
 
