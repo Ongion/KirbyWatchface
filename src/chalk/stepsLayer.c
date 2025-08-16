@@ -1,23 +1,24 @@
 #include <pebble.h>
 #include "stepsLayer.h"
 
-#define STEPS_LAYER_MAX_WIDTH 50
-
 Layer* g_pLayerSteps;
 int g_steps;
 bool g_fStepGoalMet;
 
 void steps_layer_update_callback(Layer* layer, GContext* ctx)
 {
-	uint16_t steps_per_px = g_settings.stepsGoal / STEPS_LAYER_MAX_WIDTH;
-	GColor8 stepColor = GColorRed;
-	graphics_context_set_fill_color(ctx, stepColor);
-	graphics_fill_rect(ctx, GRect((g_steps / steps_per_px), 0, STEPS_LAYER_MAX_WIDTH - (g_steps / steps_per_px), 10), 0, GCornerNone);
+	int stepsPct = (g_settings.stepsGoal - g_steps) * 100 / g_settings.stepsGoal;
+	graphics_context_set_stroke_color(ctx, GColorRed);
+	graphics_context_set_stroke_width(ctx, 7);
+
+	int32_t wedgeAngle =  stepsPct * 9 * TRIG_MAX_ANGLE / (10 * 360);
+	int32_t wedgeMiddle = TRIG_MAX_ANGLE * 1/4;
+	graphics_draw_arc(ctx, GRect(-90,1,178,178), GOvalScaleModeFillCircle, wedgeMiddle-wedgeAngle, wedgeMiddle+wedgeAngle);
 }
 
 void load_steps_layer(Layer* parent_layer)
 {
-	g_pLayerSteps = layer_create(GRect(8, 12, STEPS_LAYER_MAX_WIDTH, 10));
+	g_pLayerSteps = layer_create(GRect(90, 0, 90, 180));
 	layer_set_update_proc(g_pLayerSteps, &steps_layer_update_callback);
 	layer_add_child(parent_layer, g_pLayerSteps);
 }
