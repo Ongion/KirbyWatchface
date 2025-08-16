@@ -1,5 +1,6 @@
 #include <pebble.h>
 #include "stepsLayer.h"
+#include "viewdefs.h"
 
 #define STEPS_LAYER_MAX_WIDTH 50
 
@@ -17,7 +18,7 @@ void steps_layer_update_callback(Layer* layer, GContext* ctx)
 
 void load_steps_layer(Layer* parent_layer)
 {
-	g_pLayerSteps = layer_create(GRect(8, 12, STEPS_LAYER_MAX_WIDTH, 10));
+	g_pLayerSteps = layer_create(GRect(HUD_BOSS_LAYER_RECT.origin.x + 8, HUD_BOSS_LAYER_RECT.origin.y + 12, STEPS_LAYER_MAX_WIDTH, 10));
 	layer_set_update_proc(g_pLayerSteps, &steps_layer_update_callback);
 	layer_add_child(parent_layer, g_pLayerSteps);
 }

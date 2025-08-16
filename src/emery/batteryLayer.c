@@ -1,5 +1,6 @@
 #include <pebble.h>
 #include "batteryLayer.h"
+#include "viewdefs.h"
 
 static uint8_t s_batteryLevel;
 static bool s_fBatteryPlugged;
@@ -7,7 +8,7 @@ static GBitmap* s_pBitmapBatteryBar;
 
 Layer* g_pLayerBattery;
 
-#define BATTERY_LAYER_RECT GRect(14,7,72,10)
+#define BATTERY_LAYER_RECT GRect(HUD_KIRBY_LAYER_RECT.origin.x + 14, HUD_KIRBY_LAYER_RECT.origin.y + 7,72,10)
 
 void update_battery_resource(bool fIsPlugged)
 {

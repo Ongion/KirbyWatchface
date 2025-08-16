@@ -1115,8 +1115,8 @@ static void main_window_load(Window* window)
 	load_boss_layer(window_layer);
 	load_kirby_layer(window_layer);
 	load_HUD_layers(window_layer);
-	load_battery_layer(bitmap_layer_get_layer(s_pLayerHUDKirby));
-	load_steps_layer(bitmap_layer_get_layer(s_pLayerHUDBoss));
+	load_battery_layer(window_layer);
+	load_steps_layer(window_layer);
 	load_ability_name_layer(window_layer);
 	load_boss_name_layer(window_layer);
 	
