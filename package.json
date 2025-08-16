@@ -587,13 +587,13 @@
           "targetPlatforms": ["basalt", "chalk"],
           "type": "bitmap",
           "name": "KRACKO_NAME",
-          "file": "images/KRACKO_NAME_BIG.png"
+          "file": "images/KRACKO_NAME_SMALL.png"
         },
         {
           "targetPlatforms": ["emery"],
           "type": "bitmap",
           "name": "KRACKO_NAME",
-          "file": "images/KRACKO_NAME_SMALL.png"
+          "file": "images/KRACKO_NAME_BIG.png"
         },
         {
           "targetPlatforms": ["basalt", "chalk"],
