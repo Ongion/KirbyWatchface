@@ -2,19 +2,6 @@
 #include <pebble.h>
 #include "commonTypes.h"
 
-static const int ABILITIES_NAME_RESOURCE_IDS[] =
-{
-	RESOURCE_ID_BEAM,
-	RESOURCE_ID_CUTTER,
-	RESOURCE_ID_FIRE,
-	RESOURCE_ID_HAMMER,
-	RESOURCE_ID_MIKE,
-	RESOURCE_ID_SLEEP,
-	RESOURCE_ID_SWORD,
-};
-
-#define NUM_ABILITIES 7
-
 #define ABILITY_NAME_LAYER_ORIGIN GPoint(14, 26)
 
 #define HUD_KIRBY_LAYER_RECT GRect(1, 1, 66, 25)

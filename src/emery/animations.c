@@ -1,5 +1,16 @@
 #include "animations.h"
 
+const int ABILITIES_NAME_RESOURCE_IDS[] =
+{
+	RESOURCE_ID_BEAM,
+	RESOURCE_ID_CUTTER,
+	RESOURCE_ID_FIRE,
+	RESOURCE_ID_HAMMER,
+	RESOURCE_ID_MIKE,
+	RESOURCE_ID_SLEEP,
+	RESOURCE_ID_SWORD,
+};
+
 const AbilityAnimation BEAM_ANIMATIONS[] =
 {
 	{.type=AT_APNG, .animation.APNGAnimation = {RESOURCE_ID_KIRBY_BEAM_ANIM, {24, 52}}}
