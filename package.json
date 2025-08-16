@@ -614,10 +614,16 @@
           "file": "images/MR_FROSTY_NAME_SMALL.png"
         },
         {
-          "targetPlatforms": ["basalt", "chalk"],
+          "targetPlatforms": ["basalt"],
           "type": "bitmap",
           "name": "BACKGROUND",
           "file": "images/BACKGROUND_SMALL.png"
+        },
+        {
+          "targetPlatforms": ["chalk"],
+          "type": "bitmap",
+          "name": "BACKGROUND",
+          "file": "images/BACKGROUND_ROUND.png"
         },
         {
           "targetPlatforms": ["basalt", "chalk"],
