@@ -1,31 +1,12 @@
 #include <pebble.h>
 #include "batteryLayer.h"
-#include "viewdefs.h"
 
 static uint8_t s_batteryLevel;
 static bool s_fBatteryPlugged;
-static GBitmap* s_pBitmapBatteryBar;
 
 Layer* g_pLayerBattery;
 
-#define BATTERY_LAYER_RECT GRect(HUD_KIRBY_LAYER_RECT.origin.x + 14, HUD_KIRBY_LAYER_RECT.origin.y + 7,72,10)
-
-void update_battery_resource(bool fIsPlugged)
-{
-	if (s_pBitmapBatteryBar)
-	{
-		gbitmap_destroy(s_pBitmapBatteryBar);
-	}
-
-	if (fIsPlugged)
-	{
-		s_pBitmapBatteryBar = gbitmap_create_with_resource(RESOURCE_ID_HEALTH_CHARGE);
-	}
-	else
-	{
-		s_pBitmapBatteryBar = gbitmap_create_with_resource(RESOURCE_ID_HEALTH_DISCHARGE);
-	}
-}
+#define BATTERY_LAYER_RECT GRect(0,0,90,180)
 
 void update_battery_data(const BatteryChargeState* pState)
 {
@@ -35,26 +16,26 @@ void update_battery_data(const BatteryChargeState* pState)
 		return;
 	}
 	
-	if (s_fBatteryPlugged != pState->is_plugged || !s_pBitmapBatteryBar)
-	{
-		update_battery_resource(pState->is_plugged);
-	}
-
 	s_batteryLevel = pState->charge_percent;
 	s_fBatteryPlugged = pState->is_plugged;
 }
 
 void battery_layer_update_callback(Layer* layer, GContext* ctx)
 {
-	graphics_context_set_compositing_mode(ctx, GCompOpAssign);
-	graphics_draw_bitmap_in_rect(ctx, s_pBitmapBatteryBar, GRect(0, 0, (s_batteryLevel * BATTERY_LAYER_RECT.size.w) / 100, 10));
+	GColor8 batteryColor = s_fBatteryPlugged ? GColorGreen : GColorDarkCandyAppleRed;
+	graphics_context_set_stroke_color(ctx, batteryColor);
+	graphics_context_set_stroke_width(ctx, 7);
+
+	int32_t wedgeAngle =  s_batteryLevel * 9 * TRIG_MAX_ANGLE / (10 * 360);
+	int32_t wedgeMiddle = TRIG_MAX_ANGLE * 3/4;
+	graphics_draw_arc(ctx, GRect(1,1,178,178), GOvalScaleModeFillCircle, wedgeMiddle-wedgeAngle, wedgeMiddle+wedgeAngle);
 }
 
 void load_battery_layer(Layer* parent_layer)
 {
 	BatteryChargeState initialState = battery_state_service_peek();
 	update_battery_data(&initialState);
-	
+
 	g_pLayerBattery = layer_create(BATTERY_LAYER_RECT);
 	layer_set_update_proc(g_pLayerBattery, &battery_layer_update_callback);
 	layer_add_child(parent_layer, g_pLayerBattery);
@@ -66,10 +47,5 @@ void unload_battery_layer()
 	{
 		layer_remove_from_parent(g_pLayerBattery);
 		layer_destroy(g_pLayerBattery);
-	}
-
-	if (s_pBitmapBatteryBar)
-	{
-		gbitmap_destroy(s_pBitmapBatteryBar);
 	}
 }

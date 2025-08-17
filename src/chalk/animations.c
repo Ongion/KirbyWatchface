@@ -13,39 +13,39 @@ const int ABILITIES_NAME_RESOURCE_IDS[] =
 
 const AbilityAnimation BEAM_ANIMATIONS[] =
 {
-	{.type = AT_APNG, .animation.APNGAnimation = {RESOURCE_ID_KIRBY_BEAM_ANIM, {0, 53}}}
+	{.type = AT_APNG, .animation.APNGAnimation = {RESOURCE_ID_KIRBY_BEAM_ANIM, {18, 49}}}
 };
 
 const AbilityAnimation CUTTER_ANIMATIONS[] =
 {
-	{.type = AT_APNG, .animation.APNGAnimation = {RESOURCE_ID_KIRBY_CUTTER_THROW_ANIM, {1, 82}}}
+	{.type = AT_APNG, .animation.APNGAnimation = {RESOURCE_ID_KIRBY_CUTTER_THROW_ANIM, {19, 75}}}
 };
 
 const AbilityAnimation FIRE_ANIMATIONS[] =
 {
-	{.type = AT_APNG, .animation.APNGAnimation = {RESOURCE_ID_KIRBY_FIRE_ANIM, {0, 67}}}
+	{.type = AT_APNG, .animation.APNGAnimation = {RESOURCE_ID_KIRBY_FIRE_ANIM, {18, 64}}}
 };
 
 const AbilityAnimation HAMMER_ANIMATIONS[] =
 {
-	{.type = AT_APNG, .animation.APNGAnimation = {RESOURCE_ID_KIRBY_HAMMER_POUND_ANIM, {5, 69}}}
+	{.type = AT_APNG, .animation.APNGAnimation = {RESOURCE_ID_KIRBY_HAMMER_POUND_ANIM, {23, 64}}}
 };
 
 const AbilityAnimation MIKE_ANIMATIONS[] =
 {
-	{.type = AT_APNG, .animation.APNGAnimation = {RESOURCE_ID_KIRBY_MIKE_ANIM_1, {0, 80}}},
-	{.type = AT_APNG, .animation.APNGAnimation = {RESOURCE_ID_KIRBY_MIKE_ANIM_2, {2, 84}}},
-	{.type = AT_APNG, .animation.APNGAnimation = {RESOURCE_ID_KIRBY_MIKE_ANIM_3, {5, 52}}},
+	{.type = AT_APNG, .animation.APNGAnimation = {RESOURCE_ID_KIRBY_MIKE_ANIM_1, {18, 75}}},
+	{.type = AT_APNG, .animation.APNGAnimation = {RESOURCE_ID_KIRBY_MIKE_ANIM_2, {20, 79}}},
+	{.type = AT_APNG, .animation.APNGAnimation = {RESOURCE_ID_KIRBY_MIKE_ANIM_3, {23, 47}}},
 };
 
 const AbilityAnimation SLEEP_ANIMATIONS[] =
 {
-	{.type = AT_APNG, .animation.APNGAnimation = {RESOURCE_ID_KIRBY_SLEEP_ANIM, {11, 59}}}
+	{.type = AT_APNG, .animation.APNGAnimation = {RESOURCE_ID_KIRBY_SLEEP_ANIM, {29, 55}}}
 };
 
 const AbilityAnimation SWORD_ANIMATIONS[] =
 {
-	{.type = AT_APNG, .animation.APNGAnimation = {RESOURCE_ID_KIRBY_SWORD_ANIM, {0, 69}}}
+	{.type = AT_APNG, .animation.APNGAnimation = {RESOURCE_ID_KIRBY_SWORD_ANIM, {18, 64}}}
 };
 
 const unsigned int NUM_ABILITY_ANIMATIONS[] =

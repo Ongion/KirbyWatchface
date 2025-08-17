@@ -14,55 +14,6 @@
 #define ONE_HOUR (1*SECONDS_PER_HOUR)
 #define TWO_HOURS (2*SECONDS_PER_HOUR)
 
-ClaySettings g_settings;
-static bool initiate_watchface = true;
-static bool daytime;
-
-static bool pebbleKitReady = false;
-
-static GColor s_bgColorTime;
-
-static TextLayer* s_pTextLayerWeather;
-static TextLayer* s_pTextLayerTime;
-static TextLayer* s_pTextLayerDate;
-static TextLayer* s_pTextLayerDayOfWeek;
-
-static bool bt_connected;
-
-static GBitmap* s_pBitmapBackground;
-static BitmapLayer* s_pLayerBackground;
-
-static GBitmap* s_pBitmapHUDKirby;
-static BitmapLayer* s_pLayerHUDKirby;
-
-static GBitmap* s_pBitmapHUDBoss;
-static BitmapLayer* s_pLayerHUDBoss;
-
-static int s_temperature = 255;
-static int s_weatherCondition = -1;
-static time_t s_lastWeatherTime = 0;
-static int s_sunriseTime = 5;
-static int s_sunsetTime = 19;
-
-static unsigned int abilityIdx = 0;
-
-static AppTimer* s_pKirbyAnimationTimer;
-static AppTimer* s_pShowDateTimer;
-static AppTimer* s_pWeatherTimeoutTimer;
-
-static GBitmap* s_pBitmapAbilityName;
-static BitmapLayer* s_pLayerAbilityName;
-
-static GBitmap* s_pBitmapBossName;
-static BitmapLayer* s_pLayerBossName;
-
-static GBitmap* s_pBitmapBoss;
-static BitmapLayer* s_pLayerBoss;
-
-static GBitmap* s_pBitmapKirby;
-static GBitmapSequence* s_pBitmapSequenceKirby;
-static BitmapLayer* s_pLayerKirby;
-
 extern GFont s_fontBig;
 extern GFont s_fontSmall;
 

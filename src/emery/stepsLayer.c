@@ -1,5 +1,6 @@
 #include <pebble.h>
 #include "stepsLayer.h"
+#include "viewdefs.h"
 
 #define STEPS_LAYER_MAX_WIDTH 72
 
@@ -20,7 +21,7 @@ void load_steps_layer(Layer* parent_layer)
 {
 	s_pBitmapStepsBar = gbitmap_create_with_resource(RESOURCE_ID_BOSS_HEALTH);
 
-	g_pLayerSteps = layer_create(GRect(10, 7, STEPS_LAYER_MAX_WIDTH, 10));
+	g_pLayerSteps = layer_create(GRect(HUD_BOSS_LAYER_RECT.origin.x + 10, HUD_BOSS_LAYER_RECT.origin.y + 7, STEPS_LAYER_MAX_WIDTH, 10));
 	layer_set_update_proc(g_pLayerSteps, &steps_layer_update_callback);
 	layer_add_child(parent_layer, g_pLayerSteps);
 }
