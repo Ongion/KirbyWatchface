@@ -379,7 +379,7 @@ static void update_boss()
 	{
 		if (g_fStepGoalMet)
 		{
-			set_container_image(&s_pBitmapBoss, s_pLayerBoss, RESOURCE_ID_MR_FROSTY_DEFEAT, MR_FROSTY_ORIGIN);
+			set_container_image(&s_pBitmapBoss, s_pLayerBoss, RESOURCE_ID_MR_FROSTY_DEFEAT, MR_FROSTY_DEFEAT_ORIGIN);
 		}
 		else
 		{
