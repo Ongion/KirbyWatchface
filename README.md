@@ -2,13 +2,13 @@
 
 A watch design featuring Kirby!
 
-It's designed to work on all rectangular color-screened Pebbles, as well as the upcoming Core Time 2.
+It's designed to work on all color-screened Pebbles, as well as the upcoming Core Time 2.
 
-![Screenshot of watchface as displayed on Pebble Time](img/example_basalt.png) ![Screenshot of watchface as displayed on Core Time 2. Notably higher resolution than Pebble Time's version.](img/example_emery.png)
+![Screenshot of watchface as displayed on Pebble Time](img/example_basalt.png) ![Screenshot of watchface as displayed on Pebble Time Round. Kirby's and Boss's health is represented by semicircular arcs around the outside of the watch.](img/example_chalk.png) ![Screenshot of watchface as displayed on Core Time 2. Notably higher resolution than Pebble Time's version.](img/example_emery.png)
 
 Kirby has several different abilities, and a different one is chosen every hour (or whenever you launch the watchface). When you tap the bottom of the watch / flick your wrist the backlight turns on, the current temperature is shown, and Kirby animates.
 
-![Kirby is swinging his hammer. The temperature is 85°F.](img/example_tap.png)
+![Kirby is screaming into a yellow cone. The temperature is 85°F.](img/example_tap.png)
 
 
 The boss represents the current weather, and its health represents how close you are to your step goal for the day. When you reach your step goal, the boss is defeated!
