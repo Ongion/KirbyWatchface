@@ -672,6 +672,12 @@
           "type": "bitmap",
           "name": "HUD_BOSS",
           "file": "images/HUD_BOSS_BIG.png"
+        },
+        {
+          "targetPlatforms": ["chalk"],
+          "type": "bitmap",
+          "name": "HUD_CHALK",
+          "file": "images/CHALK_DATETIME_BACKGROUND.png"
         }
       ]
     },
