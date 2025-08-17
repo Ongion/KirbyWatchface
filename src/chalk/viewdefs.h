@@ -2,7 +2,7 @@
 #include <pebble.h>
 #include "commonTypes.h"
 
-#define ABILITY_NAME_LAYER_ORIGIN GPoint(32, 26)
+#define ABILITY_NAME_LAYER_ORIGIN GPoint(38, 110)
 
 #define TIME_LAYER_RECT GRect(29, 123, 58, 24)
 #define DATE_RECT GRect(93, 132, 60, 20)
@@ -13,18 +13,18 @@
 #define ZEROTWO_ORIGIN GPoint(51, 18)
 #define KING_ORIGIN GPoint(100, 49)
 #define KING_DEFEAT_ORIGIN GPoint(95, 55)
-#define KRACKO_ORIGIN GPoint(82, 21)
+#define KRACKO_ORIGIN GPoint(82, 18)
 #define MR_BRIGHT_ORIGIN GPoint(106, 51)
 #define MR_BRIGHT_DEFEAT_ORIGIN GPoint(105, 51)
 #define MR_SHINE_ORIGIN GPoint(109, 66)
 #define MR_SHINE_DEFEAT_ORIGIN GPoint(109, 62)
 #define MR_FROSTY_ORIGIN GPoint(110, 64)
 
-#define ZEROTWO_NAME_ORIGIN GPoint(104, 26)
-#define KING_NAME_ORIGIN GPoint(107, 26)
-#define KRACKO_NAME_ORIGIN GPoint(107, 26)
-#define MR_BRIGHT_NAME_ORIGIN GPoint(106, 26)
-#define MR_SHINE_NAME_ORIGIN GPoint(108, 26)
-#define MR_FROSTY_NAME_ORIGIN GPoint(104, 26)
+#define ZEROTWO_NAME_ORIGIN GPoint(98, 110)
+#define KING_NAME_ORIGIN GPoint(102, 110)
+#define KRACKO_NAME_ORIGIN GPoint(101, 110)
+#define MR_BRIGHT_NAME_ORIGIN GPoint(100, 110)
+#define MR_SHINE_NAME_ORIGIN GPoint(102, 110)
+#define MR_FROSTY_NAME_ORIGIN GPoint(98, 110)
 
 #define INITIAL_ANIMATION_GETTER get_random_ability_animation()
