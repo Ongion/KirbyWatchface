@@ -6,7 +6,7 @@
 
 #define HUD_KIRBY_LAYER_RECT GRect(0, 0, 96, 41)
 #define HUD_BOSS_LAYER_RECT GRect(104, 0, 96, 41)
-#define TIME_LAYER_RECT GRect(9, 175, 81, 36)
+#define TIME_LAYER_RECT GRect(11, 176, 79, 36)
 #define DATE_RECT GRect(110, 189, 80, 21)
 #define DAY_OF_WEEK_RECT GRect(110, 172, 80, 21)
 #define TEMPERATURE_RECT_BIG GRect(108, 175, 82, 38)
