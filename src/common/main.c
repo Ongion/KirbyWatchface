@@ -332,16 +332,13 @@ static void set_container_image(GBitmap** bmp_image, BitmapLayer* bmp_layer, con
 }
 
 static void update_boss()
-{
-
-	s_weatherCondition = 800;
-	
+{	
 	if (!bt_connected)
 	{
 		set_container_image(&s_pBitmapBoss, s_pLayerBoss, RESOURCE_ID_ZEROTWO, ZEROTWO_ORIGIN);
 		set_container_image(&s_pBitmapBossName, s_pLayerBossName, RESOURCE_ID_BT_DISCONNECTED, ZEROTWO_NAME_ORIGIN);
 	}
-	else if (((unsigned int)time(NULL) - (unsigned int)s_lastWeatherTime) < TIME_STALE_WEATHER)
+	else if (((unsigned int)time(NULL) - (unsigned int)s_lastWeatherTime) > TIME_STALE_WEATHER)
 	{
 		if (g_fStepGoalMet)
 		{
