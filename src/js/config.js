@@ -30,7 +30,7 @@ module.exports = [
             {
                 "type": "input",
                 "label": "API Key",
-                "description": "An API key is required to featch OpenWeatherMap data. These can be freely obtained from OpenWeatherMap.org.",
+                "description": "An API key is required to fetch OpenWeatherMap data. These can be freely obtained from OpenWeatherMap.org.",
                 "messageKey": "OpenWeatherAPIKey"
             },
             {
