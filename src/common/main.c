@@ -238,6 +238,7 @@ static void load_weather_layer(Layer* parent_layer)
 	text_layer_set_text_color(s_pTextLayerWeather, GColorBlack);
 	text_layer_set_font(s_pTextLayerWeather, g_settings.showTenthsDigit ? s_fontSmall : s_fontBig);
 	text_layer_set_text_alignment(s_pTextLayerWeather, GTextAlignmentCenter);
+	s_temperature = 30371;
 	update_weather_layer_text();
 	layer_add_child(parent_layer, text_layer_get_layer(s_pTextLayerWeather));
 	layer_set_hidden(text_layer_get_layer(s_pTextLayerWeather), true);
@@ -332,12 +333,15 @@ static void set_container_image(GBitmap** bmp_image, BitmapLayer* bmp_layer, con
 
 static void update_boss()
 {
+
+	s_weatherCondition = 800;
+	
 	if (!bt_connected)
 	{
 		set_container_image(&s_pBitmapBoss, s_pLayerBoss, RESOURCE_ID_ZEROTWO, ZEROTWO_ORIGIN);
 		set_container_image(&s_pBitmapBossName, s_pLayerBossName, RESOURCE_ID_BT_DISCONNECTED, ZEROTWO_NAME_ORIGIN);
 	}
-	else if (((unsigned int)time(NULL) - (unsigned int)s_lastWeatherTime) > TIME_STALE_WEATHER)
+	else if (((unsigned int)time(NULL) - (unsigned int)s_lastWeatherTime) < TIME_STALE_WEATHER)
 	{
 		if (g_fStepGoalMet)
 		{
@@ -641,7 +645,7 @@ void update_bg_color_time()
 		s_bgColorTime = GColorFromRGB(255, 0, 128);
 		daytime = s_sunriseTime <= current_time;
 	}
-	else if (s_sunriseTime+TWO_HOURS <= current_time && current_time < s_sunsetTime-TWO_HOURS)
+	else if (true) //(s_sunriseTime+TWO_HOURS <= current_time && current_time < s_sunsetTime-TWO_HOURS)
 	{
 		// Daytime
 		s_bgColorTime = GColorFromRGB(0, 170, 255);
