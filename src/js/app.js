@@ -126,13 +126,13 @@ function findCurrentValue(values)
 
 function getWeatherCondition(skyCoverPct, precipPct, precipMM, snowfallMM, thunderPct)
 {
-  if (thunderPct >= 50)
+  if (thunderPct >= 40)
   {
     // Thunderstorm
     return 200;
   }
 
-  if ((precipPct/100) * precipMM >= 2)
+  if ((precipPct/100) * precipMM >= 1)
   {
     if (snowfallMM > 0)
     {
