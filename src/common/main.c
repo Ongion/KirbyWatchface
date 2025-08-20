@@ -642,7 +642,7 @@ void update_bg_color_time()
 		s_bgColorTime = GColorFromRGB(255, 0, 128);
 		daytime = s_sunriseTime <= current_time;
 	}
-	else if (true) //(s_sunriseTime+TWO_HOURS <= current_time && current_time < s_sunsetTime-TWO_HOURS)
+	else if (s_sunriseTime+TWO_HOURS <= current_time && current_time < s_sunsetTime-TWO_HOURS)
 	{
 		// Daytime
 		s_bgColorTime = GColorFromRGB(0, 170, 255);
