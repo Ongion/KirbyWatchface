@@ -13,7 +13,7 @@ const int ABILITIES_NAME_RESOURCE_IDS[] =
 
 const AbilityAnimation BEAM_ANIMATIONS[] =
 {
-	{.type = AT_APNG, .animation.APNGAnimation = {RESOURCE_ID_KIRBY_BEAM_ANIM, {18, 48}}}
+	{.type = AT_APNG, .animation.APNGAnimation = {RESOURCE_ID_KIRBY_BEAM_ANIM, {19, 48}}}
 };
 
 const AbilityAnimation CUTTER_ANIMATIONS[] =
