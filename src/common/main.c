@@ -633,28 +633,43 @@ void update_bg_color()
 	window_set_background_color(s_WindowMain, bt_connected ? s_bgColorTime : GColorRed);
 }
 
+static int modular_subtraction(int minuend, int subtrahend, int modulus)
+{
+	return (((minuend - subtrahend) % modulus) + modulus) % modulus;
+}
+
+static bool modular_between(int start, int end, int value)
+{
+	return (value < start) ^ (value < end) ^ (end < start);
+}
+
 void update_bg_color_time()
 {
 	time_t current_time_of_day = time(NULL) % SECONDS_PER_DAY;
-	if (s_sunriseTime-ONE_HOUR <= current_time_of_day && current_time_of_day < s_sunriseTime+TWO_HOURS)
+	const int SUNRISE_START = modular_subtraction(s_sunriseTime, ONE_HOUR, SECONDS_PER_DAY);
+	const int SUNRISE_END = (s_sunriseTime+TWO_HOURS) % SECONDS_PER_DAY;
+	const int SUNSET_START = modular_subtraction(s_sunsetTime, TWO_HOURS, SECONDS_PER_DAY);
+	const int SUNSET_END = (s_sunsetTime+ONE_HOUR) % SECONDS_PER_DAY;
+
+	if (modular_between(SUNRISE_START, SUNRISE_END, current_time_of_day))
 	{
 		// Sunrise
 		s_bgColorTime = GColorFromRGB(255, 0, 128);
 		daytime = s_sunriseTime <= current_time_of_day;
 	}
-	else if (s_sunriseTime+TWO_HOURS <= current_time_of_day && current_time_of_day < s_sunsetTime-TWO_HOURS)
+	else if (modular_between(SUNRISE_END, SUNSET_START, current_time_of_day))
 	{
 		// Daytime
 		s_bgColorTime = GColorFromRGB(0, 170, 255);
 		daytime = true;
 	}
-	else if (s_sunsetTime-TWO_HOURS <= current_time_of_day && current_time_of_day < s_sunsetTime+ONE_HOUR)
+	else if (modular_between(SUNSET_START, SUNSET_END, current_time_of_day))
 	{
 		// Sunset
 		s_bgColorTime = GColorFromRGB(255, 170, 0);
 		daytime = current_time_of_day < s_sunsetTime;
 	}
-	else //if (s_sunsetTime+ONE_HOUR <= current_time->tm_hour || current_time->tm_hour < s_sunriseTime-ONE_HOUR)
+	else //if (modular_between(SUNSET_END, SUNRISE_START, current_time_of_day))
 	{
 		// Night
 		s_bgColorTime = GColorFromRGB(0, 0, 85);
