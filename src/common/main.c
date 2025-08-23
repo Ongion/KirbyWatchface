@@ -32,8 +32,8 @@ static BitmapLayer* s_pLayerBackground;
 static int s_temperature = 255;
 static int s_weatherCondition = -1;
 static time_t s_lastWeatherTime = 0;
-static int s_sunriseTime = 5;
-static int s_sunsetTime = 19;
+static int s_sunriseTime = 212741;
+static int s_sunsetTime = 261221;
 
 static unsigned int abilityIdx = 0;
 
@@ -635,24 +635,24 @@ void update_bg_color()
 
 void update_bg_color_time()
 {
-	time_t current_time = time(NULL);
-	if (s_sunriseTime-ONE_HOUR <= current_time && current_time < s_sunriseTime+TWO_HOURS)
+	time_t current_time_of_day = time(NULL) % SECONDS_PER_DAY;
+	if (s_sunriseTime-ONE_HOUR <= current_time_of_day && current_time_of_day < s_sunriseTime+TWO_HOURS)
 	{
 		// Sunrise
 		s_bgColorTime = GColorFromRGB(255, 0, 128);
-		daytime = s_sunriseTime <= current_time;
+		daytime = s_sunriseTime <= current_time_of_day;
 	}
-	else if (s_sunriseTime+TWO_HOURS <= current_time && current_time < s_sunsetTime-TWO_HOURS)
+	else if (s_sunriseTime+TWO_HOURS <= current_time_of_day && current_time_of_day < s_sunsetTime-TWO_HOURS)
 	{
 		// Daytime
 		s_bgColorTime = GColorFromRGB(0, 170, 255);
 		daytime = true;
 	}
-	else if (s_sunsetTime-TWO_HOURS <= current_time && current_time < s_sunsetTime+ONE_HOUR)
+	else if (s_sunsetTime-TWO_HOURS <= current_time_of_day && current_time_of_day < s_sunsetTime+ONE_HOUR)
 	{
 		// Sunset
 		s_bgColorTime = GColorFromRGB(255, 170, 0);
-		daytime = current_time < s_sunsetTime;
+		daytime = current_time_of_day < s_sunsetTime;
 	}
 	else //if (s_sunsetTime+ONE_HOUR <= current_time->tm_hour || current_time->tm_hour < s_sunriseTime-ONE_HOUR)
 	{
@@ -871,7 +871,7 @@ static void inbox_received_callback(DictionaryIterator* iter, void* context)
 	{
 		if (sunrise_t->value->int32 != 0)
 		{
-			s_sunriseTime = sunrise_t->value->int32;
+			s_sunriseTime = sunrise_t->value->int32 % SECONDS_PER_DAY;
 			persist_write_int(STORAGE_KEY_LastSeenSunriseTime, s_sunriseTime);
 
 			updated_sunrise_sunset = true;
@@ -884,7 +884,7 @@ static void inbox_received_callback(DictionaryIterator* iter, void* context)
 	{
 		if (sunset_t->value->int32 != 0)
 		{
-			s_sunsetTime = sunset_t->value->int32;
+			s_sunsetTime = sunset_t->value->int32 % SECONDS_PER_DAY;
 			persist_write_int(STORAGE_KEY_LastSeenSunsetTime, s_sunsetTime);
 
 			updated_sunrise_sunset = true;
@@ -1160,12 +1160,12 @@ static void load_settings()
 
 	if (persist_exists(STORAGE_KEY_LastSeenSunriseTime))
 	{
-		s_sunriseTime = persist_read_int(STORAGE_KEY_LastSeenSunriseTime);
+		s_sunriseTime = persist_read_int(STORAGE_KEY_LastSeenSunriseTime) % SECONDS_PER_DAY;
 	}
 
 	if (persist_exists(STORAGE_KEY_LastSeenSunsetTime))
 	{
-		s_sunsetTime = persist_read_int(STORAGE_KEY_LastSeenSunsetTime);
+		s_sunsetTime = persist_read_int(STORAGE_KEY_LastSeenSunsetTime) % SECONDS_PER_DAY;
 	}
 }
 
