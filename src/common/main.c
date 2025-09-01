@@ -238,7 +238,6 @@ static void load_weather_layer(Layer* parent_layer)
 	text_layer_set_text_color(s_pTextLayerWeather, GColorBlack);
 	text_layer_set_font(s_pTextLayerWeather, g_settings.showTenthsDigit ? s_fontSmall : s_fontBig);
 	text_layer_set_text_alignment(s_pTextLayerWeather, GTextAlignmentCenter);
-	s_temperature = 30371;
 	update_weather_layer_text();
 	layer_add_child(parent_layer, text_layer_get_layer(s_pTextLayerWeather));
 	layer_set_hidden(text_layer_get_layer(s_pTextLayerWeather), true);
