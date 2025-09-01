@@ -650,29 +650,27 @@ void update_bg_color_time()
 	const int SUNSET_START = modular_subtraction(s_sunsetTime, TWO_HOURS, SECONDS_PER_DAY);
 	const int SUNSET_END = (s_sunsetTime+ONE_HOUR) % SECONDS_PER_DAY;
 
+	daytime = modular_between(s_sunriseTime % SECONDS_PER_DAY, s_sunsetTime % SECONDS_PER_DAY, current_time_of_day);
+
 	if (modular_between(SUNRISE_START, SUNRISE_END, current_time_of_day))
 	{
 		// Sunrise
 		s_bgColorTime = GColorFromRGB(255, 0, 128);
-		daytime = s_sunriseTime <= current_time_of_day;
 	}
 	else if (modular_between(SUNRISE_END, SUNSET_START, current_time_of_day))
 	{
 		// Daytime
 		s_bgColorTime = GColorFromRGB(0, 170, 255);
-		daytime = true;
 	}
 	else if (modular_between(SUNSET_START, SUNSET_END, current_time_of_day))
 	{
 		// Sunset
 		s_bgColorTime = GColorFromRGB(255, 170, 0);
-		daytime = current_time_of_day < s_sunsetTime;
 	}
 	else //if (modular_between(SUNSET_END, SUNRISE_START, current_time_of_day))
 	{
 		// Night
 		s_bgColorTime = GColorFromRGB(0, 0, 85);
-		daytime = false;
 	}
 
 	update_bg_color();
