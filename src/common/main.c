@@ -19,6 +19,8 @@ static bool pebbleKitReady = false;
 
 static GColor s_bgColorTime;
 
+static Layer* s_pLayerBase;
+
 static TextLayer* s_pTextLayerWeather;
 static TextLayer* s_pTextLayerTime;
 static TextLayer* s_pTextLayerDate;
@@ -58,7 +60,25 @@ static const ManualAnimation* currentAnimation;
 static uint16_t nextFrame;
 static uint16_t loopsRemaining;
 
+static int16_t obstructed_area_start_height_offset = 0;
+static int16_t obstructed_area_end_height_offset = 0;
 // Add animation for steps goal being reached
+
+static void load_base_layer(Layer* parent_layer)
+{
+	GRect frame = layer_get_frame(parent_layer);
+	s_pLayerBase = layer_create(frame);
+	layer_add_child(parent_layer, s_pLayerBase);
+}
+
+static void unload_base_layer()
+{
+	if (s_pLayerBase)
+	{
+		layer_remove_from_parent(s_pLayerBase);
+		layer_destroy(s_pLayerBase);
+	}
+}
 
 static void load_background_layer(Layer* parent_layer)
 {
@@ -1075,10 +1095,37 @@ static void handle_tap(AccelAxisType axis, int32_t direction)
 	}
 }
 
+static void unobstructed_area_will_change_handler(GRect final_unobstructed_screen_area, void* context)
+{
+	GRect full_bounds = layer_get_frame(s_pLayerBase);
+	GRect unobstructed_bounds = layer_get_unobstructed_bounds(s_pLayerBase);
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "base layer origin: (%d, %d)", full_bounds.origin.x, full_bounds.origin.y);
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "base layer size: %dx%d", full_bounds.size.w, full_bounds.size.h);
+
+	obstructed_area_start_height_offset = full_bounds.origin.y;
+	obstructed_area_end_height_offset = (final_unobstructed_screen_area.size.h - full_bounds.size.h) - (full_bounds.origin.y - final_unobstructed_screen_area.origin.y);
+
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "Start Offset: %d", obstructed_area_start_height_offset);
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "End Offset  : %d", obstructed_area_end_height_offset);
+
+}
+
+static void unobstructed_area_change_handler(AnimationProgress progress, void* context)
+{
+	int16_t current_height_offset = obstructed_area_start_height_offset + ((obstructed_area_end_height_offset * progress) / ANIMATION_NORMALIZED_MAX);
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "Now Offset  : %d", current_height_offset);
+
+
+	GRect frame = layer_get_frame(s_pLayerBase);
+	frame.origin.y = current_height_offset;
+	layer_set_frame(s_pLayerBase, frame);
+}
+
 static void main_window_load(Window* window)
 {
 	Layer* window_layer = window_get_root_layer(window);
 
+	
 	load_background_layer(window_layer);
 	load_boss_layer(window_layer);
 	load_kirby_layer(window_layer);
@@ -1087,16 +1134,27 @@ static void main_window_load(Window* window)
 	load_steps_layer(window_layer);
 	load_ability_name_layer(window_layer);
 	load_boss_name_layer(window_layer);
+	load_base_layer(window_layer);
 	
 	load_custom_fonts();
-	load_time_layer(window_layer);
-	load_date_layer(window_layer);
-	load_day_of_week_layer(window_layer);
-	load_weather_layer(window_layer);
+	load_time_layer(s_pLayerBase);
+	load_date_layer(s_pLayerBase);
+	load_day_of_week_layer(s_pLayerBase);
+	load_weather_layer(s_pLayerBase);
+
+	UnobstructedAreaHandlers areaHandlers =
+	{
+		.will_change = unobstructed_area_will_change_handler,
+		.change = unobstructed_area_change_handler
+	};
+
+	unobstructed_area_service_subscribe(areaHandlers, NULL);
 }
 
 static void main_window_unload(Window* window)
 {
+	unobstructed_area_service_unsubscribe();
+
 	if (g_settings.animateOnGlance)
 	{
 		glancing_service_unsubscribe();
@@ -1117,6 +1175,8 @@ static void main_window_unload(Window* window)
 	unload_kirby_layer();
 	unload_boss_layer();
 	unload_background_layer();
+
+	unload_base_layer();
 }
 
 static void load_settings()
