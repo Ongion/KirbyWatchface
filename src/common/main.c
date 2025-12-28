@@ -56,17 +56,24 @@ static GBitmap* s_pBitmapKirby;
 static GBitmapSequence* s_pBitmapSequenceKirby;
 static BitmapLayer* s_pLayerKirby;
 
+static GBitmap* s_pBitmapDateTimeBkgd;
+static BitmapLayer* s_pLayerTimeBkgd;
+static BitmapLayer* s_pLayerDateBkgd;
+
+
 static const ManualAnimation* currentAnimation;
 static uint16_t nextFrame;
 static uint16_t loopsRemaining;
 
 static int16_t obstructed_area_start_height_offset = 0;
-static int16_t obstructed_area_end_height_offset = 0;
+static int16_t obstructed_area_end_height_offset_delta = 0;
 // Add animation for steps goal being reached
 
 static void load_base_layer(Layer* parent_layer)
 {
 	GRect frame = layer_get_frame(parent_layer);
+	GRect unobstructed_bounds = layer_get_unobstructed_bounds(parent_layer);
+	frame.origin.y = unobstructed_bounds.size.h - frame.size.h + unobstructed_bounds.origin.y;
 	s_pLayerBase = layer_create(frame);
 	layer_add_child(parent_layer, s_pLayerBase);
 }
@@ -190,6 +197,41 @@ static void unload_kirby_layer()
 	if (s_pBitmapKirby)
 	{
 		gbitmap_destroy(s_pBitmapKirby);
+	}
+}
+
+static void load_text_background_layers(Layer* parent_layer)
+{
+	s_pBitmapDateTimeBkgd = gbitmap_create_with_resource(RESOURCE_ID_TEXT_BACKGROUND);
+	
+	s_pLayerTimeBkgd = bitmap_layer_create(TIME_BACKGROUND_RECT);
+	bitmap_layer_set_compositing_mode(s_pLayerTimeBkgd, GCompOpSet);
+	bitmap_layer_set_bitmap(s_pLayerTimeBkgd, s_pBitmapDateTimeBkgd);
+	layer_add_child(parent_layer, bitmap_layer_get_layer(s_pLayerTimeBkgd));
+	
+	s_pLayerDateBkgd = bitmap_layer_create(DATE_BACKGROUND_RECT);
+	bitmap_layer_set_compositing_mode(s_pLayerDateBkgd, GCompOpSet);
+	bitmap_layer_set_bitmap(s_pLayerDateBkgd, s_pBitmapDateTimeBkgd);
+	layer_add_child(parent_layer, bitmap_layer_get_layer(s_pLayerDateBkgd));
+}
+
+static void unload_text_background_layers()
+{
+	if (s_pLayerDateBkgd)
+	{
+		layer_remove_from_parent(bitmap_layer_get_layer(s_pLayerDateBkgd));
+		bitmap_layer_destroy(s_pLayerDateBkgd);
+	}
+
+	if (s_pLayerTimeBkgd)
+	{
+		layer_remove_from_parent(bitmap_layer_get_layer(s_pLayerTimeBkgd));
+		bitmap_layer_destroy(s_pLayerTimeBkgd);
+	}
+
+	if (s_pBitmapDateTimeBkgd)
+	{
+		gbitmap_destroy(s_pBitmapDateTimeBkgd);
 	}
 }
 
@@ -1098,23 +1140,18 @@ static void handle_tap(AccelAxisType axis, int32_t direction)
 static void unobstructed_area_will_change_handler(GRect final_unobstructed_screen_area, void* context)
 {
 	GRect full_bounds = layer_get_frame(s_pLayerBase);
-	GRect unobstructed_bounds = layer_get_unobstructed_bounds(s_pLayerBase);
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "base layer origin: (%d, %d)", full_bounds.origin.x, full_bounds.origin.y);
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "base layer size: %dx%d", full_bounds.size.w, full_bounds.size.h);
 
 	obstructed_area_start_height_offset = full_bounds.origin.y;
-	obstructed_area_end_height_offset = (final_unobstructed_screen_area.size.h - full_bounds.size.h) - (full_bounds.origin.y - final_unobstructed_screen_area.origin.y);
+	obstructed_area_end_height_offset_delta = (final_unobstructed_screen_area.size.h - full_bounds.size.h) - (full_bounds.origin.y - final_unobstructed_screen_area.origin.y);
 
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "Start Offset: %d", obstructed_area_start_height_offset);
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "End Offset  : %d", obstructed_area_end_height_offset);
-
+	// APP_LOG(APP_LOG_LEVEL_DEBUG, "Start Offset : %d", obstructed_area_start_height_offset);
+	// APP_LOG(APP_LOG_LEVEL_DEBUG, "Offset Change: %d", obstructed_area_end_height_offset_delta);
 }
 
 static void unobstructed_area_change_handler(AnimationProgress progress, void* context)
 {
-	int16_t current_height_offset = obstructed_area_start_height_offset + ((obstructed_area_end_height_offset * progress) / ANIMATION_NORMALIZED_MAX);
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "Now Offset  : %d", current_height_offset);
-
+	int16_t current_height_offset = obstructed_area_start_height_offset + ((obstructed_area_end_height_offset_delta * progress) / ANIMATION_NORMALIZED_MAX);
+	// APP_LOG(APP_LOG_LEVEL_DEBUG, "Now Offset  : %d", current_height_offset);
 
 	GRect frame = layer_get_frame(s_pLayerBase);
 	frame.origin.y = current_height_offset;
@@ -1134,9 +1171,13 @@ static void main_window_load(Window* window)
 	load_steps_layer(window_layer);
 	load_ability_name_layer(window_layer);
 	load_boss_name_layer(window_layer);
-	load_base_layer(window_layer);
 	
+	load_base_layer(window_layer);
 	load_custom_fonts();
+	
+	// These text layers should probably be children of the text background layers
+	// but it's ok for them to just rest on top for now. Illusion will be maintained.
+	load_text_background_layers(s_pLayerBase);
 	load_time_layer(s_pLayerBase);
 	load_date_layer(s_pLayerBase);
 	load_day_of_week_layer(s_pLayerBase);
@@ -1164,8 +1205,10 @@ static void main_window_unload(Window* window)
 	unload_day_of_week_layer();
 	unload_date_layer();
 	unload_time_layer();
-
+	unload_text_background_layers();
+	
 	unload_custom_fonts();
+	unload_base_layer();
 
 	unload_boss_name_layer();
 	unload_ability_name_layer();
@@ -1176,7 +1219,6 @@ static void main_window_unload(Window* window)
 	unload_boss_layer();
 	unload_background_layer();
 
-	unload_base_layer();
 }
 
 static void load_settings()

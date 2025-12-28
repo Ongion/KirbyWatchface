@@ -674,11 +674,24 @@
           "file": "images/HUD_BOSS_BIG.png"
         },
         {
+          "targetPlatforms": ["basalt"],
+          "type": "bitmap",
+          "name": "TEXT_BACKGROUND",
+          "file": "images/DATETIME_BACKGROUND_SMALL.png"
+        },
+        {
           "targetPlatforms": ["chalk"],
           "type": "bitmap",
-          "name": "HUD_CHALK",
-          "file": "images/CHALK_DATETIME_BACKGROUND.png"
+          "name": "TEXT_BACKGROUND",
+          "file": "images/DATETIME_BACKGROUND_ROUND.png"
+        },
+        {
+          "targetPlatforms": ["emery"],
+          "type": "bitmap",
+          "name": "TEXT_BACKGROUND",
+          "file": "images/DATETIME_BACKGROUND_BIG.png"
         }
+
       ]
     },
     "projectType": "native",

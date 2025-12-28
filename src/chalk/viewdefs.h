@@ -4,6 +4,8 @@
 
 #define ABILITY_NAME_LAYER_ORIGIN GPoint(38, 110)
 
+#define TIME_BACKGROUND_RECT GRect(28, 122, 60, 28)
+#define DATE_BACKGROUND_RECT GRect(92, 122, 60, 28)
 #define TIME_LAYER_RECT GRect(29, 123, 58, 24)
 #define DATE_RECT GRect(93, 132, 60, 20)
 #define DAY_OF_WEEK_RECT GRect(93, 120, 58, 20)
