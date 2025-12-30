@@ -14,6 +14,16 @@ typedef enum temperature_scales
 	CELSIUS
 } TemperatureScale;
 
+typedef enum weather_condition
+{
+	WEATHER_CLEAR = 0,
+	WEATHER_CLOUDY,
+	WEATHER_RAIN,
+	WEATHER_LIGHTNING,
+	WEATHER_SNOW,
+	WEATHER_MAX
+} WeatherCondition;
+
 typedef struct ClaySettingsV1
 {
 	char openWeatherMapAPIKey[33];

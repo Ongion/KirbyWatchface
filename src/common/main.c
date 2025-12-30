@@ -32,7 +32,7 @@ static GBitmap* s_pBitmapBackground;
 static BitmapLayer* s_pLayerBackground;
 
 static int s_temperature = 255;
-static int s_weatherCondition = -1;
+static WeatherCondition s_weatherIcon = WEATHER_MAX;
 static time_t s_lastWeatherTime = 0;
 static int s_sunriseTime = 212741;
 static int s_sunsetTime = 261221;
@@ -411,7 +411,7 @@ static void update_boss()
 		}
 		set_container_image(&s_pBitmapBossName, s_pLayerBossName, RESOURCE_ID_NO_WEATHER, KING_NAME_ORIGIN);
 	}
-	else if (200 <= s_weatherCondition && s_weatherCondition < 300)
+	else if (s_weatherIcon == WEATHER_LIGHTNING)
 	{
 		if (g_fStepGoalMet)
 		{
@@ -424,7 +424,7 @@ static void update_boss()
 
 		set_container_image(&s_pBitmapBossName, s_pLayerBossName, RESOURCE_ID_KRACKO_NAME, KRACKO_NAME_ORIGIN);
 	}
-	else if (300 <= s_weatherCondition && s_weatherCondition < 600)
+	else if (s_weatherIcon == WEATHER_RAIN)
 	{
 		if (g_fStepGoalMet)
 		{
@@ -437,7 +437,7 @@ static void update_boss()
 
 		set_container_image(&s_pBitmapBossName, s_pLayerBossName, RESOURCE_ID_KRACKO_NAME, KRACKO_NAME_ORIGIN);
 	}
-	else if (600 <= s_weatherCondition && s_weatherCondition < 700)
+	else if (s_weatherIcon == WEATHER_SNOW)
 	{
 		if (g_fStepGoalMet)
 		{
@@ -450,7 +450,7 @@ static void update_boss()
 
 		set_container_image(&s_pBitmapBossName, s_pLayerBossName, RESOURCE_ID_MR_FROSTY_NAME, MR_FROSTY_NAME_ORIGIN);
 	}
-	else if (s_weatherCondition > 800)
+	else if (s_weatherIcon == WEATHER_CLOUDY)
 	{
 		if (g_fStepGoalMet)
 		{
@@ -463,6 +463,7 @@ static void update_boss()
 
 		set_container_image(&s_pBitmapBossName, s_pLayerBossName, RESOURCE_ID_KRACKO_NAME, KRACKO_NAME_ORIGIN);
 	}
+	// s_weatherIcon == WEATHER_CLEAR
 	else if (daytime)
 	{
 		if (g_fStepGoalMet)
@@ -934,9 +935,13 @@ static void inbox_received_callback(DictionaryIterator* iter, void* context)
 	Tuple* icon_t = dict_find(iter, MESSAGE_KEY_WeatherCondition);
 	if (icon_t)
 	{
-		s_weatherCondition = icon_t->value->int32;
-		persist_write_int(STORAGE_KEY_LastSeenWeatherCondition, s_weatherCondition);
-		got_weather = true;
+		// TODO: Add an error state for unexpected weather, rather than waiting for it to become stale?
+		if (icon_t->value->int32 < WEATHER_MAX)
+		{
+			s_weatherIcon = icon_t->value->int32;
+			persist_write_int(STORAGE_KEY_LastSeenWeatherCondition, s_weatherIcon);
+			got_weather = true;
+		}
 	}
 
 	// Sunrise
@@ -1264,7 +1269,7 @@ static void load_settings()
 
 	if (persist_exists(STORAGE_KEY_LastSeenWeatherCondition))
 	{
-		s_weatherCondition = persist_read_int(STORAGE_KEY_LastSeenWeatherCondition);
+		s_weatherIcon = persist_read_int(STORAGE_KEY_LastSeenWeatherCondition);
 	}
 
 	if (persist_exists(STORAGE_KEY_LastTimeRecievedWeather))
