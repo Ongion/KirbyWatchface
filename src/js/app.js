@@ -5,6 +5,7 @@ var clay = new Clay(clayConfig, customClay);
 
 var OpenWeatherMap = require('./openWeatherMap');
 var USNWS = require('./USNWS');
+var OpenMeteo = require('./openMeteo');
 
 Pebble.addEventListener('ready', function () {
 	console.log('PebbleKit JS Ready!');
@@ -42,6 +43,11 @@ Pebble.addEventListener('appmessage',
 				// US NWS
 				console.log("Requesting Weather from US NWS!");
 				USNWS.getWeather();
+			}
+			else if (dict['WeatherSource'] == 2) {
+				// OpenMeteo
+				console.log("Requesting Weather from Open-Meteo!");
+				OpenMeteo.getWeather();
 			}
 		}
 	});

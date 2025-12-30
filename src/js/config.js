@@ -24,6 +24,10 @@ module.exports = [
                     {
                         "label": "US NWS",
                         "value": "weathergov"
+                    },
+                    {
+                        "label": "Open-Meteo",
+                        "value": "openMeteo"
                     }
                 ]
             },

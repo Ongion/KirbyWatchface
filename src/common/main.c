@@ -850,6 +850,10 @@ static void inbox_received_callback(DictionaryIterator* iter, void* context)
 		{
 			g_settings.weatherSource = OPENWEATHER;
 		}
+		else if (strncmp(weatherSource_t->value->cstring, "openMeteo", 10) == 0)
+		{
+			g_settings.weatherSource = OPENMETEO;
+		}
 
 		updated_settings = true;
 	}
@@ -1305,9 +1309,9 @@ void handle_init(void)
 	window_stack_push(s_WindowMain, true);
 
 	handle_tick(tick_time, MINUTE_UNIT | HOUR_UNIT | DAY_UNIT);
-
 	tick_timer_service_subscribe(MINUTE_UNIT | HOUR_UNIT | DAY_UNIT, handle_tick);
 
+	handle_health(HealthEventMovementUpdate, NULL);
 	health_service_events_subscribe(handle_health, NULL);
 	battery_state_service_subscribe(&handle_battery);
 
