@@ -14,7 +14,7 @@
 	function findCurrentValue(values) {
 		var now = new Date();
 		for (var i = 0; i < values.length; i++) {
-			validTimeStart = values[i].validTime.split("/")[0];
+			var validTimeStart = values[i].validTime.split("/")[0];
 			if (now > Date.parse(validTimeStart)) {
 				continue;
 			}
