@@ -1236,10 +1236,12 @@ static void load_settings()
 	g_settings.stepsGoal = 5000;
 	g_settings.animateOnGlance = false;
 	g_settings.showTenthsDigit = false;
+	g_settings.enableConnectionAlertVibrations = true;
 
 	if (persist_exists(STORAGE_KEY_ClaySettings) && persist_exists(STORAGE_KEY_ClaySettingsVersion))
 	{
-		if (persist_read_int(STORAGE_KEY_ClaySettingsVersion) == 1)
+		int storedVersion = persist_read_int(STORAGE_KEY_ClaySettingsVersion);
+		if (storedVersion == 1)
 		{
 			ClaySettingsV1 settingsV1;
 			persist_read_data(STORAGE_KEY_ClaySettings, &settingsV1, sizeof(settingsV1));
@@ -1249,10 +1251,25 @@ static void load_settings()
 			g_settings.stepsGoal = settingsV1.stepsGoal;
 			g_settings.animateOnGlance = settingsV1.animateOnGlance;
 
-			persist_write_int(STORAGE_KEY_ClaySettingsVersion, 2);
+			persist_write_int(STORAGE_KEY_ClaySettingsVersion, 3);
 			persist_write_data(STORAGE_KEY_ClaySettings, &g_settings, sizeof(g_settings));
 		}
-		else if (persist_read_int(STORAGE_KEY_ClaySettingsVersion) == 2)
+		else if (storedVersion == 2)
+		{
+			ClaySettingsV2 settingsV2;
+			persist_read_data(STORAGE_KEY_ClaySettings, &settingsV2, sizeof(settingsV2));
+			g_settings.weatherSource = settingsV2.weatherSource;
+			strncpy(g_settings.openWeatherMapAPIKey, settingsV2.openWeatherMapAPIKey, sizeof(g_settings.openWeatherMapAPIKey));
+			strncpy(g_settings.city, settingsV2.city, sizeof(g_settings.city));
+			g_settings.scalePreference = settingsV2.scalePreference;
+			g_settings.stepsGoal = settingsV2.stepsGoal;
+			g_settings.animateOnGlance = settingsV2.animateOnGlance;
+			g_settings.showTenthsDigit = settingsV2.showTenthsDigit;
+
+			persist_write_int(STORAGE_KEY_ClaySettingsVersion, 3);
+			persist_write_data(STORAGE_KEY_ClaySettings, &g_settings, sizeof(g_settings));
+		}
+		else if (storedVersion == 3)
 		{
 			persist_read_data(STORAGE_KEY_ClaySettings, &g_settings, sizeof(g_settings));
 		}

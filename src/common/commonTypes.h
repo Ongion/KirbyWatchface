@@ -45,8 +45,19 @@ typedef struct ClaySettingsV2
 	bool showTenthsDigit;
 } ClaySettingsV2;
 
+typedef struct ClaySettingsV3
+{
+	WeatherSource weatherSource;
+	char openWeatherMapAPIKey[33];
+	char city[86];
+	TemperatureScale scalePreference;
+	uint16_t stepsGoal;
+	bool animateOnGlance;
+	bool showTenthsDigit;
+	bool enableConnectionAlertVibrations;
+} ClaySettingsV3;
 
-typedef ClaySettingsV2 ClaySettings;
+typedef ClaySettingsV3 ClaySettings;
 
 typedef struct BossSet
 {
