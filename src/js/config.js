@@ -13,7 +13,7 @@ module.exports = [
             {
                 "type": "select",
                 "messageKey": "WeatherSource",
-                "defaultValue": "openWeather",
+                "defaultValue": "openMeteo",
                 "label": "Weather Source",
                 "description": "OpenWeatherMap requires a (free) API key.<br>US NWS only works in the USA.",
                 "options" : [
@@ -99,6 +99,13 @@ module.exports = [
                 "label": "Show Tenths Digit",
                 "description": "Show tenths digit when showing temperature",
                 "defaultValue": false
+            },
+            {
+                "type": "toggle",
+                "messageKey": "ConnectionAlertVibration",
+                "label": "Vibrate on Disconnect/Reconnect",
+                "description": "Perform a triple-pulse vibration if bluetooth disconnects (and a double-pulse when it reconnects)",
+                "defaultValue": true
             }
         ]
     },

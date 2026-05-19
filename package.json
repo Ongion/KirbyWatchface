@@ -709,7 +709,8 @@
       "Sunrise",
       "Sunset",
       "AnimateOnGlance",
-      "TenthsDigitTemperature"
+      "TenthsDigitTemperature",
+      "ConnectionAlertVibration"
     ],
     "enableMultiJS": true,
     "displayName": "Kirby",
