@@ -982,6 +982,14 @@ static void inbox_received_callback(DictionaryIterator* iter, void* context)
 		updated_settings = true;
 	}
 
+	// ConnectionAlertVibration
+	Tuple* connectionAlerts_t = dict_find(iter, MESSAGE_KEY_ConnectionAlertVibration);
+	if (connectionAlerts_t)
+	{
+		g_settings.enableConnectionAlertVibrations = (connectionAlerts_t->value->int32 == 1);
+		updated_settings = true;
+	}
+
 	if (got_weather)
 	{
 		cancel_weather_timeout();
@@ -997,7 +1005,7 @@ static void inbox_received_callback(DictionaryIterator* iter, void* context)
 
 	if (updated_settings)
 	{
-		persist_write_int(STORAGE_KEY_ClaySettingsVersion, 2);
+		persist_write_int(STORAGE_KEY_ClaySettingsVersion, 3);
 		persist_write_data(STORAGE_KEY_ClaySettings, &g_settings, sizeof(g_settings));
 
 		request_weather_update();
@@ -1099,7 +1107,7 @@ static void handle_bluetooth(bool connected)
 	update_boss();
 	update_bg_color();
 
-	if (!initiate_watchface)
+	if (!initiate_watchface && g_settings.enableConnectionAlertVibrations)
 	{
 		if (connected)
 		{
@@ -1333,8 +1341,6 @@ void handle_init(void)
 	connection_service_subscribe((ConnectionHandlers){&handle_bluetooth, NULL});
 
 	accel_tap_service_subscribe(&handle_tap);
-
-	// APP_LOG(APP_LOG_LEVEL_DEBUG, "Just pushed a window!");
 
 	initiate_watchface = false;
 
